@@ -1,69 +1,163 @@
-import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight, BookOpen, Brain, BarChart3, ClipboardList, CheckCircle2, Target } from "lucide-react";
 
-export default function Home() {
+export default function LandingPage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
+    <div className="min-h-screen flex flex-col" style={{ background: "var(--background)", color: "var(--foreground)" }}>
+      {/* Nav */}
+      <header className="border-b sticky top-0 z-10" style={{ borderColor: "var(--border)", background: "var(--background)" }}>
+        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+          <span className="font-semibold text-lg tracking-tight">Moraje3</span>
+          <div className="flex items-center gap-3">
+            <Link
+              href="/login"
+              className="text-sm font-medium px-4 py-2 rounded-md transition-colors"
+              style={{ color: "var(--muted-foreground)" }}
+            >
+              Login
+            </Link>
+            <Link
+              href="/request-access"
+              className="text-sm font-medium px-4 py-2 rounded-md transition-colors hover:opacity-90"
+              style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}
+            >
+              Request Access
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      {/* Hero */}
+      <section className="flex flex-col items-center justify-center px-6 py-28 text-center">
+        <div className="max-w-3xl mx-auto">
+          <div
+            className="inline-block text-xs font-medium px-3 py-1 rounded-full mb-8"
+            style={{ background: "var(--secondary)", color: "var(--muted-foreground)" }}
+          >
+            Private Access Platform
+          </div>
+          <h1 className="text-5xl sm:text-6xl font-bold tracking-tight mb-6" style={{ lineHeight: "1.1", letterSpacing: "-0.02em" }}>
+            Moraje3
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="text-xl sm:text-2xl mb-4" style={{ color: "var(--foreground)", fontWeight: 500 }}>
+            AI-powered preparation for your professional medical licensing exam.
           </p>
+          <p className="text-lg mb-10" style={{ color: "var(--muted-foreground)" }}>
+            Practice real-world questions, understand every answer, and prepare with an intelligent AI tutor.
+          </p>
+          <div className="flex items-center justify-center gap-4 flex-wrap">
+            <Link
+              href="/request-access"
+              className="inline-flex items-center gap-2 text-sm font-semibold px-6 py-3 rounded-lg transition-all hover:opacity-90"
+              style={{ background: "var(--brand)", color: "var(--brand-foreground)" }}
+            >
+              Request Access
+              <ArrowRight size={16} />
+            </Link>
+            <Link
+              href="/login"
+              className="inline-flex items-center gap-2 text-sm font-medium px-6 py-3 rounded-lg border transition-all hover:opacity-80"
+              style={{ borderColor: "var(--border)", color: "var(--foreground)", background: "var(--background)" }}
+            >
+              Login
+            </Link>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* Features */}
+      <section className="border-t py-20 px-6" style={{ borderColor: "var(--border)", background: "var(--secondary)" }}>
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-14">
+            <h2 className="text-3xl font-bold tracking-tight mb-3">Everything you need to prepare</h2>
+            <p style={{ color: "var(--muted-foreground)" }}>A focused, distraction-free environment built for exam success.</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {features.map((f) => (
+              <div
+                key={f.title}
+                className="p-6 rounded-xl border"
+                style={{ background: "var(--card)", borderColor: "var(--border)" }}
+              >
+                <div
+                  className="w-10 h-10 rounded-lg flex items-center justify-center mb-4"
+                  style={{ background: "#eff6ff" }}
+                >
+                  <f.icon size={20} style={{ color: "var(--brand)" }} />
+                </div>
+                <h3 className="font-semibold mb-2">{f.title}</h3>
+                <p className="text-sm leading-relaxed" style={{ color: "var(--muted-foreground)" }}>{f.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
-      </main>
+      </section>
+
+      {/* CTA */}
+      <section className="py-24 px-6 text-center">
+        <div className="max-w-xl mx-auto">
+          <h2 className="text-3xl font-bold tracking-tight mb-4">Ready to start preparing?</h2>
+          <p className="mb-8 text-lg" style={{ color: "var(--muted-foreground)" }}>
+            Request access and we will contact you with the next steps.
+          </p>
+          <Link
+            href="/request-access"
+            className="inline-flex items-center gap-2 text-sm font-semibold px-8 py-3 rounded-lg transition-all hover:opacity-90"
+            style={{ background: "var(--brand)", color: "var(--brand-foreground)" }}
+          >
+            Request Access
+            <ArrowRight size={16} />
+          </Link>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t py-8 px-6" style={{ borderColor: "var(--border)", background: "var(--secondary)" }}>
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+          <span className="font-semibold">Moraje3</span>
+          <p className="text-xs text-center" style={{ color: "var(--muted-foreground)", maxWidth: "520px" }}>
+            Moraje3 is an independent educational preparation platform. It is not affiliated with, endorsed by, or
+            officially connected to any licensing authority. Content is provided for educational purposes only.
+          </p>
+          <div className="flex gap-4 text-xs" style={{ color: "var(--muted-foreground)" }}>
+            <Link href="/login" className="hover:underline">Login</Link>
+            <Link href="/request-access" className="hover:underline">Request Access</Link>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
+
+const features = [
+  {
+    icon: BookOpen,
+    title: "Practice Real-World Questions",
+    desc: "Work through curated exam-style MCQs across all major medical disciplines.",
+  },
+  {
+    icon: CheckCircle2,
+    title: "Understand Every Answer",
+    desc: "Detailed justifications and per-option explanations show you exactly why answers are correct or incorrect.",
+  },
+  {
+    icon: Brain,
+    title: "Learn with AI",
+    desc: "An AI tutor that explains concepts, answers your questions, and teaches you to think clinically.",
+  },
+  {
+    icon: BarChart3,
+    title: "Track Your Progress",
+    desc: "See your accuracy by category and topic. Know exactly where to focus your study time.",
+  },
+  {
+    icon: ClipboardList,
+    title: "Prepare with Mock Exams",
+    desc: "Timed, realistic mock exams that simulate the pressure and format of the real exam.",
+  },
+  {
+    icon: Target,
+    title: "Review Your Mistakes",
+    desc: "Automatically surface questions you got wrong so you can practice and master them.",
+  },
+];

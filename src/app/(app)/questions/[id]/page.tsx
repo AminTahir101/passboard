@@ -1,0 +1,223 @@
+import { notFound, redirect } from "next/navigation";
+import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
+import { CheckCircle2, XCircle, Brain, ArrowLeft, Clock } from "lucide-react";
+import type { CorrectAnswer } from "@/types/database";
+
+const OPTION_LABELS: CorrectAnswer[] = ["A", "B", "C", "D"];
+
+export default async function QuestionDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) redirect("/login");
+
+  const { data: question } = await supabase
+    .from("questions")
+    .select("*")
+    .eq("id", id)
+    .eq("status", "published")
+    .single();
+
+  if (!question) notFound();
+
+  // Fetch user's most recent attempt
+  const { data: attempts } = await supabase
+    .from("question_attempts")
+    .select("selected_answer, is_correct, attempted_at")
+    .eq("user_id", user.id)
+    .eq("question_id", id)
+    .order("attempted_at", { ascending: false })
+    .limit(1);
+
+  const lastAttempt = attempts?.[0] ?? null;
+
+  const options: { label: CorrectAnswer; text: string; explanation: string | null }[] = [
+    { label: "A", text: question.option_a, explanation: question.explanation_a },
+    { label: "B", text: question.option_b, explanation: question.explanation_b },
+    { label: "C", text: question.option_c, explanation: question.explanation_c },
+    { label: "D", text: question.option_d, explanation: question.explanation_d },
+  ];
+
+  const diffColors: Record<string, { bg: string; color: string }> = {
+    easy: { bg: "rgba(22,163,74,0.1)", color: "var(--success)" },
+    medium: { bg: "rgba(217,119,6,0.1)", color: "var(--warning)" },
+    hard: { bg: "rgba(239,68,68,0.1)", color: "var(--destructive)" },
+  };
+  const diffStyle = diffColors[question.difficulty] ?? diffColors.medium;
+
+  return (
+    <div className="max-w-2xl mx-auto space-y-5">
+      {/* Back */}
+      <Link
+        href="/questions"
+        className="inline-flex items-center gap-1.5 text-sm"
+        style={{ color: "var(--muted-foreground)" }}
+      >
+        <ArrowLeft size={15} />
+        Question Bank
+      </Link>
+
+      {/* Metadata */}
+      <div className="flex items-center gap-2 flex-wrap">
+        {question.category && (
+          <span
+            className="text-xs px-2.5 py-1 rounded-full border"
+            style={{ borderColor: "var(--border)", color: "var(--muted-foreground)", background: "var(--muted)" }}
+          >
+            {question.category}
+          </span>
+        )}
+        {question.topic && (
+          <span
+            className="text-xs px-2.5 py-1 rounded-full border"
+            style={{ borderColor: "var(--border)", color: "var(--muted-foreground)", background: "var(--muted)" }}
+          >
+            {question.topic}
+          </span>
+        )}
+        <span
+          className="text-xs px-2.5 py-1 rounded-full font-medium"
+          style={{ background: diffStyle.bg, color: diffStyle.color }}
+        >
+          {question.difficulty.charAt(0).toUpperCase() + question.difficulty.slice(1)}
+        </span>
+        {lastAttempt && (
+          <span
+            className="text-xs px-2.5 py-1 rounded-full flex items-center gap-1"
+            style={{
+              background: lastAttempt.is_correct ? "rgba(22,163,74,0.1)" : "rgba(239,68,68,0.1)",
+              color: lastAttempt.is_correct ? "var(--success)" : "var(--destructive)",
+            }}
+          >
+            {lastAttempt.is_correct ? <CheckCircle2 size={11} /> : <XCircle size={11} />}
+            {lastAttempt.is_correct ? "Answered Correctly" : "Answered Incorrectly"}
+          </span>
+        )}
+      </div>
+
+      {/* Previous attempt notice */}
+      {lastAttempt && (
+        <div
+          className="rounded-lg border p-3 flex items-center gap-2 text-sm"
+          style={{
+            borderColor: "var(--border)",
+            background: "var(--muted)",
+            color: "var(--muted-foreground)",
+          }}
+        >
+          <Clock size={14} />
+          Last attempted on {new Date(lastAttempt.attempted_at).toLocaleDateString()} — you answered{" "}
+          <strong style={{ color: "var(--foreground)" }}>{lastAttempt.selected_answer}</strong>
+        </div>
+      )}
+
+      {/* Question */}
+      <div
+        className="rounded-xl border p-6"
+        style={{ background: "var(--card)", borderColor: "var(--border)" }}
+      >
+        <p className="text-base leading-relaxed" style={{ color: "var(--foreground)" }}>
+          {question.question_text}
+        </p>
+      </div>
+
+      {/* Options */}
+      <div className="space-y-2.5">
+        {options.map(({ label, text, explanation }) => {
+          const isCorrect = label === question.correct_answer;
+          const isSelected = lastAttempt?.selected_answer === label;
+
+          let borderColor = "var(--border)";
+          let bgColor = "var(--card)";
+
+          if (lastAttempt) {
+            if (isCorrect) {
+              borderColor = "var(--success)";
+              bgColor = "rgba(22,163,74,0.06)";
+            } else if (isSelected && !isCorrect) {
+              borderColor = "var(--destructive)";
+              bgColor = "rgba(239,68,68,0.06)";
+            }
+          }
+
+          return (
+            <div
+              key={label}
+              className="flex items-start gap-4 p-4 rounded-xl border"
+              style={{ borderColor, background: bgColor }}
+            >
+              <span
+                className="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold shrink-0"
+                style={{
+                  background: isCorrect && lastAttempt ? "var(--success)" : "var(--muted)",
+                  color: isCorrect && lastAttempt ? "white" : "var(--muted-foreground)",
+                }}
+              >
+                {label}
+              </span>
+              <div className="flex-1 min-w-0">
+                <span className="text-sm" style={{ color: "var(--foreground)" }}>
+                  {text}
+                </span>
+                {lastAttempt && explanation && (
+                  <p className="text-xs mt-1.5" style={{ color: "var(--muted-foreground)" }}>
+                    {explanation}
+                  </p>
+                )}
+              </div>
+              {lastAttempt && isCorrect && (
+                <CheckCircle2 size={18} className="shrink-0 mt-0.5" style={{ color: "var(--success)" }} />
+              )}
+              {lastAttempt && isSelected && !isCorrect && (
+                <XCircle size={18} className="shrink-0 mt-0.5" style={{ color: "var(--destructive)" }} />
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Justification */}
+      {lastAttempt && question.justification && (
+        <div
+          className="rounded-xl border p-4"
+          style={{ background: "var(--muted)", borderColor: "var(--border)" }}
+        >
+          <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: "var(--muted-foreground)" }}>
+            Explanation
+          </p>
+          <p className="text-sm leading-relaxed" style={{ color: "var(--foreground)" }}>
+            {question.justification}
+          </p>
+        </div>
+      )}
+
+      {/* Actions */}
+      <div className="flex gap-3">
+        <Link
+          href={`/practice/session?mode=random&count=10`}
+          className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium border"
+          style={{ borderColor: "var(--border)", color: "var(--foreground)" }}
+        >
+          Practice Similar
+        </Link>
+        <Link
+          href={`/tutor?questionId=${question.id}`}
+          className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium"
+          style={{ background: "var(--brand)", color: "var(--brand-foreground)" }}
+        >
+          <Brain size={16} />
+          Ask AI Tutor
+        </Link>
+      </div>
+    </div>
+  );
+}
