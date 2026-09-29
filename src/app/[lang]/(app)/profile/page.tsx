@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getDictionary, localePath } from "@/lib/i18n";
 import ProfileForm from "@/components/layout/ProfileForm";
 import { User, Mail, Shield, Calendar, Clock } from "lucide-react";
 
@@ -10,14 +11,16 @@ const ACCESS_STATUS_LABELS: Record<string, { label: string; color: string; bg: s
   expired: { label: "Expired", color: "var(--muted-foreground)", bg: "var(--muted)" },
 };
 
-export default async function ProfilePage() {
+export default async function ProfilePage({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang } = await params;
+  const dict = await getDictionary(lang);
   const supabase = await createClient();
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) redirect("/login");
+  if (!user) redirect(localePath(lang, "/login"));
 
   const { data: profile } = await supabase
     .from("profiles")
@@ -25,7 +28,7 @@ export default async function ProfilePage() {
     .eq("id", user.id)
     .single();
 
-  if (!profile) redirect("/login");
+  if (!profile) redirect(localePath(lang, "/login"));
 
   const statusStyle =
     ACCESS_STATUS_LABELS[profile.access_status] ?? ACCESS_STATUS_LABELS.pending;
@@ -41,10 +44,10 @@ export default async function ProfilePage() {
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold" style={{ color: "var(--foreground)" }}>
-          Profile
+          {dict.profile.title}
         </h1>
         <p className="text-sm mt-1" style={{ color: "var(--muted-foreground)" }}>
-          Manage your account information
+          {dict.profile.accountInfo}
         </p>
       </div>
 
@@ -75,7 +78,7 @@ export default async function ProfilePage() {
             <Mail size={15} style={{ color: "var(--muted-foreground)" }} />
             <div>
               <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>
-                Email
+                {dict.profile.email}
               </p>
               <p className="text-sm font-medium" style={{ color: "var(--foreground)" }}>
                 {profile.email}
@@ -99,7 +102,7 @@ export default async function ProfilePage() {
             <Shield size={15} style={{ color: "var(--muted-foreground)" }} />
             <div>
               <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>
-                Access Status
+                {dict.profile.accessStatus}
               </p>
               <span
                 className="inline-block text-xs font-medium px-2 py-0.5 rounded-full"
@@ -114,12 +117,12 @@ export default async function ProfilePage() {
             <Clock size={15} style={{ color: "var(--muted-foreground)" }} />
             <div>
               <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>
-                Access Expires
+                {dict.profile.accessExpires}
               </p>
               <p className="text-sm font-medium" style={{ color: "var(--foreground)" }}>
                 {profile.access_expires_at
                   ? new Date(profile.access_expires_at).toLocaleDateString()
-                  : "—"}
+                  : dict.profile.never}
               </p>
             </div>
           </div>
@@ -163,9 +166,9 @@ export default async function ProfilePage() {
         style={{ background: "var(--card)", borderColor: "var(--border)" }}
       >
         <h2 className="font-semibold mb-4" style={{ color: "var(--foreground)" }}>
-          Edit Profile
+          {dict.profile.editProfile}
         </h2>
-        <ProfileForm profile={profile} />
+        <ProfileForm profile={profile} dict={dict.profile} lang={lang} />
       </div>
     </div>
   );

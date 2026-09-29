@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { getDictionary, localePath } from "@/lib/i18n";
 import type { Profile, QuestionAttempt } from "@/types/database";
 import {
   Play,
@@ -59,11 +60,13 @@ function StatCard({
   );
 }
 
-export default async function DashboardPage() {
+export default async function DashboardPage({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang } = await params;
+  const dict = await getDictionary(lang);
   const supabase = await createClient();
 
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
+  if (!user) redirect(localePath(lang, "/login"));
 
   const { data: profileData } = await supabase
     .from("profiles")
@@ -136,35 +139,45 @@ export default async function DashboardPage() {
   const strongestTopic = topicEntries[0] ?? null;
   const weakestTopic = topicEntries[topicEntries.length - 1] ?? null;
 
+  const daysToExamValue = daysToExam === null
+    ? dict.dashboard.na
+    : daysToExam < 0
+    ? "Past"
+    : daysToExam === 0
+    ? "Today!"
+    : `${daysToExam}d`;
+
   return (
     <div className="max-w-5xl mx-auto space-y-6">
       <div>
         <h1 className="text-2xl font-bold">
-          Welcome back, {profile?.full_name?.split(" ")[0] ?? "Student"}
+          {dict.dashboard.title}, {profile?.full_name?.split(" ")[0] ?? "Student"}
         </h1>
         <p className="text-sm mt-1" style={{ color: "var(--muted-foreground)" }}>
-          {profile?.target_exam ? `Preparing for ${profile.target_exam}` : "Let's continue your exam preparation"}
+          {profile?.target_exam
+            ? `${dict.dashboard.targetExam}: ${profile.target_exam}`
+            : dict.dashboard.noActivity}
         </p>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-        <StatCard label="Target Exam" value={profile?.target_exam ?? "—"} icon={Target} color="var(--brand)" />
+        <StatCard label={dict.dashboard.targetExam} value={profile?.target_exam ?? dict.dashboard.notSet} icon={Target} color="var(--brand)" />
         <StatCard
-          label="Days to Exam"
-          value={daysToExam === null ? "—" : daysToExam < 0 ? "Past" : daysToExam === 0 ? "Today!" : `${daysToExam}d`}
+          label={dict.dashboard.daysToExam}
+          value={daysToExamValue}
           icon={Calendar}
           color="var(--warning)"
           sub={profile?.exam_date ? new Date(profile.exam_date).toLocaleDateString() : undefined}
         />
-        <StatCard label="Questions Answered" value={totalAttempted.toLocaleString()} icon={BookOpen} color="var(--brand)" />
+        <StatCard label={dict.dashboard.totalAnswered} value={totalAttempted.toLocaleString()} icon={BookOpen} color="var(--brand)" />
         <StatCard
-          label="Overall Accuracy"
+          label={dict.dashboard.accuracy}
           value={`${accuracy}%`}
           icon={TrendingUp}
           color={accuracy >= 70 ? "var(--success)" : accuracy >= 50 ? "var(--warning)" : "var(--destructive)"}
         />
-        <StatCard label="Correct" value={correct.toLocaleString()} icon={CheckCircle2} color="var(--success)" />
-        <StatCard label="Incorrect" value={incorrect.toLocaleString()} icon={AlertCircle} color="var(--destructive)" />
+        <StatCard label={dict.dashboard.correct} value={correct.toLocaleString()} icon={CheckCircle2} color="var(--success)" />
+        <StatCard label={dict.dashboard.incorrect} value={incorrect.toLocaleString()} icon={AlertCircle} color="var(--destructive)" />
       </div>
 
       {(strongestTopic || weakestTopic) && (
@@ -175,7 +188,7 @@ export default async function DashboardPage() {
                 <TrendingUp size={20} style={{ color: "var(--success)" }} />
               </div>
               <div>
-                <p className="text-xs font-medium mb-0.5" style={{ color: "var(--muted-foreground)" }}>Strongest Topic</p>
+                <p className="text-xs font-medium mb-0.5" style={{ color: "var(--muted-foreground)" }}>{dict.dashboard.strongestTopic}</p>
                 <p className="font-semibold">{strongestTopic.topic}</p>
                 <p className="text-sm" style={{ color: "var(--success)" }}>{strongestTopic.accuracy}% accuracy ({strongestTopic.total} questions)</p>
               </div>
@@ -187,7 +200,7 @@ export default async function DashboardPage() {
                 <TrendingDown size={20} style={{ color: "var(--destructive)" }} />
               </div>
               <div>
-                <p className="text-xs font-medium mb-0.5" style={{ color: "var(--muted-foreground)" }}>Needs Work</p>
+                <p className="text-xs font-medium mb-0.5" style={{ color: "var(--muted-foreground)" }}>{dict.dashboard.weakestTopic}</p>
                 <p className="font-semibold">{weakestTopic.topic}</p>
                 <p className="text-sm" style={{ color: "var(--destructive)" }}>{weakestTopic.accuracy}% accuracy ({weakestTopic.total} questions)</p>
               </div>
@@ -199,12 +212,12 @@ export default async function DashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="rounded-xl border" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
           <div className="px-5 py-4 border-b" style={{ borderColor: "var(--border)" }}>
-            <h2 className="font-semibold text-sm">Recent Activity</h2>
+            <h2 className="font-semibold text-sm">{dict.dashboard.recentActivity}</h2>
           </div>
           {recentActivity.length === 0 ? (
             <div className="px-5 py-8 text-center">
               <BookOpen size={32} className="mx-auto mb-2" style={{ color: "var(--muted-foreground)" }} />
-              <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>No activity yet. Start practicing!</p>
+              <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>{dict.dashboard.noActivity}</p>
             </div>
           ) : (
             <ul className="divide-y" style={{ borderColor: "var(--border)" }}>
@@ -233,14 +246,14 @@ export default async function DashboardPage() {
 
         <div className="rounded-xl border" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
           <div className="px-5 py-4 border-b" style={{ borderColor: "var(--border)" }}>
-            <h2 className="font-semibold text-sm">Quick Actions</h2>
+            <h2 className="font-semibold text-sm">{dict.dashboard.quickActions}</h2>
           </div>
           <div className="p-5 grid grid-cols-2 gap-3">
             {[
-              { label: "Start Practice", href: "/practice", icon: Play, bg: "var(--brand)", fg: "var(--brand-foreground)" },
-              { label: "Mock Exam", href: "/mock-exams", icon: ClipboardList, bg: "var(--secondary)", fg: "var(--secondary-foreground)" },
-              { label: "Ask AI Tutor", href: "/tutor", icon: Brain, bg: "var(--secondary)", fg: "var(--secondary-foreground)" },
-              { label: "My Mistakes", href: "/mistakes", icon: XCircle, bg: "var(--secondary)", fg: "var(--secondary-foreground)" },
+              { label: dict.dashboard.startPractice, href: localePath(lang, "/practice"), icon: Play, bg: "var(--brand)", fg: "var(--brand-foreground)" },
+              { label: dict.dashboard.startMockExam, href: localePath(lang, "/mock-exams"), icon: ClipboardList, bg: "var(--secondary)", fg: "var(--secondary-foreground)" },
+              { label: dict.dashboard.askAITutor, href: localePath(lang, "/tutor"), icon: Brain, bg: "var(--secondary)", fg: "var(--secondary-foreground)" },
+              { label: dict.dashboard.reviewMistakes, href: localePath(lang, "/mistakes"), icon: XCircle, bg: "var(--secondary)", fg: "var(--secondary-foreground)" },
             ].map(({ label, href, icon: Icon, bg, fg }) => (
               <Link key={href} href={href}
                 className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl text-sm font-medium transition-opacity hover:opacity-90"

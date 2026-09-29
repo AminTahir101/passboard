@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { getDictionary, localePath } from "@/lib/i18n";
 import { BookOpen, ChevronRight } from "lucide-react";
 
 const DIFFICULTY_COLORS: Record<string, { bg: string; color: string }> = {
@@ -12,20 +13,24 @@ const DIFFICULTY_COLORS: Record<string, { bg: string; color: string }> = {
 type StatusFilter = "all" | "unanswered" | "correct" | "incorrect";
 
 export default async function QuestionsPage({
+  params,
   searchParams,
 }: {
+  params: Promise<{ lang: string }>;
   searchParams: Promise<{ exam?: string; category?: string; topic?: string; difficulty?: string; status?: string }>;
 }) {
-  const params = await searchParams;
+  const { lang } = await params;
+  const dict = await getDictionary(lang);
+  const sp = await searchParams;
   const supabase = await createClient();
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) redirect("/login");
+  if (!user) redirect(localePath(lang, "/login"));
 
-  const statusFilter: StatusFilter = (params.status as StatusFilter) || "all";
+  const statusFilter: StatusFilter = (sp.status as StatusFilter) || "all";
 
   // Build questions query
   let query = supabase
@@ -35,10 +40,10 @@ export default async function QuestionsPage({
     .order("created_at", { ascending: false })
     .limit(100);
 
-  if (params.exam) query = query.eq("exam", params.exam);
-  if (params.category) query = query.eq("category", params.category);
-  if (params.topic) query = query.eq("topic", params.topic);
-  if (params.difficulty) query = query.eq("difficulty", params.difficulty as import("@/types/database").Difficulty);
+  if (sp.exam) query = query.eq("exam", sp.exam);
+  if (sp.category) query = query.eq("category", sp.category);
+  if (sp.topic) query = query.eq("topic", sp.topic);
+  if (sp.difficulty) query = query.eq("difficulty", sp.difficulty as import("@/types/database").Difficulty);
 
   const { data: questions } = await query;
 
@@ -73,21 +78,23 @@ export default async function QuestionsPage({
   const categories = [...new Set(allQuestions.map((q) => q.category).filter(Boolean))];
 
   const statusTabs: { key: StatusFilter; label: string }[] = [
-    { key: "all", label: "All" },
-    { key: "unanswered", label: "Unanswered" },
-    { key: "correct", label: "Correct" },
-    { key: "incorrect", label: "Incorrect" },
+    { key: "all", label: dict.common.all },
+    { key: "unanswered", label: dict.common.unanswered },
+    { key: "correct", label: dict.common.correct },
+    { key: "incorrect", label: dict.common.incorrect },
   ];
+
+  const questionsBase = localePath(lang, "/questions");
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold" style={{ color: "var(--foreground)" }}>
-          Question Bank
+          {dict.questionBank.title}
         </h1>
         <p className="text-sm mt-1" style={{ color: "var(--muted-foreground)" }}>
-          Browse all available questions
+          {dict.questionBank.allExams}
         </p>
       </div>
 
@@ -105,25 +112,25 @@ export default async function QuestionsPage({
               </label>
               <div className="flex gap-1.5 flex-wrap">
                 <Link
-                  href={buildFilterUrl(params, { exam: undefined })}
+                  href={buildFilterUrl(questionsBase, sp, { exam: undefined })}
                   className="text-xs px-2.5 py-1 rounded-full border transition-colors"
                   style={{
-                    borderColor: !params.exam ? "var(--brand)" : "var(--border)",
-                    background: !params.exam ? "var(--brand)" : "transparent",
-                    color: !params.exam ? "var(--brand-foreground)" : "var(--muted-foreground)",
+                    borderColor: !sp.exam ? "var(--brand)" : "var(--border)",
+                    background: !sp.exam ? "var(--brand)" : "transparent",
+                    color: !sp.exam ? "var(--brand-foreground)" : "var(--muted-foreground)",
                   }}
                 >
-                  All
+                  {dict.common.all}
                 </Link>
                 {exams.map((exam) => (
                   <Link
                     key={exam}
-                    href={buildFilterUrl(params, { exam: exam! })}
+                    href={buildFilterUrl(questionsBase, sp, { exam: exam! })}
                     className="text-xs px-2.5 py-1 rounded-full border transition-colors"
                     style={{
-                      borderColor: params.exam === exam ? "var(--brand)" : "var(--border)",
-                      background: params.exam === exam ? "var(--brand)" : "transparent",
-                      color: params.exam === exam ? "var(--brand-foreground)" : "var(--muted-foreground)",
+                      borderColor: sp.exam === exam ? "var(--brand)" : "var(--border)",
+                      background: sp.exam === exam ? "var(--brand)" : "transparent",
+                      color: sp.exam === exam ? "var(--brand-foreground)" : "var(--muted-foreground)",
                     }}
                   >
                     {exam}
@@ -137,29 +144,29 @@ export default async function QuestionsPage({
           {categories.length > 0 && (
             <div className="flex items-center gap-2">
               <label className="text-xs font-medium" style={{ color: "var(--muted-foreground)" }}>
-                Category:
+                {dict.common.category}:
               </label>
               <div className="flex gap-1.5 flex-wrap">
                 <Link
-                  href={buildFilterUrl(params, { category: undefined })}
+                  href={buildFilterUrl(questionsBase, sp, { category: undefined })}
                   className="text-xs px-2.5 py-1 rounded-full border"
                   style={{
-                    borderColor: !params.category ? "var(--brand)" : "var(--border)",
-                    background: !params.category ? "var(--brand)" : "transparent",
-                    color: !params.category ? "var(--brand-foreground)" : "var(--muted-foreground)",
+                    borderColor: !sp.category ? "var(--brand)" : "var(--border)",
+                    background: !sp.category ? "var(--brand)" : "transparent",
+                    color: !sp.category ? "var(--brand-foreground)" : "var(--muted-foreground)",
                   }}
                 >
-                  All
+                  {dict.common.all}
                 </Link>
                 {categories.slice(0, 8).map((cat) => (
                   <Link
                     key={cat}
-                    href={buildFilterUrl(params, { category: cat! })}
+                    href={buildFilterUrl(questionsBase, sp, { category: cat! })}
                     className="text-xs px-2.5 py-1 rounded-full border"
                     style={{
-                      borderColor: params.category === cat ? "var(--brand)" : "var(--border)",
-                      background: params.category === cat ? "var(--brand)" : "transparent",
-                      color: params.category === cat ? "var(--brand-foreground)" : "var(--muted-foreground)",
+                      borderColor: sp.category === cat ? "var(--brand)" : "var(--border)",
+                      background: sp.category === cat ? "var(--brand)" : "transparent",
+                      color: sp.category === cat ? "var(--brand-foreground)" : "var(--muted-foreground)",
                     }}
                   >
                     {cat}
@@ -172,21 +179,21 @@ export default async function QuestionsPage({
           {/* Difficulty filter */}
           <div className="flex items-center gap-2">
             <label className="text-xs font-medium" style={{ color: "var(--muted-foreground)" }}>
-              Difficulty:
+              {dict.common.difficulty}:
             </label>
             <div className="flex gap-1.5">
               {[undefined, "easy", "medium", "hard"].map((d) => (
                 <Link
                   key={d ?? "all"}
-                  href={buildFilterUrl(params, { difficulty: d })}
+                  href={buildFilterUrl(questionsBase, sp, { difficulty: d })}
                   className="text-xs px-2.5 py-1 rounded-full border"
                   style={{
-                    borderColor: params.difficulty === d ? "var(--brand)" : "var(--border)",
-                    background: params.difficulty === d ? "var(--brand)" : "transparent",
-                    color: params.difficulty === d ? "var(--brand-foreground)" : "var(--muted-foreground)",
+                    borderColor: sp.difficulty === d ? "var(--brand)" : "var(--border)",
+                    background: sp.difficulty === d ? "var(--brand)" : "transparent",
+                    color: sp.difficulty === d ? "var(--brand-foreground)" : "var(--muted-foreground)",
                   }}
                 >
-                  {d ? d.charAt(0).toUpperCase() + d.slice(1) : "All"}
+                  {d ? d.charAt(0).toUpperCase() + d.slice(1) : dict.common.all}
                 </Link>
               ))}
             </div>
@@ -199,7 +206,7 @@ export default async function QuestionsPage({
         {statusTabs.map(({ key, label }) => (
           <Link
             key={key}
-            href={buildFilterUrl(params, { status: key === "all" ? undefined : key })}
+            href={buildFilterUrl(questionsBase, sp, { status: key === "all" ? undefined : key })}
             className="px-4 py-2.5 text-sm font-medium border-b-2 transition-colors"
             style={{
               borderBottomColor: statusFilter === key ? "var(--brand)" : "transparent",
@@ -213,7 +220,7 @@ export default async function QuestionsPage({
           className="ml-auto self-center text-xs px-2"
           style={{ color: "var(--muted-foreground)" }}
         >
-          {filteredQuestions.length} questions
+          {filteredQuestions.length} {dict.common.questions}
         </span>
       </div>
 
@@ -222,10 +229,10 @@ export default async function QuestionsPage({
         <div className="text-center py-16">
           <BookOpen size={40} className="mx-auto mb-3" style={{ color: "var(--muted-foreground)" }} />
           <p className="font-medium" style={{ color: "var(--foreground)" }}>
-            No questions found
+            {dict.questionBank.noQuestions}
           </p>
           <p className="text-sm mt-1" style={{ color: "var(--muted-foreground)" }}>
-            Try adjusting your filters
+            {dict.common.filter}
           </p>
         </div>
       ) : (
@@ -237,7 +244,7 @@ export default async function QuestionsPage({
             return (
               <Link
                 key={q.id}
-                href={`/questions/${q.id}`}
+                href={localePath(lang, `/questions/${q.id}`)}
                 className="flex items-center gap-4 p-4 rounded-xl border transition-colors hover:border-gray-300"
                 style={{ background: "var(--card)", borderColor: "var(--border)" }}
               >
@@ -297,6 +304,7 @@ export default async function QuestionsPage({
 }
 
 function buildFilterUrl(
+  base: string,
   current: Record<string, string | undefined>,
   updates: Record<string, string | undefined>
 ): string {
@@ -306,5 +314,5 @@ function buildFilterUrl(
     if (v) params.set(k, v);
   }
   const qs = params.toString();
-  return `/questions${qs ? "?" + qs : ""}`;
+  return `${base}${qs ? "?" + qs : ""}`;
 }

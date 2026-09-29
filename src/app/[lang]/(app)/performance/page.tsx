@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getDictionary, localePath } from "@/lib/i18n";
 import Link from "next/link";
 import { Play, TrendingUp, TrendingDown, Calendar, BookOpen, Target } from "lucide-react";
 
@@ -21,14 +22,16 @@ function AccuracyBar({ value }: { value: number }) {
   );
 }
 
-export default async function PerformancePage() {
+export default async function PerformancePage({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang } = await params;
+  const dict = await getDictionary(lang);
   const supabase = await createClient();
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) redirect("/login");
+  if (!user) redirect(localePath(lang, "/login"));
 
   type AttemptRow = { id: string; question_id: string; is_correct: boolean; attempted_at: string };
   type MockExamRow = { id: string; exam_name: string | null; started_at: string; completed_at: string | null; question_count: number; score: number | null; percentage: number | null };
@@ -130,7 +133,7 @@ export default async function PerformancePage() {
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold" style={{ color: "var(--foreground)" }}>
-          Performance
+          {dict.performance.title}
         </h1>
         <p className="text-sm mt-1" style={{ color: "var(--muted-foreground)" }}>
           Track your progress and identify areas for improvement
@@ -141,18 +144,18 @@ export default async function PerformancePage() {
         <div className="text-center py-16">
           <TrendingUp size={48} className="mx-auto mb-3" style={{ color: "var(--muted-foreground)" }} />
           <p className="font-semibold" style={{ color: "var(--foreground)" }}>
-            No data yet
+            {dict.performance.noData}
           </p>
           <p className="text-sm mt-1 mb-4" style={{ color: "var(--muted-foreground)" }}>
             Start practicing to see your performance statistics
           </p>
           <Link
-            href="/practice"
+            href={localePath(lang, "/practice")}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium"
             style={{ background: "var(--brand)", color: "var(--brand-foreground)" }}
           >
             <Play size={14} />
-            Start Practice
+            {dict.dashboard.startPractice}
           </Link>
         </div>
       ) : (
@@ -161,13 +164,13 @@ export default async function PerformancePage() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {[
               {
-                label: "Total Answered",
+                label: dict.performance.totalAnswered,
                 value: total.toLocaleString(),
                 icon: BookOpen,
                 color: "var(--brand)",
               },
               {
-                label: "Overall Accuracy",
+                label: dict.performance.accuracy,
                 value: `${accuracy}%`,
                 icon: Target,
                 color:
@@ -178,13 +181,13 @@ export default async function PerformancePage() {
                     : "var(--destructive)",
               },
               {
-                label: "This Week",
+                label: dict.performance.thisWeek,
                 value: thisWeekAttempts.length.toLocaleString(),
                 icon: Calendar,
                 color: "var(--brand)",
               },
               {
-                label: "Weekly Accuracy",
+                label: dict.performance.weeklyAccuracy,
                 value: thisWeekAttempts.length > 0 ? `${thisWeekAccuracy}%` : "—",
                 icon: TrendingUp,
                 color:
@@ -222,7 +225,7 @@ export default async function PerformancePage() {
               >
                 <div className="px-5 py-4 border-b" style={{ borderColor: "var(--border)" }}>
                   <h2 className="font-semibold text-sm" style={{ color: "var(--foreground)" }}>
-                    Accuracy by Category
+                    {dict.performance.accuracyByCategory}
                   </h2>
                 </div>
                 <div className="p-5 space-y-4">
@@ -253,7 +256,7 @@ export default async function PerformancePage() {
                   <div className="px-5 py-4 border-b" style={{ borderColor: "var(--border)" }}>
                     <h2 className="font-semibold text-sm flex items-center gap-2" style={{ color: "var(--foreground)" }}>
                       <TrendingUp size={15} style={{ color: "var(--success)" }} />
-                      Strongest Topics
+                      {dict.performance.strongestTopics}
                     </h2>
                   </div>
                   <div className="divide-y" style={{ borderColor: "var(--border)" }}>
@@ -282,7 +285,7 @@ export default async function PerformancePage() {
                   <div className="px-5 py-4 border-b" style={{ borderColor: "var(--border)" }}>
                     <h2 className="font-semibold text-sm flex items-center gap-2" style={{ color: "var(--foreground)" }}>
                       <TrendingDown size={15} style={{ color: "var(--destructive)" }} />
-                      Needs Improvement
+                      {dict.performance.weakestTopics}
                     </h2>
                   </div>
                   <div className="divide-y" style={{ borderColor: "var(--border)" }}>
@@ -313,7 +316,7 @@ export default async function PerformancePage() {
             >
               <div className="px-5 py-4 border-b" style={{ borderColor: "var(--border)" }}>
                 <h2 className="font-semibold text-sm" style={{ color: "var(--foreground)" }}>
-                  Recent Mock Exams
+                  {dict.performance.recentMockExams}
                 </h2>
               </div>
               <div className="divide-y" style={{ borderColor: "var(--border)" }}>

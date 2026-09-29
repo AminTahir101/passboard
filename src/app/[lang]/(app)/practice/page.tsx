@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
+import { localePath } from "@/lib/i18n";
 import {
   Shuffle,
   Tag,
@@ -11,54 +12,57 @@ import {
   ChevronRight,
 } from "lucide-react";
 
-const PRACTICE_MODES = [
-  {
-    id: "random",
-    label: "Random Practice",
-    description: "Questions from across all topics and categories",
-    icon: Shuffle,
-    color: "var(--brand)",
-  },
-  {
-    id: "category",
-    label: "Practice by Category",
-    description: "Focus on a specific subject category",
-    icon: Tag,
-    color: "var(--warning)",
-  },
-  {
-    id: "topic",
-    label: "Practice by Topic",
-    description: "Drill down into a specific topic",
-    icon: BookMarked,
-    color: "var(--success)",
-  },
-  {
-    id: "incorrect",
-    label: "Practice Incorrect Questions",
-    description: "Revisit questions you got wrong",
-    icon: AlertCircle,
-    color: "var(--destructive)",
-  },
-  {
-    id: "unanswered",
-    label: "Practice Unanswered Questions",
-    description: "Fresh questions you haven't seen yet",
-    icon: BookOpen,
-    color: "var(--foreground)",
-  },
-];
-
 const QUESTION_COUNTS = [10, 20, 50, 100];
 
 export default function PracticePage() {
   const router = useRouter();
+  const params = useParams();
+  const lang = (params?.lang as string) ?? "ar";
+
+  const PRACTICE_MODES = [
+    {
+      id: "random",
+      label: "Random Practice",
+      description: "Questions from across all topics and categories",
+      icon: Shuffle,
+      color: "var(--brand)",
+    },
+    {
+      id: "category",
+      label: "Practice by Category",
+      description: "Focus on a specific subject category",
+      icon: Tag,
+      color: "var(--warning)",
+    },
+    {
+      id: "topic",
+      label: "Practice by Topic",
+      description: "Drill down into a specific topic",
+      icon: BookMarked,
+      color: "var(--success)",
+    },
+    {
+      id: "incorrect",
+      label: "Practice Incorrect Questions",
+      description: "Revisit questions you got wrong",
+      icon: AlertCircle,
+      color: "var(--destructive)",
+    },
+    {
+      id: "unanswered",
+      label: "Practice Unanswered Questions",
+      description: "Fresh questions you haven't seen yet",
+      icon: BookOpen,
+      color: "var(--foreground)",
+    },
+  ];
+
   const [selectedMode, setSelectedMode] = useState<string | null>(null);
   const [selectedCount, setSelectedCount] = useState(20);
 
   function handleStart() {
     if (!selectedMode) return;
-    router.push(`/practice/session?mode=${selectedMode}&count=${selectedCount}`);
+    router.push(localePath(lang, `/practice/session?mode=${selectedMode}&count=${selectedCount}`));
   }
 
   return (

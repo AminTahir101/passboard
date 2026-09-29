@@ -4,12 +4,15 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Loader2, Check, AlertCircle } from "lucide-react";
 import type { Profile } from "@/types/database";
+import type { Dictionary } from "@/lib/i18n";
 
 interface ProfileFormProps {
   profile: Profile;
+  dict?: Dictionary["profile"];
+  lang?: string;
 }
 
-export default function ProfileForm({ profile }: ProfileFormProps) {
+export default function ProfileForm({ profile, dict }: ProfileFormProps) {
   const [fullName, setFullName] = useState(profile.full_name ?? "");
   const [phone, setPhone] = useState(profile.phone ?? "");
   const [targetExam, setTargetExam] = useState(profile.target_exam ?? "");
@@ -54,7 +57,7 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-1.5">
           <label className="text-sm font-medium" style={{ color: "var(--foreground)" }}>
-            Full Name
+            {dict?.fullName ?? "Full Name"}
           </label>
           <input
             type="text"
@@ -74,7 +77,7 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
 
         <div className="space-y-1.5">
           <label className="text-sm font-medium" style={{ color: "var(--foreground)" }}>
-            Phone Number
+            {dict?.phone ?? "Phone Number"}
           </label>
           <input
             type="tel"
@@ -94,7 +97,7 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
 
         <div className="space-y-1.5">
           <label className="text-sm font-medium" style={{ color: "var(--foreground)" }}>
-            Target Exam
+            {dict?.targetExam ?? "Target Exam"}
           </label>
           <input
             type="text"
@@ -114,7 +117,7 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
 
         <div className="space-y-1.5">
           <label className="text-sm font-medium" style={{ color: "var(--foreground)" }}>
-            Exam Date
+            {dict?.examDate ?? "Exam Date"}
           </label>
           <input
             type="date"
@@ -139,7 +142,7 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
           style={{ background: "rgba(22,163,74,0.1)", color: "var(--success)" }}
         >
           <Check size={15} />
-          Profile updated successfully
+          {dict?.updateSuccess ?? "Profile updated successfully"}
         </div>
       )}
 
@@ -161,7 +164,7 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
           style={{ background: "var(--brand)", color: "var(--brand-foreground)" }}
         >
           {saving && <Loader2 size={14} className="animate-spin" />}
-          {saving ? "Saving…" : "Save Changes"}
+          {saving ? "Saving…" : (dict?.save ?? "Save Changes")}
         </button>
       </div>
     </form>

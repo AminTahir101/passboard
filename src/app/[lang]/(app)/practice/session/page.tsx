@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useEffect, useCallback, Suspense } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams, useRouter, useParams } from "next/navigation";
 import Link from "next/link";
+import { localePath } from "@/lib/i18n";
 import {
   CheckCircle2,
   XCircle,
@@ -59,6 +60,8 @@ function getOptionExplanation(q: SessionQuestion, opt: CorrectAnswer): string | 
 function PracticeSession() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const params = useParams();
+  const lang = (params?.lang as string) ?? "ar";
 
   const mode = searchParams.get("mode") ?? "random";
   const count = parseInt(searchParams.get("count") ?? "20", 10);
@@ -82,11 +85,11 @@ function PracticeSession() {
     setLoading(true);
     setError(null);
     try {
-      const params = new URLSearchParams({ mode, count: count.toString() });
-      if (category) params.set("category", category);
-      if (topic) params.set("topic", topic);
+      const qparams = new URLSearchParams({ mode, count: count.toString() });
+      if (category) qparams.set("category", category);
+      if (topic) qparams.set("topic", topic);
 
-      const res = await fetch(`/api/practice/questions?${params}`);
+      const res = await fetch(`/api/practice/questions?${qparams}`);
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
         throw new Error(data.error ?? "Failed to load questions");
@@ -171,7 +174,7 @@ function PracticeSession() {
             Try Again
           </button>
           <Link
-            href="/practice"
+            href={localePath(lang, "/practice")}
             className="px-4 py-2 rounded-lg text-sm font-medium border"
             style={{ borderColor: "var(--border)", color: "var(--foreground)" }}
           >
@@ -250,7 +253,7 @@ function PracticeSession() {
         </div>
         <div className="flex gap-3">
           <Link
-            href="/practice"
+            href={localePath(lang, "/practice")}
             className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium border"
             style={{ borderColor: "var(--border)", color: "var(--foreground)" }}
           >
@@ -286,7 +289,7 @@ function PracticeSession() {
       {/* Progress */}
       <div className="flex items-center justify-between">
         <Link
-          href="/practice"
+          href={localePath(lang, "/practice")}
           className="flex items-center gap-1 text-sm"
           style={{ color: "var(--muted-foreground)" }}
         >
@@ -482,7 +485,7 @@ function PracticeSession() {
         ) : (
           <>
             <Link
-              href={`/tutor?questionId=${question.id}`}
+              href={localePath(lang, `/tutor?questionId=${question.id}`)}
               className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-medium border"
               style={{ borderColor: "var(--border)", color: "var(--foreground)" }}
             >

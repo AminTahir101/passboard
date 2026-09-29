@@ -1,23 +1,28 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { getDictionary, localePath } from "@/lib/i18n";
 import { CheckCircle2, Brain, Play, BookOpen, Filter } from "lucide-react";
 
 type AttemptRow = { id: string; question_id: string; selected_answer: string; is_correct: boolean; attempted_at: string };
 
 export default async function MistakesPage({
+  params,
   searchParams,
 }: {
+  params: Promise<{ lang: string }>;
   searchParams: Promise<{ category?: string; topic?: string }>;
 }) {
-  const params = await searchParams;
+  const { lang } = await params;
+  const dict = await getDictionary(lang);
+  const sp = await searchParams;
   const supabase = await createClient();
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) redirect("/login");
+  if (!user) redirect(localePath(lang, "/login"));
 
   // Get all attempts, ordered by most recent
   const { data: attemptsRaw } = await supabase
@@ -62,8 +67,8 @@ export default async function MistakesPage({
       .in("id", incorrectIds)
       .eq("status", "published");
 
-    if (params.category) q = q.eq("category", params.category);
-    if (params.topic) q = q.eq("topic", params.topic);
+    if (sp.category) q = q.eq("category", sp.category);
+    if (sp.topic) q = q.eq("topic", sp.topic);
 
     const { data } = await q;
     questions = data ?? [];
@@ -80,15 +85,17 @@ export default async function MistakesPage({
   const allCategories = [...new Set(questions.map((q) => q.category).filter((x): x is string => Boolean(x)))];
   const allTopics = [...new Set(questions.map((q) => q.topic).filter((x): x is string => Boolean(x)))];
 
+  const mistakesBase = localePath(lang, "/mistakes");
+
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold" style={{ color: "var(--foreground)" }}>
-          My Mistakes
+          {dict.mistakes.title}
         </h1>
         <p className="text-sm mt-1" style={{ color: "var(--muted-foreground)" }}>
-          Questions where your most recent answer was incorrect
+          {dict.mistakes.subtitle}
         </p>
       </div>
 
@@ -113,12 +120,12 @@ export default async function MistakesPage({
         </div>
         {incorrectIds.length > 0 && (
           <Link
-            href={`/practice/session?mode=incorrect&count=${Math.min(incorrectIds.length, 50)}`}
+            href={localePath(lang, `/practice/session?mode=incorrect&count=${Math.min(incorrectIds.length, 50)}`)}
             className="ml-auto flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium"
             style={{ background: "var(--brand)", color: "var(--brand-foreground)" }}
           >
             <Play size={14} />
-            Practice All
+            {dict.mistakes.practiceAll}
           </Link>
         )}
       </div>
@@ -132,26 +139,26 @@ export default async function MistakesPage({
           <div className="flex items-center gap-2">
             <Filter size={14} style={{ color: "var(--muted-foreground)" }} />
             <span className="text-xs font-medium" style={{ color: "var(--muted-foreground)" }}>
-              Filters
+              {dict.common.filter}
             </span>
           </div>
           {allCategories.length > 0 && (
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-xs" style={{ color: "var(--muted-foreground)" }}>
-                Category:
+                {dict.common.category}:
               </span>
               {[undefined, ...allCategories].map((cat) => (
                 <Link
                   key={cat ?? "all"}
-                  href={buildUrl({ ...params, category: cat, topic: undefined })}
+                  href={buildUrl(mistakesBase, { ...sp, category: cat, topic: undefined })}
                   className="text-xs px-2.5 py-1 rounded-full border"
                   style={{
-                    borderColor: params.category === cat ? "var(--brand)" : "var(--border)",
-                    background: params.category === cat ? "var(--brand)" : "transparent",
-                    color: params.category === cat ? "var(--brand-foreground)" : "var(--muted-foreground)",
+                    borderColor: sp.category === cat ? "var(--brand)" : "var(--border)",
+                    background: sp.category === cat ? "var(--brand)" : "transparent",
+                    color: sp.category === cat ? "var(--brand-foreground)" : "var(--muted-foreground)",
                   }}
                 >
-                  {cat ?? "All"}
+                  {cat ?? dict.common.all}
                 </Link>
               ))}
             </div>
@@ -159,20 +166,20 @@ export default async function MistakesPage({
           {allTopics.length > 0 && (
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-xs" style={{ color: "var(--muted-foreground)" }}>
-                Topic:
+                {dict.common.topic}:
               </span>
               {[undefined, ...allTopics].map((topic) => (
                 <Link
                   key={topic ?? "all"}
-                  href={buildUrl({ ...params, topic })}
+                  href={buildUrl(mistakesBase, { ...sp, topic })}
                   className="text-xs px-2.5 py-1 rounded-full border"
                   style={{
-                    borderColor: params.topic === topic ? "var(--brand)" : "var(--border)",
-                    background: params.topic === topic ? "var(--brand)" : "transparent",
-                    color: params.topic === topic ? "var(--brand-foreground)" : "var(--muted-foreground)",
+                    borderColor: sp.topic === topic ? "var(--brand)" : "var(--border)",
+                    background: sp.topic === topic ? "var(--brand)" : "transparent",
+                    color: sp.topic === topic ? "var(--brand-foreground)" : "var(--muted-foreground)",
                   }}
                 >
-                  {topic ?? "All"}
+                  {topic ?? dict.common.all}
                 </Link>
               ))}
             </div>
@@ -185,21 +192,21 @@ export default async function MistakesPage({
         <div className="text-center py-16">
           <CheckCircle2 size={48} className="mx-auto mb-3" style={{ color: "var(--success)" }} />
           <p className="font-semibold" style={{ color: "var(--foreground)" }}>
-            {incorrectIds.length === 0 ? "No mistakes yet!" : "No mistakes match your filters"}
+            {incorrectIds.length === 0 ? dict.mistakes.noMistakes : "No mistakes match your filters"}
           </p>
           <p className="text-sm mt-1" style={{ color: "var(--muted-foreground)" }}>
             {incorrectIds.length === 0
-              ? "Start practicing to track your progress"
+              ? dict.mistakes.noMistakesDesc
               : "Try clearing your filters"}
           </p>
           {incorrectIds.length === 0 && (
             <Link
-              href="/practice"
+              href={localePath(lang, "/practice")}
               className="inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-lg text-sm font-medium"
               style={{ background: "var(--brand)", color: "var(--brand-foreground)" }}
             >
               <Play size={14} />
-              Start Practice
+              {dict.dashboard.startPractice}
             </Link>
           )}
         </div>
@@ -246,26 +253,26 @@ export default async function MistakesPage({
                     className="flex items-center gap-1 px-2 py-1 rounded-lg"
                     style={{ background: "rgba(239,68,68,0.1)", color: "var(--destructive)" }}
                   >
-                    Your answer: <strong>{attempt.selected_answer}</strong>
+                    {dict.mistakes.yourAnswer}: <strong>{attempt.selected_answer}</strong>
                   </span>
                   <span
                     className="flex items-center gap-1 px-2 py-1 rounded-lg"
                     style={{ background: "rgba(22,163,74,0.1)", color: "var(--success)" }}
                   >
-                    Correct: <strong>{q.correct_answer}</strong>
+                    {dict.mistakes.correctAnswer}: <strong>{q.correct_answer}</strong>
                   </span>
                 </div>
 
                 <div className="flex items-center gap-2 pt-1">
                   <Link
-                    href={`/questions/${q.id}`}
+                    href={localePath(lang, `/questions/${q.id}`)}
                     className="px-3 py-1.5 rounded-lg text-xs font-medium border"
                     style={{ borderColor: "var(--border)", color: "var(--foreground)" }}
                   >
                     Review
                   </Link>
                   <Link
-                    href={`/practice/session?mode=incorrect&count=10`}
+                    href={localePath(lang, "/practice/session?mode=incorrect&count=10")}
                     className="px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5"
                     style={{ background: "var(--secondary)", color: "var(--secondary-foreground)" }}
                   >
@@ -273,7 +280,7 @@ export default async function MistakesPage({
                     Practice Again
                   </Link>
                   <Link
-                    href={`/tutor?questionId=${q.id}`}
+                    href={localePath(lang, `/tutor?questionId=${q.id}`)}
                     className="px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5"
                     style={{ background: "var(--secondary)", color: "var(--secondary-foreground)" }}
                   >
@@ -290,11 +297,11 @@ export default async function MistakesPage({
   );
 }
 
-function buildUrl(params: Record<string, string | undefined>): string {
+function buildUrl(base: string, params: Record<string, string | undefined>): string {
   const p = new URLSearchParams();
   for (const [k, v] of Object.entries(params)) {
     if (v) p.set(k, v);
   }
   const qs = p.toString();
-  return `/mistakes${qs ? "?" + qs : ""}`;
+  return `${base}${qs ? "?" + qs : ""}`;
 }

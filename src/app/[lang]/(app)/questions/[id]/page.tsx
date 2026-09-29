@@ -1,6 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { getDictionary, localePath } from "@/lib/i18n";
 import { CheckCircle2, XCircle, Brain, ArrowLeft, Clock } from "lucide-react";
 import type { CorrectAnswer } from "@/types/database";
 
@@ -9,16 +10,17 @@ const OPTION_LABELS: CorrectAnswer[] = ["A", "B", "C", "D"];
 export default async function QuestionDetailPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ lang: string; id: string }>;
 }) {
-  const { id } = await params;
+  const { lang, id } = await params;
+  const dict = await getDictionary(lang);
   const supabase = await createClient();
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) redirect("/login");
+  if (!user) redirect(localePath(lang, "/login"));
 
   const { data: question } = await supabase
     .from("questions")
@@ -58,12 +60,12 @@ export default async function QuestionDetailPage({
     <div className="max-w-2xl mx-auto space-y-5">
       {/* Back */}
       <Link
-        href="/questions"
+        href={localePath(lang, "/questions")}
         className="inline-flex items-center gap-1.5 text-sm"
         style={{ color: "var(--muted-foreground)" }}
       >
         <ArrowLeft size={15} />
-        Question Bank
+        {dict.questionBank.title}
       </Link>
 
       {/* Metadata */}
@@ -99,7 +101,7 @@ export default async function QuestionDetailPage({
             }}
           >
             {lastAttempt.is_correct ? <CheckCircle2 size={11} /> : <XCircle size={11} />}
-            {lastAttempt.is_correct ? "Answered Correctly" : "Answered Incorrectly"}
+            {lastAttempt.is_correct ? dict.common.correct : dict.common.incorrect}
           </span>
         )}
       </div>
@@ -115,7 +117,7 @@ export default async function QuestionDetailPage({
           }}
         >
           <Clock size={14} />
-          Last attempted on {new Date(lastAttempt.attempted_at).toLocaleDateString()} — you answered{" "}
+          {dict.questionBank.answeredOn} {new Date(lastAttempt.attempted_at).toLocaleDateString()} — {dict.questionBank.yourAnswer}{" "}
           <strong style={{ color: "var(--foreground)" }}>{lastAttempt.selected_answer}</strong>
         </div>
       )}
@@ -203,19 +205,19 @@ export default async function QuestionDetailPage({
       {/* Actions */}
       <div className="flex gap-3">
         <Link
-          href={`/practice/session?mode=random&count=10`}
+          href={localePath(lang, "/practice/session?mode=random&count=10")}
           className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium border"
           style={{ borderColor: "var(--border)", color: "var(--foreground)" }}
         >
           Practice Similar
         </Link>
         <Link
-          href={`/tutor?questionId=${question.id}`}
+          href={localePath(lang, `/tutor?questionId=${question.id}`)}
           className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium"
           style={{ background: "var(--brand)", color: "var(--brand-foreground)" }}
         >
           <Brain size={16} />
-          Ask AI Tutor
+          {dict.practiceSession.askAI}
         </Link>
       </div>
     </div>
