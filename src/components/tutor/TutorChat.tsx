@@ -11,21 +11,17 @@ import {
   BookOpen,
 } from "lucide-react";
 import type { AiConversation, AiMessage, Question } from "@/types/database";
+import type { Dictionary } from "@/lib/i18n";
 
 interface Props {
   conversations: AiConversation[];
   userId: string;
   questionId?: string;
   initialQuestion?: Question | null;
+  dict: Dictionary["tutor"];
+  lang: string;
 }
 
-const SUGGESTED_PROMPTS = [
-  "Teach me a topic",
-  "Quiz me on a medical topic",
-  "Explain a clinical concept",
-  "Give me a clinical case scenario",
-  "Explain one of my recent mistakes",
-];
 
 function formatTime(ts: string) {
   const d = new Date(ts);
@@ -37,6 +33,8 @@ export default function TutorChat({
   userId,
   questionId,
   initialQuestion,
+  dict,
+  lang: _lang,
 }: Props) {
   const [conversations, setConversations] =
     useState<AiConversation[]>(initialConversations);
@@ -192,7 +190,7 @@ export default function TutorChat({
               className="font-semibold text-sm"
               style={{ color: "var(--foreground)" }}
             >
-              AI Tutor
+              {dict.title}
             </span>
           </div>
           <button
@@ -211,7 +209,7 @@ export default function TutorChat({
             }}
           >
             <Plus size={15} />
-            New Conversation
+            {dict.newConversation}
           </button>
         </div>
 
@@ -221,7 +219,7 @@ export default function TutorChat({
               className="text-xs px-3 py-4 text-center"
               style={{ color: "var(--muted-foreground)" }}
             >
-              No conversations yet
+              {dict.noConversations}
             </p>
           ) : (
             <ul className="space-y-0.5">
@@ -257,7 +255,7 @@ export default function TutorChat({
                       <MessageSquare size={13} className="mt-0.5 shrink-0" />
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-xs font-medium leading-tight">
-                          {conv.title || "Untitled conversation"}
+                          {conv.title || dict.conversations}
                         </p>
                         <p
                           className="text-xs mt-0.5"
@@ -292,7 +290,7 @@ export default function TutorChat({
             onMouseLeave={(e) => {
               e.currentTarget.style.background = "transparent";
             }}
-            title="Toggle sidebar"
+            title={dict.conversations}
           >
             <MessageSquare size={17} />
           </button>
@@ -300,7 +298,7 @@ export default function TutorChat({
             className="font-semibold text-base"
             style={{ color: "var(--foreground)" }}
           >
-            AI Tutor
+            {dict.title}
           </h1>
 
           {/* Question context banner */}
@@ -314,7 +312,7 @@ export default function TutorChat({
             >
               <BookOpen size={13} />
               <span className="truncate max-w-xs">
-                Discussing:{" "}
+                {dict.questionContext}{" "}
                 <span style={{ color: "var(--foreground)" }}>
                   {initialQuestion.question_text.slice(0, 80)}
                   {initialQuestion.question_text.length > 80 ? "…" : ""}
@@ -346,17 +344,16 @@ export default function TutorChat({
                 className="text-xl font-semibold mb-2"
                 style={{ color: "var(--foreground)" }}
               >
-                Moraje3 AI Tutor
+                {dict.title}
               </h2>
               <p
                 className="text-sm text-center mb-8 max-w-sm"
                 style={{ color: "var(--muted-foreground)" }}
               >
-                Your personal medical exam study companion. Ask me anything to
-                get started.
+                {dict.subtitle}
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 w-full max-w-xl">
-                {SUGGESTED_PROMPTS.map((prompt) => (
+                {dict.suggestedPrompts.map((prompt) => (
                   <button
                     key={prompt}
                     onClick={() => sendMessage(prompt)}
@@ -494,7 +491,7 @@ export default function TutorChat({
                 value={input}
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
-                placeholder="Ask anything about medicine or your exam…"
+                placeholder={dict.placeholder}
                 rows={1}
                 className="flex-1 resize-none bg-transparent text-sm outline-none"
                 style={{
@@ -523,7 +520,7 @@ export default function TutorChat({
               className="text-xs mt-2 text-center"
               style={{ color: "var(--muted-foreground)" }}
             >
-              Press Enter to send · Shift+Enter for new line
+              {dict.send}
             </p>
           </div>
         </div>

@@ -1,14 +1,19 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getDictionary, localePath } from "@/lib/i18n";
 import TutorChat from "@/components/tutor/TutorChat";
 import type { AiConversation, Question } from "@/types/database";
 
 interface TutorPageProps {
+  params: Promise<{ lang: string }>;
   searchParams: Promise<{ questionId?: string }>;
 }
 
-export default async function TutorPage({ searchParams }: TutorPageProps) {
+export default async function TutorPage({ params, searchParams }: TutorPageProps) {
+  const { lang } = await params;
   const { questionId } = await searchParams;
+  const dict = await getDictionary(lang);
+
   const supabase = await createClient();
 
   const {
@@ -16,7 +21,7 @@ export default async function TutorPage({ searchParams }: TutorPageProps) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect("/login");
+    redirect(localePath(lang, "/login"));
   }
 
   const { data: conversations } = await supabase
@@ -43,6 +48,8 @@ export default async function TutorPage({ searchParams }: TutorPageProps) {
         userId={user.id}
         questionId={questionId}
         initialQuestion={initialQuestion}
+        dict={dict.tutor}
+        lang={lang}
       />
     </div>
   );

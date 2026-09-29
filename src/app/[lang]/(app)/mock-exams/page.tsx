@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { getDictionary, localePath } from "@/lib/i18n";
 import { Plus, ClipboardList, CheckCircle2, Clock, Percent } from "lucide-react";
 import type { MockExam } from "@/types/database";
 
@@ -24,14 +25,22 @@ function formatDate(dateStr: string): string {
   });
 }
 
-export default async function MockExamsPage() {
+export default async function MockExamsPage({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}) {
+  const { lang } = await params;
+  const dict = await getDictionary(lang);
+  const t = dict.mockExams;
+
   const supabase = await createClient();
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) redirect("/login");
+  if (!user) redirect(localePath(lang, "/login"));
 
   const { data: examsRaw } = await supabase
     .from("mock_exams")
@@ -52,19 +61,19 @@ export default async function MockExamsPage() {
             className="text-2xl font-bold"
             style={{ color: "var(--foreground)" }}
           >
-            Mock Exams
+            {t.title}
           </h1>
           <p className="text-sm mt-1" style={{ color: "var(--muted-foreground)" }}>
-            Simulate real exam conditions and track your performance
+            {t.noExamsDesc}
           </p>
         </div>
         <Link
-          href="/mock-exams/new"
+          href={localePath(lang, "/mock-exams/new")}
           className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
           style={{ background: "var(--brand)", color: "var(--brand-foreground)" }}
         >
           <Plus size={16} />
-          Start New Exam
+          {t.newExam}
         </Link>
       </div>
 
@@ -76,7 +85,7 @@ export default async function MockExamsPage() {
             style={{ background: "var(--card)", borderColor: "var(--border)" }}
           >
             <p className="text-xs mb-1" style={{ color: "var(--muted-foreground)" }}>
-              Total Exams
+              {t.completed}
             </p>
             <p className="text-2xl font-bold" style={{ color: "var(--foreground)" }}>
               {completedExams.length}
@@ -87,7 +96,7 @@ export default async function MockExamsPage() {
             style={{ background: "var(--card)", borderColor: "var(--border)" }}
           >
             <p className="text-xs mb-1" style={{ color: "var(--muted-foreground)" }}>
-              Avg Score
+              {dict.performance.accuracy}
             </p>
             <p className="text-2xl font-bold" style={{ color: "var(--foreground)" }}>
               {Math.round(
@@ -102,7 +111,7 @@ export default async function MockExamsPage() {
             style={{ background: "var(--card)", borderColor: "var(--border)" }}
           >
             <p className="text-xs mb-1" style={{ color: "var(--muted-foreground)" }}>
-              Best Score
+              {t.score}
             </p>
             <p className="text-2xl font-bold" style={{ color: "var(--success)" }}>
               {Math.max(...completedExams.map((e) => e.percentage || 0))}%
@@ -118,7 +127,7 @@ export default async function MockExamsPage() {
             className="text-sm font-semibold mb-3"
             style={{ color: "var(--muted-foreground)" }}
           >
-            IN PROGRESS
+            {t.inProgress.toUpperCase()}
           </h2>
           <div className="space-y-3">
             {inProgressExams.map((exam) => (
@@ -136,19 +145,19 @@ export default async function MockExamsPage() {
                   </div>
                   <div>
                     <p className="font-medium text-sm" style={{ color: "var(--foreground)" }}>
-                      {exam.exam_name || "Mock Exam"}
+                      {exam.exam_name || t.title}
                     </p>
                     <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>
-                      Started {formatDate(exam.started_at)} · {exam.question_count} questions
+                      {t.started} {formatDate(exam.started_at)} · {exam.question_count} {t.questions}
                     </p>
                   </div>
                 </div>
                 <Link
-                  href={`/mock-exams/${exam.id}/session`}
+                  href={localePath(lang, `/mock-exams/${exam.id}/session`)}
                   className="px-3 py-1.5 rounded-lg text-xs font-medium"
                   style={{ background: "var(--brand)", color: "var(--brand-foreground)" }}
                 >
-                  Continue
+                  {t.resume}
                 </Link>
               </div>
             ))}
@@ -162,7 +171,7 @@ export default async function MockExamsPage() {
           className="text-sm font-semibold mb-3"
           style={{ color: "var(--muted-foreground)" }}
         >
-          COMPLETED EXAMS
+          {t.completed.toUpperCase()}
         </h2>
 
         {completedExams.length === 0 ? (
@@ -176,18 +185,18 @@ export default async function MockExamsPage() {
               style={{ color: "var(--muted-foreground)" }}
             />
             <p className="font-medium mb-1" style={{ color: "var(--foreground)" }}>
-              No completed exams yet
+              {t.noExams}
             </p>
             <p className="text-sm mb-4" style={{ color: "var(--muted-foreground)" }}>
-              Take your first mock exam to simulate real exam conditions
+              {t.noExamsDesc}
             </p>
             <Link
-              href="/mock-exams/new"
+              href={localePath(lang, "/mock-exams/new")}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium"
               style={{ background: "var(--brand)", color: "var(--brand-foreground)" }}
             >
               <Plus size={15} />
-              Start Your First Exam
+              {t.startNew}
             </Link>
           </div>
         ) : (
@@ -216,7 +225,7 @@ export default async function MockExamsPage() {
                           className="font-medium text-sm"
                           style={{ color: "var(--foreground)" }}
                         >
-                          {exam.exam_name || "Mock Exam"}
+                          {exam.exam_name || t.title}
                         </p>
                         <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>
                           {formatDate(exam.started_at)}
@@ -247,24 +256,24 @@ export default async function MockExamsPage() {
 
                     <div className="flex items-center gap-2">
                       <Link
-                        href={`/mock-exams/${exam.id}/results`}
+                        href={localePath(lang, `/mock-exams/${exam.id}/results`)}
                         className="px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors"
                         style={{
                           borderColor: "var(--border)",
                           color: "var(--foreground)",
                         }}
                       >
-                        Results
+                        {t.results}
                       </Link>
                       <Link
-                        href={`/mock-exams/${exam.id}/review`}
+                        href={localePath(lang, `/mock-exams/${exam.id}/review`)}
                         className="px-3 py-1.5 rounded-lg text-xs font-medium"
                         style={{
                           background: "var(--brand)",
                           color: "var(--brand-foreground)",
                         }}
                       >
-                        Review
+                        {dict.mockExamReview.title}
                       </Link>
                     </div>
                   </div>

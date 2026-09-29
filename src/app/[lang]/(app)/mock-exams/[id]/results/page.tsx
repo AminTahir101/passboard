@@ -1,6 +1,7 @@
 import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { getDictionary, localePath } from "@/lib/i18n";
 import type { MockExam } from "@/types/database";
 import {
   CheckCircle2,
@@ -28,27 +29,27 @@ function getScoreColor(pct: number): string {
   return "var(--destructive)";
 }
 
-function getScoreLabel(pct: number): string {
-  if (pct >= 80) return "Excellent";
-  if (pct >= 70) return "Pass";
-  if (pct >= 60) return "Near Pass";
-  if (pct >= 50) return "Below Pass";
-  return "Needs Improvement";
+function getScoreLabel(pct: number, t: { passed: string; failed: string }): string {
+  if (pct >= 70) return t.passed;
+  return t.failed;
 }
 
 export default async function MockExamResultsPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ lang: string; id: string }>;
 }) {
-  const { id } = await params;
+  const { lang, id } = await params;
+  const dict = await getDictionary(lang);
+  const t = dict.mockExamResults;
+
   const supabase = await createClient();
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) redirect("/login");
+  if (!user) redirect(localePath(lang, "/login"));
 
   const { data: examRaw } = await supabase
     .from("mock_exams")
@@ -61,7 +62,7 @@ export default async function MockExamResultsPage({
   const exam = examRaw as MockExam;
 
   if (!exam.completed_at) {
-    redirect(`/mock-exams/${id}/session`);
+    redirect(localePath(lang, `/mock-exams/${id}/session`));
   }
 
   type AnswerWithQuestion = {
@@ -130,18 +131,18 @@ export default async function MockExamResultsPage({
 
   const pct = exam.percentage ?? 0;
   const scoreColor = getScoreColor(pct);
-  const scoreLabel = getScoreLabel(pct);
+  const scoreLabel = getScoreLabel(pct, t);
 
   return (
     <div className="max-w-3xl mx-auto">
       {/* Back */}
       <Link
-        href="/mock-exams"
+        href={localePath(lang, "/mock-exams")}
         className="inline-flex items-center gap-1.5 text-sm mb-6"
         style={{ color: "var(--muted-foreground)" }}
       >
         <ChevronLeft size={16} />
-        All Mock Exams
+        {t.backToExams}
       </Link>
 
       {/* Score hero */}
@@ -153,7 +154,7 @@ export default async function MockExamResultsPage({
           className="text-sm font-medium mb-2"
           style={{ color: "var(--muted-foreground)" }}
         >
-          {exam.exam_name || "Mock Exam"} Results
+          {exam.exam_name || t.title} {t.title}
         </p>
         <div
           className="text-7xl font-bold mb-2"
@@ -171,7 +172,7 @@ export default async function MockExamResultsPage({
           {scoreLabel}
         </div>
         <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>
-          {exam.score} correct out of {exam.question_count} questions
+          {exam.score} {t.correct} / {exam.question_count} {t.totalQuestions}
         </p>
       </div>
 
@@ -190,7 +191,7 @@ export default async function MockExamResultsPage({
             {correctAnswers.length}
           </p>
           <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>
-            Correct
+            {t.correct}
           </p>
         </div>
         <div
@@ -209,7 +210,7 @@ export default async function MockExamResultsPage({
             {incorrectAnswers.length}
           </p>
           <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>
-            Incorrect
+            {t.incorrect}
           </p>
         </div>
         <div
@@ -228,7 +229,7 @@ export default async function MockExamResultsPage({
             {skippedAnswers.length}
           </p>
           <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>
-            Skipped
+            {t.unanswered}
           </p>
         </div>
         <div
@@ -247,7 +248,7 @@ export default async function MockExamResultsPage({
             {formatDuration(exam.duration_seconds)}
           </p>
           <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>
-            Time Taken
+            {t.timeTaken}
           </p>
         </div>
       </div>
@@ -264,7 +265,7 @@ export default async function MockExamResultsPage({
               className="font-semibold text-sm"
               style={{ color: "var(--foreground)" }}
             >
-              Accuracy by Category
+              {t.accuracyByCategory}
             </h3>
           </div>
 
@@ -280,7 +281,7 @@ export default async function MockExamResultsPage({
                   className="text-xs mb-0.5"
                   style={{ color: "var(--success)" }}
                 >
-                  Strongest
+                  {t.strongestTopics}
                 </p>
                 <p
                   className="text-sm font-medium truncate"
@@ -303,7 +304,7 @@ export default async function MockExamResultsPage({
                   className="text-xs mb-0.5"
                   style={{ color: "var(--destructive)" }}
                 >
-                  Needs Work
+                  {t.weakestTopics}
                 </p>
                 <p
                   className="text-sm font-medium truncate"
@@ -356,22 +357,22 @@ export default async function MockExamResultsPage({
       {/* Actions */}
       <div className="flex gap-3">
         <Link
-          href={`/mock-exams/${id}/review`}
+          href={localePath(lang, `/mock-exams/${id}/review`)}
           className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-medium"
           style={{ background: "var(--brand)", color: "var(--brand-foreground)" }}
         >
-          Review Answers
+          {t.reviewAnswers}
           <ArrowRight size={16} />
         </Link>
         <Link
-          href="/mock-exams/new"
+          href={localePath(lang, "/mock-exams/new")}
           className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-medium border"
           style={{
             borderColor: "var(--border)",
             color: "var(--foreground)",
           }}
         >
-          Take New Exam
+          {t.newExam}
         </Link>
       </div>
     </div>

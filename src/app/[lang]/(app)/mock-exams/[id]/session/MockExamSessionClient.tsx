@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
   Flag,
   ChevronLeft,
@@ -12,6 +12,14 @@ import {
   Grid3X3,
   X,
 } from "lucide-react";
+import { localePath } from "@/lib/i18n";
+import type { Dictionary } from "@/lib/i18n";
+
+interface Props {
+  dict: Dictionary["mockExamSession"];
+  lang: string;
+  id: string;
+}
 
 interface QuestionData {
   id: string;
@@ -64,10 +72,9 @@ function getOptionText(q: QuestionData, key: string): string {
   return map[key] || "";
 }
 
-export default function MockExamSessionPage() {
-  const params = useParams();
+export default function MockExamSessionClient({ dict, lang, id }: Props) {
+  const examId = id;
   const router = useRouter();
-  const examId = params.id as string;
 
   const [exam, setExam] = useState<ExamInfo | null>(null);
   const [questions, setQuestions] = useState<ExamQuestion[]>([]);
@@ -96,7 +103,7 @@ export default function MockExamSessionPage() {
         const data = await res.json();
 
         if (data.exam?.completed_at) {
-          router.replace(`/mock-exams/${examId}/results`);
+          router.replace(localePath(lang, `/mock-exams/${examId}/results`));
           return;
         }
 
@@ -116,7 +123,7 @@ export default function MockExamSessionPage() {
       }
     }
     load();
-  }, [examId, router]);
+  }, [examId, router, lang]);
 
   // Timer
   useEffect(() => {
@@ -171,12 +178,12 @@ export default function MockExamSessionPage() {
         return;
       }
 
-      router.push(`/mock-exams/${examId}/results`);
+      router.push(localePath(lang, `/mock-exams/${examId}/results`));
     } catch {
       alert("Failed to submit exam. Please try again.");
       setSubmitting(false);
     }
-  }, [questions, answers, examId, router, timer]);
+  }, [questions, answers, examId, router, timer, lang]);
 
   const answeredCount = Object.values(answers).filter(
     (a) => a !== null && a !== undefined
@@ -229,7 +236,7 @@ export default function MockExamSessionPage() {
             className="font-semibold text-sm"
             style={{ color: "var(--foreground)" }}
           >
-            Question {currentIndex + 1} / {questions.length}
+            {dict.questionOf.replace("{current}", String(currentIndex + 1)).replace("{total}", String(questions.length))}
           </span>
           {q.category && (
             <span
@@ -273,7 +280,7 @@ export default function MockExamSessionPage() {
               color: "var(--brand-foreground)",
             }}
           >
-            Submit Exam
+            {dict.submit}
           </button>
         </div>
       </div>
@@ -358,7 +365,7 @@ export default function MockExamSessionPage() {
           style={{ borderColor: "var(--border)", color: "var(--foreground)" }}
         >
           <ChevronLeft size={16} />
-          Previous
+          {dict.previous}
         </button>
 
         <button
@@ -377,7 +384,7 @@ export default function MockExamSessionPage() {
           }}
         >
           <Flag size={15} />
-          {flags[currentQuestionId] ? "Flagged" : "Flag"}
+          {flags[currentQuestionId] ? dict.flagged : dict.flag}
         </button>
 
         <button
@@ -388,7 +395,7 @@ export default function MockExamSessionPage() {
           className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm border transition-colors disabled:opacity-40"
           style={{ borderColor: "var(--border)", color: "var(--foreground)" }}
         >
-          Next
+          {dict.next}
           <ChevronRight size={16} />
         </button>
       </div>
@@ -413,7 +420,7 @@ export default function MockExamSessionPage() {
                 className="font-semibold text-sm"
                 style={{ color: "var(--foreground)" }}
               >
-                Question Navigator
+                Navigator
               </h3>
               <button
                 onClick={() => setShowNavigator(false)}
@@ -426,8 +433,8 @@ export default function MockExamSessionPage() {
             <div className="px-4 py-3 border-b" style={{ borderColor: "var(--border)" }}>
               <div className="flex gap-4 text-xs" style={{ color: "var(--muted-foreground)" }}>
                 <span>{answeredCount} answered</span>
-                <span>{unansweredCount} unanswered</span>
-                <span>{flaggedCount} flagged</span>
+                <span>{unansweredCount} {dict.unansweredWarning}</span>
+                <span>{flaggedCount} {dict.flagged}</span>
               </div>
             </div>
 
@@ -490,7 +497,7 @@ export default function MockExamSessionPage() {
                   color: "var(--brand-foreground)",
                 }}
               >
-                Submit Exam
+                {dict.submit}
               </button>
             </div>
           </div>
@@ -512,10 +519,10 @@ export default function MockExamSessionPage() {
                 className="text-lg font-semibold mb-2"
                 style={{ color: "var(--foreground)" }}
               >
-                Submit Exam?
+                {dict.confirmTitle}
               </h3>
               <p className="text-sm mb-4" style={{ color: "var(--muted-foreground)" }}>
-                Once submitted, you cannot change your answers.
+                {dict.confirmMessage}
               </p>
 
               <div
@@ -529,7 +536,7 @@ export default function MockExamSessionPage() {
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Unanswered</span>
+                  <span>{dict.unansweredWarning}</span>
                   <span
                     style={{
                       color:
@@ -543,13 +550,13 @@ export default function MockExamSessionPage() {
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Flagged</span>
+                  <span>{dict.flagged}</span>
                   <span style={{ color: "var(--foreground)", fontWeight: 500 }}>
                     {flaggedCount}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Time</span>
+                  <span>{dict.timeRemaining}</span>
                   <span style={{ color: "var(--foreground)", fontWeight: 500 }}>
                     {formatTimer(timer)}
                   </span>
@@ -566,7 +573,7 @@ export default function MockExamSessionPage() {
                     color: "var(--foreground)",
                   }}
                 >
-                  Continue Exam
+                  {dict.cancel}
                 </button>
                 <button
                   onClick={handleSubmit}
@@ -580,10 +587,10 @@ export default function MockExamSessionPage() {
                   {submitting ? (
                     <>
                       <Loader2 size={15} className="animate-spin" />
-                      Submitting…
+                      {dict.submit}…
                     </>
                   ) : (
-                    "Submit Exam"
+                    dict.submit
                   )}
                 </button>
               </div>

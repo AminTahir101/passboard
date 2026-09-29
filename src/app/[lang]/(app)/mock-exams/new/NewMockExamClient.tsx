@@ -1,28 +1,47 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { ChevronLeft, ClipboardList, Loader2 } from "lucide-react";
+import { localePath } from "@/lib/i18n";
+import type { Dictionary } from "@/lib/i18n";
 
-const EXAM_OPTIONS = [
-  { value: "", label: "All Exams (Mixed)" },
-  { value: "USMLE Step 1", label: "USMLE Step 1" },
-  { value: "USMLE Step 2 CK", label: "USMLE Step 2 CK" },
-  { value: "USMLE Step 3", label: "USMLE Step 3" },
-  { value: "MCCQE Part 1", label: "MCCQE Part 1" },
-  { value: "MCCQE Part 2", label: "MCCQE Part 2" },
-  { value: "PLAB 1", label: "PLAB 1" },
-  { value: "PLAB 2", label: "PLAB 2" },
-  { value: "AMC MCQ", label: "AMC MCQ" },
+interface Props {
+  dict: Dictionary["mockExamNew"];
+  lang: string;
+}
+
+const EXAM_OPTIONS_VALUES = [
+  "",
+  "USMLE Step 1",
+  "USMLE Step 2 CK",
+  "USMLE Step 3",
+  "MCCQE Part 1",
+  "MCCQE Part 2",
+  "PLAB 1",
+  "PLAB 2",
+  "AMC MCQ",
 ];
 
-export default function NewMockExamPage() {
+export default function NewMockExamClient({ dict, lang }: Props) {
   const router = useRouter();
   const [examName, setExamName] = useState("");
   const [questionCount, setQuestionCount] = useState<50 | 100>(50);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const examOptions = [
+    { value: "", label: dict.allExams },
+    { value: "USMLE Step 1", label: "USMLE Step 1" },
+    { value: "USMLE Step 2 CK", label: "USMLE Step 2 CK" },
+    { value: "USMLE Step 3", label: "USMLE Step 3" },
+    { value: "MCCQE Part 1", label: "MCCQE Part 1" },
+    { value: "MCCQE Part 2", label: "MCCQE Part 2" },
+    { value: "PLAB 1", label: "PLAB 1" },
+    { value: "PLAB 2", label: "PLAB 2" },
+    { value: "AMC MCQ", label: "AMC MCQ" },
+  ];
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -43,7 +62,7 @@ export default function NewMockExamPage() {
         return;
       }
 
-      router.push(`/mock-exams/${data.mockExamId}/session`);
+      router.push(localePath(lang, `/mock-exams/${data.mockExamId}/session`));
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {
@@ -55,12 +74,12 @@ export default function NewMockExamPage() {
     <div className="max-w-xl mx-auto">
       {/* Back */}
       <Link
-        href="/mock-exams"
+        href={localePath(lang, "/mock-exams")}
         className="inline-flex items-center gap-1.5 text-sm mb-6 transition-colors"
         style={{ color: "var(--muted-foreground)" }}
       >
         <ChevronLeft size={16} />
-        Back to Mock Exams
+        {dict.title}
       </Link>
 
       {/* Header */}
@@ -73,10 +92,10 @@ export default function NewMockExamPage() {
         </div>
         <div>
           <h1 className="text-2xl font-bold" style={{ color: "var(--foreground)" }}>
-            New Mock Exam
+            {dict.title}
           </h1>
           <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>
-            Configure your exam settings below
+            {dict.subtitle}
           </p>
         </div>
       </div>
@@ -92,7 +111,7 @@ export default function NewMockExamPage() {
               className="block text-sm font-medium mb-2"
               style={{ color: "var(--foreground)" }}
             >
-              Exam Type
+              {dict.examType}
             </label>
             <select
               value={examName}
@@ -104,14 +123,14 @@ export default function NewMockExamPage() {
                 color: "var(--foreground)",
               }}
             >
-              {EXAM_OPTIONS.map((opt) => (
+              {examOptions.map((opt) => (
                 <option key={opt.value} value={opt.value}>
                   {opt.label}
                 </option>
               ))}
             </select>
             <p className="text-xs mt-1.5" style={{ color: "var(--muted-foreground)" }}>
-              Questions will be randomly selected from the question bank
+              {dict.selectExam}
             </p>
           </div>
 
@@ -121,7 +140,7 @@ export default function NewMockExamPage() {
               className="block text-sm font-medium mb-3"
               style={{ color: "var(--foreground)" }}
             >
-              Number of Questions
+              {dict.questionCount}
             </label>
             <div className="flex gap-3">
               {([50, 100] as const).map((count) => (
@@ -146,23 +165,10 @@ export default function NewMockExamPage() {
                   }}
                 >
                   <span className="text-2xl font-bold">{count}</span>
-                  <span className="text-xs">questions</span>
-                  <span className="text-xs opacity-70">
-                    ~{count === 50 ? "1 hour" : "2 hours"}
-                  </span>
+                  <span className="text-xs">{count === 50 ? dict.q50 : dict.q100}</span>
                 </button>
               ))}
             </div>
-          </div>
-
-          {/* Info */}
-          <div
-            className="rounded-lg px-4 py-3 text-sm space-y-1"
-            style={{ background: "var(--muted)", color: "var(--muted-foreground)" }}
-          >
-            <p>• Timer will count up during your exam</p>
-            <p>• Answers are only revealed after submission</p>
-            <p>• You can flag questions to revisit before submitting</p>
           </div>
 
           {/* Error */}
@@ -182,12 +188,12 @@ export default function NewMockExamPage() {
           {loading ? (
             <>
               <Loader2 size={17} className="animate-spin" />
-              Creating exam…
+              {dict.start}…
             </>
           ) : (
             <>
               <ClipboardList size={17} />
-              Start Mock Exam
+              {dict.start}
             </>
           )}
         </button>

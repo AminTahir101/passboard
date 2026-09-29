@@ -1,6 +1,7 @@
 import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { getDictionary, localePath } from "@/lib/i18n";
 import type { MockExam } from "@/types/database";
 import {
   CheckCircle2,
@@ -34,16 +35,19 @@ function getOptionText(
 export default async function MockExamReviewPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ lang: string; id: string }>;
 }) {
-  const { id } = await params;
+  const { lang, id } = await params;
+  const dict = await getDictionary(lang);
+  const t = dict.mockExamReview;
+
   const supabase = await createClient();
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) redirect("/login");
+  if (!user) redirect(localePath(lang, "/login"));
 
   const { data: examRaw } = await supabase
     .from("mock_exams")
@@ -56,7 +60,7 @@ export default async function MockExamReviewPage({
   const exam = examRaw as MockExam;
 
   if (!exam.completed_at) {
-    redirect(`/mock-exams/${id}/session`);
+    redirect(localePath(lang, `/mock-exams/${id}/session`));
   }
 
   type ExamQuestionWithDetails = {
@@ -133,18 +137,18 @@ export default async function MockExamReviewPage({
       <div className="flex items-center justify-between mb-6">
         <div>
           <Link
-            href={`/mock-exams/${id}/results`}
+            href={localePath(lang, `/mock-exams/${id}/results`)}
             className="inline-flex items-center gap-1.5 text-sm mb-2"
             style={{ color: "var(--muted-foreground)" }}
           >
             <ChevronLeft size={16} />
-            Back to Results
+            {t.backToResults}
           </Link>
           <h1 className="text-2xl font-bold" style={{ color: "var(--foreground)" }}>
-            Answer Review
+            {t.title}
           </h1>
           <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>
-            {exam.exam_name || "Mock Exam"} · {questions.length} questions
+            {exam.exam_name || t.title} · {questions.length} {dict.mockExams.questions}
           </p>
         </div>
 
@@ -157,7 +161,7 @@ export default async function MockExamReviewPage({
             }}
           >
             <CheckCircle2 size={13} />
-            {exam.score} correct
+            {exam.score} {t.correct}
           </span>
           <span
             className="flex items-center gap-1 px-3 py-1.5 rounded-full"
@@ -168,7 +172,7 @@ export default async function MockExamReviewPage({
             }}
           >
             <XCircle size={13} />
-            {(exam.question_count || 0) - (exam.score || 0)} incorrect
+            {(exam.question_count || 0) - (exam.score || 0)} {t.incorrect}
           </span>
         </div>
       </div>
@@ -245,10 +249,10 @@ export default async function MockExamReviewPage({
                     >
                       Q{idx + 1}
                       {wasSkipped
-                        ? " · Skipped"
+                        ? ` · ${t.unanswered}`
                         : isCorrect === true
-                        ? " · Correct"
-                        : " · Incorrect"}
+                        ? ` · ${t.correct}`
+                        : ` · ${t.incorrect}`}
                     </span>
                     {q?.category && (
                       <span
@@ -269,11 +273,11 @@ export default async function MockExamReviewPage({
                         style={{ color: "var(--warning)" }}
                       >
                         <Flag size={12} />
-                        Flagged
+                        {t.flagged}
                       </span>
                     )}
                     <Link
-                      href={`/tutor?questionId=${examQ.question_id}`}
+                      href={localePath(lang, `/tutor?questionId=${examQ.question_id}`)}
                       className="flex items-center gap-1 text-xs px-2 py-1 rounded-lg transition-colors"
                       style={{
                         color: "var(--brand)",
@@ -282,7 +286,7 @@ export default async function MockExamReviewPage({
                       }}
                     >
                       <Brain size={12} />
-                      Ask Tutor
+                      {dict.practiceSession.askAI}
                     </Link>
                   </div>
                 </div>
@@ -352,7 +356,7 @@ export default async function MockExamReviewPage({
                                 className="ml-2 text-xs font-semibold"
                                 style={{ color: "var(--success)" }}
                               >
-                                ✓ Correct
+                                ✓ {t.correctAnswer}
                               </span>
                             )}
                             {isWrongSelection && (
@@ -360,7 +364,7 @@ export default async function MockExamReviewPage({
                                 className="ml-2 text-xs font-semibold"
                                 style={{ color: "var(--destructive)" }}
                               >
-                                ✗ Your answer
+                                ✗ {t.yourAnswer}
                               </span>
                             )}
                           </span>
@@ -382,7 +386,7 @@ export default async function MockExamReviewPage({
                         className="text-xs font-semibold mb-1"
                         style={{ color: "var(--brand)" }}
                       >
-                        Explanation
+                        {t.justification}
                       </p>
                       <p
                         className="text-sm leading-relaxed"
@@ -402,19 +406,19 @@ export default async function MockExamReviewPage({
       {/* Bottom actions */}
       <div className="flex gap-3 mt-8">
         <Link
-          href={`/mock-exams/${id}/results`}
+          href={localePath(lang, `/mock-exams/${id}/results`)}
           className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-medium border"
           style={{ borderColor: "var(--border)", color: "var(--foreground)" }}
         >
           <ChevronLeft size={16} />
-          Back to Results
+          {t.backToResults}
         </Link>
         <Link
-          href="/mock-exams/new"
+          href={localePath(lang, "/mock-exams/new")}
           className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-medium"
           style={{ background: "var(--brand)", color: "var(--brand-foreground)" }}
         >
-          Take New Exam
+          {dict.mockExamResults.newExam}
         </Link>
       </div>
     </div>
