@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Cairo } from "next/font/google";
 import "@/app/globals.css";
-import { getDictionary } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: "Moraje3 — AI-Powered Medical Exam Preparation",
