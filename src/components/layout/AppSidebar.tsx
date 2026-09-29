@@ -18,37 +18,47 @@ import {
   GraduationCap,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-
-const navItems = [
-  { label: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
-  { label: "Practice", icon: Play, href: "/practice" },
-  { label: "Question Bank", icon: BookOpen, href: "/questions" },
-  { label: "Mock Exams", icon: ClipboardList, href: "/mock-exams" },
-  { label: "AI Tutor", icon: Brain, href: "/tutor" },
-  { label: "My Mistakes", icon: XCircle, href: "/mistakes" },
-  { label: "Performance", icon: BarChart3, href: "/performance" },
-  { label: "Profile", icon: User, href: "/profile" },
-];
+import { localePath } from "@/lib/i18n";
+import LanguageToggle from "@/components/LanguageToggle";
 
 interface AppSidebarProps {
   userName: string | null;
   userEmail: string;
+  lang: string;
+  nav: {
+    dashboard: string; practice: string; questionBank: string;
+    mockExams: string; aiTutor: string; myMistakes: string;
+    performance: string; profile: string; logout: string;
+  };
+  langToggleLabel: string;
 }
 
-export default function AppSidebar({ userName, userEmail }: AppSidebarProps) {
+export default function AppSidebar({ userName, userEmail, lang, nav, langToggleLabel }: AppSidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  const navItems = [
+    { label: nav.dashboard, icon: LayoutDashboard, href: localePath(lang, "/dashboard") },
+    { label: nav.practice, icon: Play, href: localePath(lang, "/practice") },
+    { label: nav.questionBank, icon: BookOpen, href: localePath(lang, "/questions") },
+    { label: nav.mockExams, icon: ClipboardList, href: localePath(lang, "/mock-exams") },
+    { label: nav.aiTutor, icon: Brain, href: localePath(lang, "/tutor") },
+    { label: nav.myMistakes, icon: XCircle, href: localePath(lang, "/mistakes") },
+    { label: nav.performance, icon: BarChart3, href: localePath(lang, "/performance") },
+    { label: nav.profile, icon: User, href: localePath(lang, "/profile") },
+  ];
+
   async function handleLogout() {
     const supabase = createClient();
     await supabase.auth.signOut();
-    router.push("/login");
+    router.push(localePath(lang, "/login"));
   }
 
   function isActive(href: string) {
-    if (href === "/dashboard") return pathname === "/dashboard";
-    return pathname.startsWith(href);
+    const pathWithoutLang = pathname.replace(`/${lang}`, "") || "/";
+    if (href === localePath(lang, "/dashboard")) return pathWithoutLang === "/dashboard";
+    return pathWithoutLang.startsWith(href.replace(`/${lang}`, ""));
   }
 
   const SidebarContent = () => (
@@ -121,6 +131,9 @@ export default function AppSidebar({ userName, userEmail }: AppSidebarProps) {
             </p>
           </div>
         </div>
+        <div className="mb-1 px-1">
+          <LanguageToggle lang={lang} label={langToggleLabel} />
+        </div>
         <button
           onClick={handleLogout}
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors"
@@ -135,7 +148,7 @@ export default function AppSidebar({ userName, userEmail }: AppSidebarProps) {
           }}
         >
           <LogOut size={17} />
-          Sign Out
+          {nav.logout}
         </button>
       </div>
     </div>
