@@ -3,16 +3,16 @@
 import { useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import type { Dictionary } from "@/lib/i18n";
 
-const TARGET_EXAMS = [
-  "Saudi Medical Licensing Exam (SMLE)",
-  "Saudi Dentistry Licensing Exam (SDLE)",
-  "Saudi Pharmacy Licensing Exam (SPLE)",
-  "Saudi Nursing Licensing Exam (SNLE)",
-  "Other",
-];
+interface RequestAccessClientProps {
+  lang: string;
+  homePath: string;
+  loginPath: string;
+  dict: Dictionary["requestAccess"];
+}
 
-export default function RequestAccessPage() {
+export default function RequestAccessClient({ lang, homePath, loginPath, dict }: RequestAccessClientProps) {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -48,7 +48,7 @@ export default function RequestAccessPage() {
 
       if (insertError) {
         console.error(insertError);
-        setError("Something went wrong. Please try again.");
+        setError(lang === "ar" ? "حدث خطأ. يرجى المحاولة مجددًا." : "Something went wrong. Please try again.");
         return;
       }
 
@@ -64,7 +64,7 @@ export default function RequestAccessPage() {
         className="min-h-screen flex flex-col items-center justify-center px-4"
         style={{ background: "var(--secondary)" }}
       >
-        <Link href="/" className="mb-8 font-semibold text-xl tracking-tight">
+        <Link href={homePath} className="mb-8 font-semibold text-xl tracking-tight">
           Moraje3
         </Link>
         <div
@@ -77,16 +77,16 @@ export default function RequestAccessPage() {
           >
             <span style={{ fontSize: "1.5rem" }}>✓</span>
           </div>
-          <h2 className="text-xl font-semibold mb-2">Request Received</h2>
+          <h2 className="text-xl font-semibold mb-2">{dict.successTitle}</h2>
           <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>
-            Your access request has been received. We will contact you with the next steps.
+            {dict.successMessage}
           </p>
           <Link
-            href="/"
+            href={homePath}
             className="inline-block mt-6 text-sm font-medium hover:underline"
             style={{ color: "var(--muted-foreground)" }}
           >
-            Back to home
+            {lang === "ar" ? "العودة إلى الرئيسية" : "Back to home"}
           </Link>
         </div>
       </div>
@@ -98,7 +98,7 @@ export default function RequestAccessPage() {
       className="min-h-screen flex flex-col items-center justify-center px-4 py-12"
       style={{ background: "var(--secondary)" }}
     >
-      <Link href="/" className="mb-8 font-semibold text-xl tracking-tight">
+      <Link href={homePath} className="mb-8 font-semibold text-xl tracking-tight">
         Moraje3
       </Link>
 
@@ -106,9 +106,9 @@ export default function RequestAccessPage() {
         className="w-full max-w-md rounded-xl border p-8 shadow-sm"
         style={{ background: "var(--card)", borderColor: "var(--border)" }}
       >
-        <h1 className="text-xl font-semibold mb-1">Request Access</h1>
+        <h1 className="text-xl font-semibold mb-1">{dict.title}</h1>
         <p className="text-sm mb-6" style={{ color: "var(--muted-foreground)" }}>
-          Fill in your details and we will get back to you shortly.
+          {dict.subtitle}
         </p>
 
         {error && (
@@ -122,21 +122,21 @@ export default function RequestAccessPage() {
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div>
-            <label className="block text-sm font-medium mb-1.5">Full Name *</label>
+            <label className="block text-sm font-medium mb-1.5">{dict.fullName} *</label>
             <input
               name="full_name"
               type="text"
               value={form.full_name}
               onChange={handleChange}
               required
-              placeholder="Your full name"
+              placeholder={lang === "ar" ? "اسمك الكامل" : "Your full name"}
               className="w-full px-3 py-2 text-sm rounded-lg border outline-none"
               style={{ background: "var(--background)", borderColor: "var(--border)", color: "var(--foreground)" }}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1.5">Email Address *</label>
+            <label className="block text-sm font-medium mb-1.5">{dict.email} *</label>
             <input
               name="email"
               type="email"
@@ -150,7 +150,7 @@ export default function RequestAccessPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1.5">Mobile Number</label>
+            <label className="block text-sm font-medium mb-1.5">{dict.phone}</label>
             <input
               name="phone"
               type="tel"
@@ -163,7 +163,7 @@ export default function RequestAccessPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1.5">Target Exam</label>
+            <label className="block text-sm font-medium mb-1.5">{dict.targetExam}</label>
             <select
               name="target_exam"
               value={form.target_exam}
@@ -171,15 +171,15 @@ export default function RequestAccessPage() {
               className="w-full px-3 py-2 text-sm rounded-lg border outline-none"
               style={{ background: "var(--background)", borderColor: "var(--border)", color: "var(--foreground)" }}
             >
-              <option value="">Select exam…</option>
-              {TARGET_EXAMS.map((e) => (
-                <option key={e} value={e}>{e}</option>
+              <option value="">{lang === "ar" ? "اختر الامتحان…" : "Select exam…"}</option>
+              {dict.examOptions.map((exam) => (
+                <option key={exam} value={exam}>{exam}</option>
               ))}
             </select>
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1.5">Expected Exam Date</label>
+            <label className="block text-sm font-medium mb-1.5">{dict.examDate}</label>
             <input
               name="expected_exam_date"
               type="date"
@@ -191,13 +191,16 @@ export default function RequestAccessPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1.5">Notes <span style={{ color: "var(--muted-foreground)" }}>(optional)</span></label>
+            <label className="block text-sm font-medium mb-1.5">
+              {dict.notes}{" "}
+              <span style={{ color: "var(--muted-foreground)" }}>({lang === "ar" ? "اختياري" : "optional"})</span>
+            </label>
             <textarea
               name="notes"
               value={form.notes}
               onChange={handleChange}
               rows={3}
-              placeholder="Any additional information..."
+              placeholder={lang === "ar" ? "أي معلومات إضافية..." : "Any additional information..."}
               className="w-full px-3 py-2 text-sm rounded-lg border outline-none resize-none"
               style={{ background: "var(--background)", borderColor: "var(--border)", color: "var(--foreground)" }}
             />
@@ -209,15 +212,15 @@ export default function RequestAccessPage() {
             className="w-full py-2.5 rounded-lg text-sm font-semibold transition-all hover:opacity-90 disabled:opacity-50"
             style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}
           >
-            {loading ? "Submitting…" : "Request Access"}
+            {loading ? (lang === "ar" ? "جاري الإرسال…" : "Submitting…") : dict.submit}
           </button>
         </form>
       </div>
 
       <p className="mt-6 text-sm" style={{ color: "var(--muted-foreground)" }}>
-        Already have access?{" "}
-        <Link href="/login" className="font-medium hover:underline" style={{ color: "var(--foreground)" }}>
-          Login
+        {lang === "ar" ? "لديك وصول بالفعل؟" : "Already have access?"}{" "}
+        <Link href={loginPath} className="font-medium hover:underline" style={{ color: "var(--foreground)" }}>
+          {lang === "ar" ? "تسجيل الدخول" : "Login"}
         </Link>
       </p>
     </div>

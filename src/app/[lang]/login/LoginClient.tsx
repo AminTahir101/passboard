@@ -4,8 +4,17 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import type { Dictionary } from "@/lib/i18n";
 
-export default function LoginPage() {
+interface LoginClientProps {
+  lang: string;
+  homePath: string;
+  requestAccessPath: string;
+  dashboardPath: string;
+  dict: Dictionary["login"];
+}
+
+export default function LoginClient({ lang, homePath, requestAccessPath, dashboardPath, dict }: LoginClientProps) {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,12 +34,11 @@ export default function LoginPage() {
       });
 
       if (authError) {
-        setError("Invalid email or password. Please try again.");
+        setError(dict.error);
         return;
       }
 
       if (data.user) {
-        // Check profile role and access status
         const { data: profile } = await supabase
           .from("profiles")
           .select("role, access_status, access_expires_at")
@@ -44,7 +52,7 @@ export default function LoginPage() {
 
         if (profile?.access_status === "suspended") {
           await supabase.auth.signOut();
-          setError("Your account has been suspended. Please contact support.");
+          setError(dict.error);
           return;
         }
 
@@ -53,17 +61,17 @@ export default function LoginPage() {
           (profile?.access_expires_at && new Date(profile.access_expires_at) < new Date())
         ) {
           await supabase.auth.signOut();
-          setError("Your access has expired. Please contact support to renew.");
+          setError(dict.error);
           return;
         }
 
         if (profile?.access_status !== "active") {
           await supabase.auth.signOut();
-          setError("Your account is not yet active. Please wait for activation.");
+          setError(dict.error);
           return;
         }
 
-        router.push("/dashboard");
+        router.push(dashboardPath);
         router.refresh();
       }
     } finally {
@@ -77,7 +85,7 @@ export default function LoginPage() {
       style={{ background: "var(--secondary)" }}
     >
       {/* Logo */}
-      <Link href="/" className="mb-8 font-semibold text-xl tracking-tight">
+      <Link href={homePath} className="mb-8 font-semibold text-xl tracking-tight">
         Moraje3
       </Link>
 
@@ -85,9 +93,9 @@ export default function LoginPage() {
         className="w-full max-w-sm rounded-xl border p-8 shadow-sm"
         style={{ background: "var(--card)", borderColor: "var(--border)" }}
       >
-        <h1 className="text-xl font-semibold mb-1">Sign in</h1>
+        <h1 className="text-xl font-semibold mb-1">{dict.title}</h1>
         <p className="text-sm mb-6" style={{ color: "var(--muted-foreground)" }}>
-          Enter your credentials to access your account.
+          {dict.subtitle}
         </p>
 
         {error && (
@@ -101,7 +109,7 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div>
-            <label className="block text-sm font-medium mb-1.5">Email</label>
+            <label className="block text-sm font-medium mb-1.5">{dict.emailLabel}</label>
             <input
               type="email"
               value={email}
@@ -118,7 +126,7 @@ export default function LoginPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1.5">Password</label>
+            <label className="block text-sm font-medium mb-1.5">{dict.passwordLabel}</label>
             <input
               type="password"
               value={password}
@@ -140,15 +148,14 @@ export default function LoginPage() {
             className="w-full py-2.5 rounded-lg text-sm font-semibold transition-all hover:opacity-90 disabled:opacity-50"
             style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}
           >
-            {loading ? "Signing in…" : "Sign in"}
+            {loading ? dict.submit + "…" : dict.submit}
           </button>
         </form>
       </div>
 
       <p className="mt-6 text-sm" style={{ color: "var(--muted-foreground)" }}>
-        Don&apos;t have access?{" "}
-        <Link href="/request-access" className="font-medium hover:underline" style={{ color: "var(--foreground)" }}>
-          Request Access
+        <Link href={requestAccessPath} className="font-medium hover:underline" style={{ color: "var(--foreground)" }}>
+          {lang === "ar" ? "طلب الوصول" : "Request Access"}
         </Link>
       </p>
     </div>

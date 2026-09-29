@@ -5,51 +5,17 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { ShieldX, Clock, Ban, Mail, LogOut } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import type { Dictionary } from "@/lib/i18n";
 
 type ReasonKey = "suspended" | "expired" | "pending";
 
-const REASON_CONFIG: Record<
-  ReasonKey,
-  {
-    icon: React.ElementType;
-    iconColor: string;
-    iconBg: string;
-    title: string;
-    description: string;
-    suggestion: string;
-  }
-> = {
-  suspended: {
-    icon: Ban,
-    iconColor: "var(--destructive)",
-    iconBg: "rgba(239,68,68,0.1)",
-    title: "Account Suspended",
-    description:
-      "Your account has been suspended. This may be due to a violation of our terms of service or an administrative action.",
-    suggestion: "Please contact support to resolve this issue and restore your access.",
-  },
-  expired: {
-    icon: Clock,
-    iconColor: "var(--warning)",
-    iconBg: "rgba(217,119,6,0.1)",
-    title: "Access Expired",
-    description:
-      "Your access period has ended. Your exam preparation data is safe and will be available once you renew.",
-    suggestion: "Please contact us to renew your access and continue your preparation.",
-  },
-  pending: {
-    icon: ShieldX,
-    iconColor: "var(--brand)",
-    iconBg: "rgba(37,99,235,0.1)",
-    title: "Access Pending",
-    description:
-      "Your account is currently pending activation. We will review your access request shortly.",
-    suggestion:
-      "If you have recently registered or made a payment, please allow up to 24 hours for activation. Contact support if you need immediate assistance.",
-  },
-};
+interface UnauthorizedClientProps {
+  loginPath: string;
+  dashboardPath: string;
+  dict: Dictionary["unauthorized"];
+}
 
-function UnauthorizedContent() {
+function UnauthorizedContent({ loginPath, dashboardPath, dict }: UnauthorizedClientProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const reasonParam = searchParams.get("reason") ?? "pending";
@@ -57,13 +23,37 @@ function UnauthorizedContent() {
     ? reasonParam
     : "pending") as ReasonKey;
 
-  const config = REASON_CONFIG[reason];
-  const { icon: Icon, iconColor, iconBg, title, description, suggestion } = config;
+  const configs: Record<ReasonKey, { icon: React.ElementType; iconColor: string; iconBg: string; title: string; description: string }> = {
+    suspended: {
+      icon: Ban,
+      iconColor: "var(--destructive)",
+      iconBg: "rgba(239,68,68,0.1)",
+      title: dict.suspendedTitle,
+      description: dict.suspendedMessage,
+    },
+    expired: {
+      icon: Clock,
+      iconColor: "var(--warning)",
+      iconBg: "rgba(217,119,6,0.1)",
+      title: dict.expiredTitle,
+      description: dict.expiredMessage,
+    },
+    pending: {
+      icon: ShieldX,
+      iconColor: "var(--brand)",
+      iconBg: "rgba(37,99,235,0.1)",
+      title: dict.pendingTitle,
+      description: dict.pendingMessage,
+    },
+  };
+
+  const config = configs[reason];
+  const { icon: Icon, iconColor, iconBg, title, description } = config;
 
   async function handleLogout() {
     const supabase = createClient();
     await supabase.auth.signOut();
-    router.push("/login");
+    router.push(loginPath);
   }
 
   return (
@@ -90,16 +80,6 @@ function UnauthorizedContent() {
           </p>
         </div>
 
-        {/* Suggestion card */}
-        <div
-          className="rounded-xl border p-4 text-left"
-          style={{ background: "var(--card)", borderColor: "var(--border)" }}
-        >
-          <p className="text-sm" style={{ color: "var(--foreground)" }}>
-            {suggestion}
-          </p>
-        </div>
-
         {/* Actions */}
         <div className="space-y-3">
           <a
@@ -117,20 +97,19 @@ function UnauthorizedContent() {
             style={{ borderColor: "var(--border)", color: "var(--muted-foreground)" }}
           >
             <LogOut size={16} />
-            Sign Out
+            {dict.signOut}
           </button>
         </div>
 
         {/* Back link for pending status */}
         {reason === "pending" && (
           <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>
-            Already activated?{" "}
             <Link
-              href="/dashboard"
+              href={dashboardPath}
               className="font-medium underline"
               style={{ color: "var(--brand)" }}
             >
-              Try accessing the dashboard
+              {dashboardPath}
             </Link>
           </p>
         )}
@@ -139,7 +118,7 @@ function UnauthorizedContent() {
   );
 }
 
-export default function UnauthorizedPage() {
+export default function UnauthorizedClient(props: UnauthorizedClientProps) {
   return (
     <Suspense
       fallback={
@@ -154,7 +133,7 @@ export default function UnauthorizedPage() {
         </div>
       }
     >
-      <UnauthorizedContent />
+      <UnauthorizedContent {...props} />
     </Suspense>
   );
 }
