@@ -13,7 +13,7 @@ interface ProfileFormProps {
 }
 
 
-export default function ProfileForm({ profile, dict }: ProfileFormProps) {
+export default function ProfileForm({ profile, dict, lang }: ProfileFormProps) {
   const [fullName, setFullName] = useState(profile.full_name ?? "");
   const [phone, setPhone] = useState(profile.phone ?? "");
   const [targetExam, setTargetExam] = useState(profile.target_exam ?? "");
