@@ -70,7 +70,7 @@ export default async function AdminDashboard({ params }: { params: Promise<{ lan
     <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">{d.title}</h1>
-        <p className="text-sm mt-1" style={{ color: "var(--muted-foreground)" }}>{dict.common.noData}</p>
+        <p className="text-sm mt-1" style={{ color: "var(--muted-foreground)" }}>{lang === "ar" ? "نظرة عامة على المنصة" : "Platform overview"}</p>
       </div>
 
       {/* Stats */}

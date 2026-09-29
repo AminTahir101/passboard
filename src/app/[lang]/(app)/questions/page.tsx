@@ -108,7 +108,7 @@ export default async function QuestionsPage({
           {exams.length > 0 && (
             <div className="flex items-center gap-2">
               <label className="text-xs font-medium" style={{ color: "var(--muted-foreground)" }}>
-                Exam:
+                {lang === "ar" ? "الامتحان:" : "Exam:"}
               </label>
               <div className="flex gap-1.5 flex-wrap">
                 <Link

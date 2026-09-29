@@ -209,7 +209,7 @@ export default async function QuestionDetailPage({
           className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium border"
           style={{ borderColor: "var(--border)", color: "var(--foreground)" }}
         >
-          Practice Similar
+          {lang === "ar" ? "تدرب على مشابه" : "Practice Similar"}
         </Link>
         <Link
           href={localePath(lang, `/tutor?questionId=${question.id}`)}

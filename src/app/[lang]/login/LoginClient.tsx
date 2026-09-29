@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import type { Dictionary } from "@/lib/i18n";
+import { localePath } from "@/lib/i18n";
 
 interface LoginClientProps {
   lang: string;
@@ -46,7 +47,7 @@ export default function LoginClient({ lang, homePath, requestAccessPath, dashboa
           .single();
 
         if (profile?.role === "admin") {
-          router.push("/admin");
+          router.push(localePath(lang, "/admin"));
           return;
         }
 

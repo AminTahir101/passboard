@@ -154,7 +154,7 @@ export default async function MockExamResultsPage({
           className="text-sm font-medium mb-2"
           style={{ color: "var(--muted-foreground)" }}
         >
-          {exam.exam_name || t.title} {t.title}
+          {exam.exam_name || t.title}
         </p>
         <div
           className="text-7xl font-bold mb-2"

@@ -55,7 +55,7 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
             className="px-2 py-1 rounded-full text-xs font-medium capitalize"
             style={{ background: sc.bg, color: sc.text }}
           >
-            {student.access_status}
+            {({ active: lang === "ar" ? "نشط" : "Active", pending: lang === "ar" ? "معلق" : "Pending", suspended: lang === "ar" ? "موقوف" : "Suspended", expired: lang === "ar" ? "منتهي" : "Expired" } as Record<string, string>)[student.access_status] ?? student.access_status}
           </span>
         </div>
         <div className="grid sm:grid-cols-2 gap-4 text-sm">
@@ -100,7 +100,7 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
 
       {/* Actions */}
       <div className="rounded-xl border p-6" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
-        <h2 className="font-semibold mb-4">{d.performanceStats}</h2>
+        <h2 className="font-semibold mb-4">{lang === "ar" ? "إدارة الوصول" : "Manage Access"}</h2>
         <StudentActions student={student} dict={d} lang={lang} />
       </div>
 

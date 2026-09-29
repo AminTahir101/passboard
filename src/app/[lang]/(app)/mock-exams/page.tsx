@@ -15,8 +15,8 @@ function formatDuration(seconds: number | null): string {
   return `${s}s`;
 }
 
-function formatDate(dateStr: string): string {
-  return new Date(dateStr).toLocaleDateString("en-US", {
+function formatDate(dateStr: string, lang: string): string {
+  return new Date(dateStr).toLocaleDateString(lang === "ar" ? "ar-SA" : "en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",
@@ -64,7 +64,7 @@ export default async function MockExamsPage({
             {t.title}
           </h1>
           <p className="text-sm mt-1" style={{ color: "var(--muted-foreground)" }}>
-            {t.noExamsDesc}
+            {lang === "ar" ? "إدارة اختباراتك المحاكية" : "Manage your mock exams"}
           </p>
         </div>
         <Link
@@ -148,7 +148,7 @@ export default async function MockExamsPage({
                       {exam.exam_name || t.title}
                     </p>
                     <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>
-                      {t.started} {formatDate(exam.started_at)} · {exam.question_count} {t.questions}
+                      {t.started} {formatDate(exam.started_at, lang)} · {exam.question_count} {t.questions}
                     </p>
                   </div>
                 </div>
@@ -228,7 +228,7 @@ export default async function MockExamsPage({
                           {exam.exam_name || t.title}
                         </p>
                         <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>
-                          {formatDate(exam.started_at)}
+                          {formatDate(exam.started_at, lang)}
                         </p>
                       </div>
                     </div>

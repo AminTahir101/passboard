@@ -58,19 +58,28 @@ export default async function StudentsPage({
 
       {/* Filters */}
       <div className="flex gap-2 flex-wrap">
-        {["all", "active", "pending", "suspended", "expired"].map((s) => (
-          <a
-            key={s}
-            href={`${baseUrl}${s !== "all" ? `?status=${s}` : ""}${sp.q ? `${s !== "all" ? "&" : "?"}q=${sp.q}` : ""}`}
-            className="px-3 py-1.5 rounded-lg text-sm font-medium capitalize transition-colors"
-            style={{
-              background: (sp.status ?? "all") === s ? "var(--primary)" : "var(--secondary)",
-              color: (sp.status ?? "all") === s ? "var(--primary-foreground)" : "var(--muted-foreground)",
-            }}
-          >
-            {s}
-          </a>
-        ))}
+        {(["all", "active", "pending", "suspended", "expired"] as const).map((s) => {
+          const tabLabels: Record<string, string> = {
+            all: lang === "ar" ? "الكل" : "All",
+            active: lang === "ar" ? "نشط" : "Active",
+            pending: lang === "ar" ? "معلق" : "Pending",
+            suspended: lang === "ar" ? "موقوف" : "Suspended",
+            expired: lang === "ar" ? "منتهي" : "Expired",
+          };
+          return (
+            <a
+              key={s}
+              href={`${baseUrl}${s !== "all" ? `?status=${s}` : ""}${sp.q ? `${s !== "all" ? "&" : "?"}q=${sp.q}` : ""}`}
+              className="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
+              style={{
+                background: (sp.status ?? "all") === s ? "var(--primary)" : "var(--secondary)",
+                color: (sp.status ?? "all") === s ? "var(--primary-foreground)" : "var(--muted-foreground)",
+              }}
+            >
+              {tabLabels[s]}
+            </a>
+          );
+        })}
         <form className="ml-auto">
           <input
             name="q"
@@ -117,7 +126,7 @@ export default async function StudentsPage({
                           className="px-2 py-0.5 rounded-full text-xs font-medium capitalize"
                           style={{ background: sc.bg, color: sc.text }}
                         >
-                          {s.access_status}
+                          {({ active: lang === "ar" ? "نشط" : "Active", pending: lang === "ar" ? "معلق" : "Pending", suspended: lang === "ar" ? "موقوف" : "Suspended", expired: lang === "ar" ? "منتهي" : "Expired" } as Record<string, string>)[s.access_status] ?? s.access_status}
                         </span>
                       </td>
                       <td className="px-4 py-3 hidden lg:table-cell text-sm" style={{ color: "var(--muted-foreground)" }}>

@@ -8,8 +8,8 @@ import type { Dictionary } from "@/lib/i18n";
 
 interface ProfileFormProps {
   profile: Profile;
-  dict?: Dictionary["profile"];
-  lang?: string;
+  dict: Dictionary["profile"];
+  lang: string;
 }
 
 

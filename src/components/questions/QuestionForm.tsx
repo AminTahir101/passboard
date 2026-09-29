@@ -12,7 +12,7 @@ interface QuestionFormProps {
   initialData?: Partial<QuestionFormData>;
   questionId?: string;
   dict: Dictionary["admin"]["questionForm"];
-  lang?: string;
+  lang: string;
 }
 
 const CORRECT_ANSWERS = ["A", "B", "C", "D"] as const;

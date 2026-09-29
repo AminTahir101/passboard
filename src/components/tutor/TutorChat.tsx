@@ -23,9 +23,9 @@ interface Props {
 }
 
 
-function formatTime(ts: string) {
+function formatTime(ts: string, lang: string) {
   const d = new Date(ts);
-  return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  return d.toLocaleDateString(lang === "ar" ? "ar-SA" : "en-US", { month: "short", day: "numeric" });
 }
 
 export default function TutorChat({
@@ -34,7 +34,7 @@ export default function TutorChat({
   questionId,
   initialQuestion,
   dict,
-  lang: _lang,
+  lang,
 }: Props) {
   const [conversations, setConversations] =
     useState<AiConversation[]>(initialConversations);
@@ -261,7 +261,7 @@ export default function TutorChat({
                           className="text-xs mt-0.5"
                           style={{ color: "var(--muted-foreground)" }}
                         >
-                          {formatTime(conv.updated_at)}
+                          {formatTime(conv.updated_at, lang)}
                         </p>
                       </div>
                     </div>

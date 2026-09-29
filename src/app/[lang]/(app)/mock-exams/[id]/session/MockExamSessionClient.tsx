@@ -236,7 +236,7 @@ export default function MockExamSessionClient({ dict, lang, id }: Props) {
             className="font-semibold text-sm"
             style={{ color: "var(--foreground)" }}
           >
-            {dict.questionOf.replace("{current}", String(currentIndex + 1)).replace("{total}", String(questions.length))}
+            {dict.questionOf.replace("{n}", String(currentIndex + 1)).replace("{total}", String(questions.length))}
           </span>
           {q.category && (
             <span
@@ -432,8 +432,8 @@ export default function MockExamSessionClient({ dict, lang, id }: Props) {
 
             <div className="px-4 py-3 border-b" style={{ borderColor: "var(--border)" }}>
               <div className="flex gap-4 text-xs" style={{ color: "var(--muted-foreground)" }}>
-                <span>{answeredCount} answered</span>
-                <span>{unansweredCount} {dict.unansweredWarning}</span>
+                <span>{answeredCount} {lang === "ar" ? "مُجاب" : "answered"}</span>
+                <span>{unansweredCount} {lang === "ar" ? "غير مُجاب" : "unanswered"}</span>
                 <span>{flaggedCount} {dict.flagged}</span>
               </div>
             </div>

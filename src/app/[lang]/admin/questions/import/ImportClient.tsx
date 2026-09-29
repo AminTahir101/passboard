@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import Papa from "papaparse";
 import type { Dictionary } from "@/lib/i18n";
 import { localePath } from "@/lib/i18n";
@@ -21,7 +22,7 @@ interface ValidationResult {
   invalid: { row: number; data: ParsedRow; errors: string[] }[];
 }
 
-function validateRows(rows: ParsedRow[]): ValidationResult {
+function validateRows(rows: ParsedRow[], lang: string): ValidationResult {
   const valid: ParsedRow[] = [];
   const invalid: ValidationResult["invalid"] = [];
 
@@ -29,21 +30,21 @@ function validateRows(rows: ParsedRow[]): ValidationResult {
     const errors: string[] = [];
 
     for (const col of REQUIRED_COLUMNS) {
-      if (!row[col]?.trim()) errors.push(`Missing required field: ${col}`);
+      if (!row[col]?.trim()) errors.push(lang === "ar" ? `حقل مطلوب مفقود: ${col}` : `Missing required field: ${col}`);
     }
 
     const ca = row.correct_answer?.trim().toUpperCase();
     if (ca && !["A", "B", "C", "D"].includes(ca)) {
-      errors.push(`correct_answer must be A, B, C, or D (got: ${row.correct_answer})`);
+      errors.push(lang === "ar" ? `correct_answer يجب أن يكون A أو B أو C أو D (القيمة: ${row.correct_answer})` : `correct_answer must be A, B, C, or D (got: ${row.correct_answer})`);
     }
 
     const diff = row.difficulty?.trim().toLowerCase();
     if (diff && !["easy", "medium", "hard", ""].includes(diff)) {
-      errors.push(`difficulty must be easy, medium, or hard (got: ${row.difficulty})`);
+      errors.push(lang === "ar" ? `difficulty يجب أن يكون easy أو medium أو hard (القيمة: ${row.difficulty})` : `difficulty must be easy, medium, or hard (got: ${row.difficulty})`);
     }
 
     if (row.year && isNaN(parseInt(row.year))) {
-      errors.push(`year must be a number (got: ${row.year})`);
+      errors.push(lang === "ar" ? `year يجب أن يكون رقماً (القيمة: ${row.year})` : `year must be a number (got: ${row.year})`);
     }
 
     if (errors.length === 0) {
@@ -77,10 +78,10 @@ export default function ImportClient({ dict, lang }: ImportClientProps) {
       skipEmptyLines: true,
       complete: (results) => {
         if (results.errors.length > 0 && results.data.length === 0) {
-          setParseError("Failed to parse CSV file. Please check the file format.");
+          setParseError(lang === "ar" ? "فشل تحليل ملف CSV. يرجى التحقق من تنسيق الملف." : "Failed to parse CSV file. Please check the file format.");
           return;
         }
-        const result = validateRows(results.data);
+        const result = validateRows(results.data, lang);
         setValidation(result);
         setStep("preview");
       },
@@ -116,9 +117,9 @@ export default function ImportClient({ dict, lang }: ImportClientProps) {
   return (
     <div className="space-y-6 max-w-3xl">
       <div className="flex items-center gap-2">
-        <a href={questionsHref} className="text-sm hover:underline" style={{ color: "var(--muted-foreground)" }}>
+        <Link href={questionsHref} className="text-sm hover:underline" style={{ color: "var(--muted-foreground)" }}>
           {dict.title}
-        </a>
+        </Link>
         <span style={{ color: "var(--muted-foreground)" }}>/</span>
         <span className="text-sm">{lang === "ar" ? "استيراد" : "Import"}</span>
       </div>
@@ -136,8 +137,8 @@ export default function ImportClient({ dict, lang }: ImportClientProps) {
               <table className="text-xs w-full">
                 <thead>
                   <tr style={{ borderBottom: "1px solid var(--border)" }}>
-                    <th className="text-left py-1.5 pr-4 font-medium" style={{ color: "var(--muted-foreground)" }}>Column</th>
-                    <th className="text-left py-1.5 font-medium" style={{ color: "var(--muted-foreground)" }}>Notes</th>
+                    <th className="text-left py-1.5 pr-4 font-medium" style={{ color: "var(--muted-foreground)" }}>{lang === "ar" ? "العمود" : "Column"}</th>
+                    <th className="text-left py-1.5 font-medium" style={{ color: "var(--muted-foreground)" }}>{lang === "ar" ? "ملاحظات" : "Notes"}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -148,10 +149,10 @@ export default function ImportClient({ dict, lang }: ImportClientProps) {
                         {REQUIRED_COLUMNS.includes(col) && <span className="ml-1" style={{ color: "var(--brand)" }}>*</span>}
                       </td>
                       <td className="py-1.5" style={{ color: "var(--muted-foreground)" }}>
-                        {col === "correct_answer" && "A, B, C, or D"}
-                        {col === "difficulty" && "easy, medium, or hard"}
-                        {col === "year" && "numeric"}
-                        {col === "status" && "draft, published, or archived"}
+                        {col === "correct_answer" && (lang === "ar" ? "A أو B أو C أو D" : "A, B, C, or D")}
+                        {col === "difficulty" && (lang === "ar" ? "easy أو medium أو hard" : "easy, medium, or hard")}
+                        {col === "year" && (lang === "ar" ? "رقم" : "numeric")}
+                        {col === "status" && (lang === "ar" ? "draft أو published أو archived" : "draft, published, or archived")}
                       </td>
                     </tr>
                   ))}
@@ -226,13 +227,13 @@ export default function ImportClient({ dict, lang }: ImportClientProps) {
               <div className="divide-y" style={{ borderColor: "#fecaca", maxHeight: "200px", overflowY: "auto" }}>
                 {validation.invalid.slice(0, 10).map((inv) => (
                   <div key={inv.row} className="px-4 py-2 text-xs" style={{ background: "#fffafa" }}>
-                    <p className="font-medium mb-0.5" style={{ color: "#dc2626" }}>Row {inv.row}</p>
+                    <p className="font-medium mb-0.5" style={{ color: "#dc2626" }}>{lang === "ar" ? `صف ${inv.row}` : `Row ${inv.row}`}</p>
                     {inv.errors.map((err) => <p key={err} style={{ color: "#6b7280" }}>• {err}</p>)}
                   </div>
                 ))}
                 {validation.invalid.length > 10 && (
                   <p className="px-4 py-2 text-xs" style={{ color: "#6b7280", background: "#fffafa" }}>
-                    …and {validation.invalid.length - 10} more errors
+                    {lang === "ar" ? `…و${validation.invalid.length - 10} أخطاء أخرى` : `…and ${validation.invalid.length - 10} more errors`}
                   </p>
                 )}
               </div>
@@ -250,7 +251,7 @@ export default function ImportClient({ dict, lang }: ImportClientProps) {
                   <div key={i} className="px-4 py-3" style={{ background: "var(--card)" }}>
                     <p className="text-sm font-medium truncate">{row.question_text}</p>
                     <p className="text-xs mt-1" style={{ color: "var(--muted-foreground)" }}>
-                      Correct: {row.correct_answer} · {row.category || "—"} · {row.difficulty || "medium"}
+                      {lang === "ar" ? `صحيح: ${row.correct_answer}` : `Correct: ${row.correct_answer}`} · {row.category || "—"} · {row.difficulty || "medium"}
                     </p>
                   </div>
                 ))}

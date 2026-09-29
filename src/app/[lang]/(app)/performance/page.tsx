@@ -136,7 +136,7 @@ export default async function PerformancePage({ params }: { params: Promise<{ la
           {dict.performance.title}
         </h1>
         <p className="text-sm mt-1" style={{ color: "var(--muted-foreground)" }}>
-          Track your progress and identify areas for improvement
+          {lang === "ar" ? "تتبّع تقدمك وحدد مجالات التحسين" : "Track your progress and identify areas for improvement"}
         </p>
       </div>
 
@@ -147,7 +147,7 @@ export default async function PerformancePage({ params }: { params: Promise<{ la
             {dict.performance.noData}
           </p>
           <p className="text-sm mt-1 mb-4" style={{ color: "var(--muted-foreground)" }}>
-            Start practicing to see your performance statistics
+            {lang === "ar" ? "ابدأ التدريب لرؤية إحصائيات أدائك" : "Start practicing to see your performance statistics"}
           </p>
           <Link
             href={localePath(lang, "/practice")}
