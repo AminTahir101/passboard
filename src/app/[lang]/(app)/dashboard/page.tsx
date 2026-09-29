@@ -142,9 +142,9 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
   const daysToExamValue = daysToExam === null
     ? dict.dashboard.na
     : daysToExam < 0
-    ? "Past"
+    ? (lang === "ar" ? "ماضٍ" : "Past")
     : daysToExam === 0
-    ? "Today!"
+    ? (lang === "ar" ? "اليوم!" : "Today!")
     : `${daysToExam}d`;
 
   return (
@@ -190,7 +190,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
               <div>
                 <p className="text-xs font-medium mb-0.5" style={{ color: "var(--muted-foreground)" }}>{dict.dashboard.strongestTopic}</p>
                 <p className="font-semibold">{strongestTopic.topic}</p>
-                <p className="text-sm" style={{ color: "var(--success)" }}>{strongestTopic.accuracy}% accuracy ({strongestTopic.total} questions)</p>
+                <p className="text-sm" style={{ color: "var(--success)" }}>{strongestTopic.accuracy}% {dict.common.accuracy} ({strongestTopic.total} {dict.common.questions})</p>
               </div>
             </div>
           )}
@@ -202,7 +202,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
               <div>
                 <p className="text-xs font-medium mb-0.5" style={{ color: "var(--muted-foreground)" }}>{dict.dashboard.weakestTopic}</p>
                 <p className="font-semibold">{weakestTopic.topic}</p>
-                <p className="text-sm" style={{ color: "var(--destructive)" }}>{weakestTopic.accuracy}% accuracy ({weakestTopic.total} questions)</p>
+                <p className="text-sm" style={{ color: "var(--destructive)" }}>{weakestTopic.accuracy}% {dict.common.accuracy} ({weakestTopic.total} {dict.common.questions})</p>
               </div>
             </div>
           )}

@@ -12,6 +12,7 @@ interface ProfileFormProps {
   lang?: string;
 }
 
+
 export default function ProfileForm({ profile, dict }: ProfileFormProps) {
   const [fullName, setFullName] = useState(profile.full_name ?? "");
   const [phone, setPhone] = useState(profile.phone ?? "");
@@ -152,7 +153,7 @@ export default function ProfileForm({ profile, dict }: ProfileFormProps) {
           style={{ background: "rgba(239,68,68,0.1)", color: "var(--destructive)" }}
         >
           <AlertCircle size={15} />
-          {errorMsg || "Failed to update profile"}
+          {errorMsg || (lang === "ar" ? "فشل تحديث الملف الشخصي" : "Failed to update profile")}
         </div>
       )}
 
@@ -164,7 +165,7 @@ export default function ProfileForm({ profile, dict }: ProfileFormProps) {
           style={{ background: "var(--brand)", color: "var(--brand-foreground)" }}
         >
           {saving && <Loader2 size={14} className="animate-spin" />}
-          {saving ? "Saving…" : (dict?.save ?? "Save Changes")}
+          {saving ? (lang === "ar" ? "جارٍ الحفظ…" : "Saving…") : (dict?.save ?? "Save Changes")}
         </button>
       </div>
     </form>

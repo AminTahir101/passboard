@@ -112,10 +112,12 @@ export default async function MistakesPage({
         </div>
         <div>
           <p className="font-semibold" style={{ color: "var(--foreground)" }}>
-            {incorrectIds.length} incorrect question{incorrectIds.length !== 1 ? "s" : ""}
+            {lang === "ar"
+              ? `${incorrectIds.length} سؤال خاطئ`
+              : `${incorrectIds.length} incorrect question${incorrectIds.length !== 1 ? "s" : ""}`}
           </p>
           <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>
-            Based on your most recent attempt at each question
+            {lang === "ar" ? "بناءً على آخر محاولة لكل سؤال" : "Based on your most recent attempt at each question"}
           </p>
         </div>
         {incorrectIds.length > 0 && (
@@ -192,12 +194,14 @@ export default async function MistakesPage({
         <div className="text-center py-16">
           <CheckCircle2 size={48} className="mx-auto mb-3" style={{ color: "var(--success)" }} />
           <p className="font-semibold" style={{ color: "var(--foreground)" }}>
-            {incorrectIds.length === 0 ? dict.mistakes.noMistakes : "No mistakes match your filters"}
+            {incorrectIds.length === 0
+              ? dict.mistakes.noMistakes
+              : (lang === "ar" ? "لا توجد أخطاء تطابق الفلاتر" : "No mistakes match your filters")}
           </p>
           <p className="text-sm mt-1" style={{ color: "var(--muted-foreground)" }}>
             {incorrectIds.length === 0
               ? dict.mistakes.noMistakesDesc
-              : "Try clearing your filters"}
+              : (lang === "ar" ? "حاول مسح الفلاتر" : "Try clearing your filters")}
           </p>
           {incorrectIds.length === 0 && (
             <Link
@@ -269,7 +273,7 @@ export default async function MistakesPage({
                     className="px-3 py-1.5 rounded-lg text-xs font-medium border"
                     style={{ borderColor: "var(--border)", color: "var(--foreground)" }}
                   >
-                    Review
+                    {lang === "ar" ? "مراجعة" : "Review"}
                   </Link>
                   <Link
                     href={localePath(lang, "/practice/session?mode=incorrect&count=10")}
@@ -277,7 +281,7 @@ export default async function MistakesPage({
                     style={{ background: "var(--secondary)", color: "var(--secondary-foreground)" }}
                   >
                     <Play size={11} />
-                    Practice Again
+                    {lang === "ar" ? "تدرّب مجدداً" : "Practice Again"}
                   </Link>
                   <Link
                     href={localePath(lang, `/tutor?questionId=${q.id}`)}
@@ -285,7 +289,7 @@ export default async function MistakesPage({
                     style={{ background: "var(--secondary)", color: "var(--secondary-foreground)" }}
                   >
                     <Brain size={11} />
-                    Ask AI
+                    {lang === "ar" ? "اسأل المدرب الذكي" : "Ask AI"}
                   </Link>
                 </div>
               </div>

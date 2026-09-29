@@ -4,12 +4,14 @@ import { getDictionary, localePath } from "@/lib/i18n";
 import ProfileForm from "@/components/layout/ProfileForm";
 import { User, Mail, Shield, Calendar, Clock } from "lucide-react";
 
-const ACCESS_STATUS_LABELS: Record<string, { label: string; color: string; bg: string }> = {
-  active: { label: "Active", color: "var(--success)", bg: "rgba(22,163,74,0.1)" },
-  pending: { label: "Pending", color: "var(--warning)", bg: "rgba(217,119,6,0.1)" },
-  suspended: { label: "Suspended", color: "var(--destructive)", bg: "rgba(239,68,68,0.1)" },
-  expired: { label: "Expired", color: "var(--muted-foreground)", bg: "var(--muted)" },
-};
+function getAccessStatusLabels(dict: { active: string; pending: string; suspended: string; expired: string }): Record<string, { label: string; color: string; bg: string }> {
+  return {
+    active: { label: dict.active, color: "var(--success)", bg: "rgba(22,163,74,0.1)" },
+    pending: { label: dict.pending, color: "var(--warning)", bg: "rgba(217,119,6,0.1)" },
+    suspended: { label: dict.suspended, color: "var(--destructive)", bg: "rgba(239,68,68,0.1)" },
+    expired: { label: dict.expired, color: "var(--muted-foreground)", bg: "var(--muted)" },
+  };
+}
 
 export default async function ProfilePage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
@@ -30,6 +32,12 @@ export default async function ProfilePage({ params }: { params: Promise<{ lang: 
 
   if (!profile) redirect(localePath(lang, "/login"));
 
+  const ACCESS_STATUS_LABELS = getAccessStatusLabels({
+    active: dict.common.active,
+    pending: dict.common.pending,
+    suspended: dict.common.suspended,
+    expired: dict.common.expired,
+  });
   const statusStyle =
     ACCESS_STATUS_LABELS[profile.access_status] ?? ACCESS_STATUS_LABELS.pending;
 
@@ -90,7 +98,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ lang: 
             <User size={15} style={{ color: "var(--muted-foreground)" }} />
             <div>
               <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>
-                Role
+                {lang === "ar" ? "الدور" : "Role"}
               </p>
               <p className="text-sm font-medium capitalize" style={{ color: "var(--foreground)" }}>
                 {profile.role}
@@ -131,7 +139,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ lang: 
             <Calendar size={15} style={{ color: "var(--muted-foreground)" }} />
             <div>
               <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>
-                Member Since
+                {lang === "ar" ? "عضو منذ" : "Member Since"}
               </p>
               <p className="text-sm font-medium" style={{ color: "var(--foreground)" }}>
                 {new Date(profile.created_at).toLocaleDateString()}
@@ -150,7 +158,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ lang: 
             </div>
             <div>
               <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>
-                Questions Attempted
+                {lang === "ar" ? "الأسئلة المحاولة" : "Questions Attempted"}
               </p>
               <p className="text-sm font-medium" style={{ color: "var(--foreground)" }}>
                 {(totalAttempts ?? 0).toLocaleString()}
