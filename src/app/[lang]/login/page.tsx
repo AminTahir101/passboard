@@ -10,7 +10,7 @@ export default async function LoginPage({ params }: { params: Promise<{ lang: st
       lang={lang}
       homePath={localePath(lang, "/")}
       requestAccessPath={localePath(lang, "/request-access")}
-      dashboardPath="/dashboard"
+      dashboardPath={localePath(lang, "/dashboard")}
       dict={dict.login}
     />
   );

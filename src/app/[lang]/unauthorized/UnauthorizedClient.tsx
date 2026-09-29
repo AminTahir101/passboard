@@ -10,12 +10,13 @@ import type { Dictionary } from "@/lib/i18n";
 type ReasonKey = "suspended" | "expired" | "pending";
 
 interface UnauthorizedClientProps {
+  lang: string;
   loginPath: string;
   dashboardPath: string;
   dict: Dictionary["unauthorized"];
 }
 
-function UnauthorizedContent({ loginPath, dashboardPath, dict }: UnauthorizedClientProps) {
+function UnauthorizedContent({ lang, loginPath, dashboardPath, dict }: UnauthorizedClientProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const reasonParam = searchParams.get("reason") ?? "pending";
@@ -88,7 +89,7 @@ function UnauthorizedContent({ loginPath, dashboardPath, dict }: UnauthorizedCli
             style={{ background: "var(--brand)", color: "var(--brand-foreground)" }}
           >
             <Mail size={16} />
-            Contact Support
+            {lang === "ar" ? "تواصل مع الدعم" : "Contact Support"}
           </a>
 
           <button
@@ -109,7 +110,7 @@ function UnauthorizedContent({ loginPath, dashboardPath, dict }: UnauthorizedCli
               className="font-medium underline"
               style={{ color: "var(--brand)" }}
             >
-              {dashboardPath}
+              {lang === "ar" ? "الذهاب إلى لوحة التحكم" : "Go to Dashboard"}
             </Link>
           </p>
         )}

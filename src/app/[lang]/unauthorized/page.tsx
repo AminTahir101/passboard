@@ -7,8 +7,9 @@ export default async function UnauthorizedPage({ params }: { params: Promise<{ l
 
   return (
     <UnauthorizedClient
+      lang={lang}
       loginPath={localePath(lang, "/login")}
-      dashboardPath="/dashboard"
+      dashboardPath={localePath(lang, "/dashboard")}
       dict={dict.unauthorized}
     />
   );
