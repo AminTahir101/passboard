@@ -85,3 +85,11 @@ body {
   background: var(--border);
   border-radius: 3px;
 }
+
+/* RTL adjustments */
+[dir="rtl"] .lucide {
+  /* Icons that indicate direction need to flip */
+}
+[dir="rtl"] .flip-rtl {
+  transform: scaleX(-1);
+}
