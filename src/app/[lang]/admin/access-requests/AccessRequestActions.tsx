@@ -3,10 +3,16 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { AccessRequest } from "@/types/database";
+import type { Dictionary } from "@/lib/i18n";
 
 const STATUS_OPTIONS = ["new", "contacted", "paid", "approved", "rejected"] as const;
 
-export function AccessRequestActions({ request }: { request: AccessRequest }) {
+interface AccessRequestActionsProps {
+  request: AccessRequest;
+  dict: Dictionary["admin"]["accessRequests"];
+}
+
+export function AccessRequestActions({ request, dict }: AccessRequestActionsProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [showCreate, setShowCreate] = useState(false);
@@ -54,10 +60,9 @@ export function AccessRequestActions({ request }: { request: AccessRequest }) {
         className="p-3 rounded-lg text-xs space-y-1"
         style={{ background: "#f0fdf4", border: "1px solid #bbf7d0" }}
       >
-        <p className="font-semibold" style={{ color: "#16a34a" }}>Account created!</p>
+        <p className="font-semibold" style={{ color: "#16a34a" }}>{dict.accountCreated}</p>
         <p>Email: <strong>{createdEmail}</strong></p>
-        <p>Temp Password: <strong>{tempPassword}</strong></p>
-        <p style={{ color: "#6b7280" }}>Share these credentials with the student securely.</p>
+        <p>{dict.tempPassword}: <strong>{tempPassword}</strong></p>
       </div>
     );
   }
@@ -90,14 +95,14 @@ export function AccessRequestActions({ request }: { request: AccessRequest }) {
                   className="text-xs px-2 py-1.5 rounded-lg font-medium transition-colors hover:opacity-90"
                   style={{ background: "var(--brand)", color: "var(--brand-foreground)" }}
                 >
-                  {createLoading ? "Creating…" : "Confirm Create"}
+                  {createLoading ? "..." : dict.createAccount}
                 </button>
                 <button
                   onClick={() => setShowCreate(false)}
                   className="text-xs px-2 py-1.5 rounded-lg font-medium"
                   style={{ background: "var(--secondary)", color: "var(--muted-foreground)" }}
                 >
-                  Cancel
+                  ✕
                 </button>
               </div>
             </div>
@@ -107,7 +112,7 @@ export function AccessRequestActions({ request }: { request: AccessRequest }) {
               className="text-xs px-2 py-1.5 rounded-lg font-medium transition-colors hover:opacity-80"
               style={{ background: "var(--secondary)", color: "var(--foreground)" }}
             >
-              Create Account
+              {dict.createAccount}
             </button>
           )}
         </div>

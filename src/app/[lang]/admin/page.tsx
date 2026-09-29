@@ -1,10 +1,12 @@
 import { createAdminClient } from "@/lib/supabase/admin";
-import { createClient } from "@/lib/supabase/server";
 import { formatDate } from "@/lib/utils";
 import Link from "next/link";
+import { getDictionary, localePath } from "@/lib/i18n";
 
-export default async function AdminDashboard() {
-  const supabase = await createClient();
+export default async function AdminDashboard({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang } = await params;
+  const dict = await getDictionary(lang);
+  const d = dict.admin.dashboard;
   const admin = createAdminClient();
 
   // Counts
@@ -40,13 +42,13 @@ export default async function AdminDashboard() {
     .limit(5);
 
   const stats = [
-    { label: "Total Students", value: totalStudents ?? 0 },
-    { label: "Active Students", value: activeStudents ?? 0, color: "var(--success)" },
-    { label: "Expired", value: expiredStudents ?? 0, color: "var(--warning)" },
-    { label: "Pending Requests", value: pendingRequests ?? 0, color: pendingRequests ? "var(--brand)" : undefined },
-    { label: "Total Questions", value: totalQuestions ?? 0 },
-    { label: "Published", value: publishedQuestions ?? 0, color: "var(--success)" },
-    { label: "Total Attempts", value: totalAttempts ?? 0 },
+    { label: d.totalStudents, value: totalStudents ?? 0 },
+    { label: d.activeStudents, value: activeStudents ?? 0, color: "var(--success)" },
+    { label: d.expiredStudents, value: expiredStudents ?? 0, color: "var(--warning)" },
+    { label: d.pendingRequests, value: pendingRequests ?? 0, color: pendingRequests ? "var(--brand)" : undefined },
+    { label: d.totalQuestions, value: totalQuestions ?? 0 },
+    { label: d.publishedQuestions, value: publishedQuestions ?? 0, color: "var(--success)" },
+    { label: d.totalAttempts, value: totalAttempts ?? 0 },
   ];
 
   const statusColors: Record<string, string> = {
@@ -67,8 +69,8 @@ export default async function AdminDashboard() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
-        <p className="text-sm mt-1" style={{ color: "var(--muted-foreground)" }}>Platform overview</p>
+        <h1 className="text-2xl font-semibold tracking-tight">{d.title}</h1>
+        <p className="text-sm mt-1" style={{ color: "var(--muted-foreground)" }}>{dict.common.noData}</p>
       </div>
 
       {/* Stats */}
@@ -89,8 +91,8 @@ export default async function AdminDashboard() {
         {/* Recent Requests */}
         <div className="rounded-xl border" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
           <div className="flex items-center justify-between px-5 py-4 border-b" style={{ borderColor: "var(--border)" }}>
-            <h2 className="font-semibold text-sm">Recent Access Requests</h2>
-            <Link href="/admin/access-requests" className="text-xs hover:underline" style={{ color: "var(--muted-foreground)" }}>View all</Link>
+            <h2 className="font-semibold text-sm">{d.recentRequests}</h2>
+            <Link href={localePath(lang, "/admin/access-requests")} className="text-xs hover:underline" style={{ color: "var(--muted-foreground)" }}>{d.viewAll}</Link>
           </div>
           {recentRequests?.length ? (
             <div className="divide-y" style={{ borderColor: "var(--border)" }}>
@@ -110,15 +112,15 @@ export default async function AdminDashboard() {
               ))}
             </div>
           ) : (
-            <p className="px-5 py-8 text-sm text-center" style={{ color: "var(--muted-foreground)" }}>No access requests</p>
+            <p className="px-5 py-8 text-sm text-center" style={{ color: "var(--muted-foreground)" }}>{d.noRequests}</p>
           )}
         </div>
 
         {/* Recent Students */}
         <div className="rounded-xl border" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
           <div className="flex items-center justify-between px-5 py-4 border-b" style={{ borderColor: "var(--border)" }}>
-            <h2 className="font-semibold text-sm">Recent Students</h2>
-            <Link href="/admin/students" className="text-xs hover:underline" style={{ color: "var(--muted-foreground)" }}>View all</Link>
+            <h2 className="font-semibold text-sm">{d.recentStudents}</h2>
+            <Link href={localePath(lang, "/admin/students")} className="text-xs hover:underline" style={{ color: "var(--muted-foreground)" }}>{d.viewAll}</Link>
           </div>
           {recentStudents?.length ? (
             <div className="divide-y" style={{ borderColor: "var(--border)" }}>
@@ -138,7 +140,7 @@ export default async function AdminDashboard() {
               ))}
             </div>
           ) : (
-            <p className="px-5 py-8 text-sm text-center" style={{ color: "var(--muted-foreground)" }}>No students yet</p>
+            <p className="px-5 py-8 text-sm text-center" style={{ color: "var(--muted-foreground)" }}>{d.noStudents}</p>
           )}
         </div>
       </div>

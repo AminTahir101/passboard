@@ -1,6 +1,7 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { formatDate } from "@/lib/utils";
 import { AccessRequestActions } from "./AccessRequestActions";
+import { getDictionary, localePath } from "@/lib/i18n";
 
 const STATUS_OPTIONS = ["all", "new", "contacted", "paid", "approved", "rejected"] as const;
 
@@ -13,12 +14,17 @@ const statusColors: Record<string, { bg: string; text: string }> = {
 };
 
 export default async function AccessRequestsPage({
+  params,
   searchParams,
 }: {
+  params: Promise<{ lang: string }>;
   searchParams: Promise<{ status?: string }>;
 }) {
-  const params = await searchParams;
-  const statusFilter = params.status ?? "all";
+  const { lang } = await params;
+  const sp = await searchParams;
+  const statusFilter = sp.status ?? "all";
+  const dict = await getDictionary(lang);
+  const d = dict.admin.accessRequests;
   const admin = createAdminClient();
 
   let query = admin.from("access_requests").select("*").order("created_at", { ascending: false });
@@ -31,9 +37,9 @@ export default async function AccessRequestsPage({
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Access Requests</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{d.title}</h1>
         <p className="text-sm mt-1" style={{ color: "var(--muted-foreground)" }}>
-          {requests?.length ?? 0} request{requests?.length !== 1 ? "s" : ""}
+          {requests?.length ?? 0}
         </p>
       </div>
 
@@ -42,7 +48,7 @@ export default async function AccessRequestsPage({
         {STATUS_OPTIONS.map((s) => (
           <a
             key={s}
-            href={`/admin/access-requests${s !== "all" ? `?status=${s}` : ""}`}
+            href={`${localePath(lang, "/admin/access-requests")}${s !== "all" ? `?status=${s}` : ""}`}
             className="px-3 py-1.5 rounded-lg text-sm font-medium capitalize transition-colors"
             style={{
               background: statusFilter === s ? "var(--primary)" : "var(--secondary)",
@@ -61,12 +67,12 @@ export default async function AccessRequestsPage({
             <table className="w-full text-sm">
               <thead>
                 <tr style={{ background: "var(--secondary)", borderBottom: "1px solid var(--border)" }}>
-                  <th className="text-left px-4 py-3 font-medium" style={{ color: "var(--muted-foreground)" }}>Name</th>
-                  <th className="text-left px-4 py-3 font-medium" style={{ color: "var(--muted-foreground)" }}>Email</th>
-                  <th className="text-left px-4 py-3 font-medium hidden sm:table-cell" style={{ color: "var(--muted-foreground)" }}>Target Exam</th>
-                  <th className="text-left px-4 py-3 font-medium hidden md:table-cell" style={{ color: "var(--muted-foreground)" }}>Date</th>
-                  <th className="text-left px-4 py-3 font-medium" style={{ color: "var(--muted-foreground)" }}>Status</th>
-                  <th className="text-left px-4 py-3 font-medium" style={{ color: "var(--muted-foreground)" }}>Actions</th>
+                  <th className="text-left px-4 py-3 font-medium" style={{ color: "var(--muted-foreground)" }}>{dict.common.name}</th>
+                  <th className="text-left px-4 py-3 font-medium" style={{ color: "var(--muted-foreground)" }}>{dict.common.email}</th>
+                  <th className="text-left px-4 py-3 font-medium hidden sm:table-cell" style={{ color: "var(--muted-foreground)" }}>{d.targetExam}</th>
+                  <th className="text-left px-4 py-3 font-medium hidden md:table-cell" style={{ color: "var(--muted-foreground)" }}>{dict.common.date}</th>
+                  <th className="text-left px-4 py-3 font-medium" style={{ color: "var(--muted-foreground)" }}>{dict.common.status}</th>
+                  <th className="text-left px-4 py-3 font-medium" style={{ color: "var(--muted-foreground)" }}>{dict.common.actions}</th>
                 </tr>
               </thead>
               <tbody style={{ background: "var(--card)" }}>
@@ -91,7 +97,7 @@ export default async function AccessRequestsPage({
                         </span>
                       </td>
                       <td className="px-4 py-3">
-                        <AccessRequestActions request={r} />
+                        <AccessRequestActions request={r} dict={d} />
                       </td>
                     </tr>
                   );
@@ -101,7 +107,7 @@ export default async function AccessRequestsPage({
           </div>
         ) : (
           <div className="py-16 text-center" style={{ background: "var(--card)" }}>
-            <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>No access requests found</p>
+            <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>{d.noRequests}</p>
           </div>
         )}
       </div>

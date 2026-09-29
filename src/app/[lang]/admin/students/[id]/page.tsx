@@ -1,11 +1,14 @@
 import { createAdminClient } from "@/lib/supabase/admin";
-import { formatDate, daysUntil } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 import { notFound } from "next/navigation";
 import { StudentActions } from "./StudentActions";
 import Link from "next/link";
+import { getDictionary, localePath } from "@/lib/i18n";
 
-export default async function StudentDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
+export default async function StudentDetailPage({ params }: { params: Promise<{ lang: string; id: string }> }) {
+  const { lang, id } = await params;
+  const dict = await getDictionary(lang);
+  const d = dict.admin.students;
   const admin = createAdminClient();
 
   const { data: student } = await admin.from("profiles").select("*").eq("id", id).single();
@@ -34,8 +37,8 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
   return (
     <div className="space-y-6 max-w-3xl">
       <div className="flex items-center gap-2">
-        <Link href="/admin/students" className="text-sm hover:underline" style={{ color: "var(--muted-foreground)" }}>
-          Students
+        <Link href={localePath(lang, "/admin/students")} className="text-sm hover:underline" style={{ color: "var(--muted-foreground)" }}>
+          {d.title}
         </Link>
         <span style={{ color: "var(--muted-foreground)" }}>/</span>
         <span className="text-sm">{student.full_name ?? student.email}</span>
@@ -57,25 +60,25 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
         </div>
         <div className="grid sm:grid-cols-2 gap-4 text-sm">
           <div>
-            <p className="font-medium mb-0.5">Phone</p>
+            <p className="font-medium mb-0.5">{dict.common.phone}</p>
             <p style={{ color: "var(--muted-foreground)" }}>{student.phone ?? "—"}</p>
           </div>
           <div>
-            <p className="font-medium mb-0.5">Target Exam</p>
+            <p className="font-medium mb-0.5">{d.targetExam}</p>
             <p style={{ color: "var(--muted-foreground)" }}>{student.target_exam ?? "—"}</p>
           </div>
           <div>
-            <p className="font-medium mb-0.5">Exam Date</p>
+            <p className="font-medium mb-0.5">{d.examDate}</p>
             <p style={{ color: "var(--muted-foreground)" }}>{student.exam_date ? formatDate(student.exam_date) : "—"}</p>
           </div>
           <div>
-            <p className="font-medium mb-0.5">Access Expires</p>
+            <p className="font-medium mb-0.5">{d.expires}</p>
             <p style={{ color: "var(--muted-foreground)" }}>
-              {student.access_expires_at ? formatDate(student.access_expires_at) : "Never"}
+              {student.access_expires_at ? formatDate(student.access_expires_at) : dict.common.never}
             </p>
           </div>
           <div>
-            <p className="font-medium mb-0.5">Member Since</p>
+            <p className="font-medium mb-0.5">{dict.common.date}</p>
             <p style={{ color: "var(--muted-foreground)" }}>{formatDate(student.created_at)}</p>
           </div>
         </div>
@@ -84,9 +87,9 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4">
         {[
-          { label: "Questions Answered", value: totalAttempts ?? 0 },
-          { label: "Correct", value: correctAttempts ?? 0 },
-          { label: "Accuracy", value: `${accuracy}%` },
+          { label: d.totalAnswered, value: totalAttempts ?? 0 },
+          { label: d.correct, value: correctAttempts ?? 0 },
+          { label: d.accuracy, value: `${accuracy}%` },
         ].map((stat) => (
           <div key={stat.label} className="rounded-xl border p-4 text-center" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
             <p className="text-2xl font-bold mb-1">{stat.value}</p>
@@ -97,15 +100,15 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
 
       {/* Actions */}
       <div className="rounded-xl border p-6" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
-        <h2 className="font-semibold mb-4">Manage Access</h2>
-        <StudentActions student={student} />
+        <h2 className="font-semibold mb-4">{d.performanceStats}</h2>
+        <StudentActions student={student} dict={d} />
       </div>
 
       {/* Recent Mock Exams */}
       {mockExams && mockExams.length > 0 && (
         <div className="rounded-xl border" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
           <div className="px-5 py-4 border-b" style={{ borderColor: "var(--border)" }}>
-            <h2 className="font-semibold text-sm">Recent Mock Exams</h2>
+            <h2 className="font-semibold text-sm">{d.mockExamHistory}</h2>
           </div>
           <div className="divide-y" style={{ borderColor: "var(--border)" }}>
             {mockExams.map((exam) => (
@@ -113,7 +116,7 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
                 <div>
                   <p className="font-medium">{exam.exam_name ?? "Mock Exam"}</p>
                   <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>
-                    {formatDate(exam.started_at)} · {exam.question_count} questions
+                    {formatDate(exam.started_at)} · {exam.question_count} {dict.common.questions}
                   </p>
                 </div>
                 {exam.percentage !== null && (

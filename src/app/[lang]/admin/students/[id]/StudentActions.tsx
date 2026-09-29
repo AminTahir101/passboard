@@ -3,8 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Profile } from "@/types/database";
+import type { Dictionary } from "@/lib/i18n";
 
-export function StudentActions({ student }: { student: Profile }) {
+interface StudentActionsProps {
+  student: Profile;
+  dict: Dictionary["admin"]["students"];
+}
+
+export function StudentActions({ student, dict }: StudentActionsProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [expiryDate, setExpiryDate] = useState(student.access_expires_at?.split("T")[0] ?? "");
@@ -41,7 +47,7 @@ export function StudentActions({ student }: { student: Profile }) {
             className="text-sm px-3 py-2 rounded-lg font-medium transition-colors hover:opacity-90 disabled:opacity-50"
             style={{ background: "#f0fdf4", color: "#16a34a" }}
           >
-            Activate
+            {dict.activate}
           </button>
         )}
         {student.access_status === "active" && (
@@ -51,7 +57,7 @@ export function StudentActions({ student }: { student: Profile }) {
             className="text-sm px-3 py-2 rounded-lg font-medium transition-colors hover:opacity-90 disabled:opacity-50"
             style={{ background: "#fef2f2", color: "#dc2626" }}
           >
-            Suspend
+            {dict.suspend}
           </button>
         )}
         {student.access_status === "suspended" && (
@@ -61,14 +67,14 @@ export function StudentActions({ student }: { student: Profile }) {
             className="text-sm px-3 py-2 rounded-lg font-medium transition-colors hover:opacity-90 disabled:opacity-50"
             style={{ background: "#eff6ff", color: "#2563eb" }}
           >
-            Reactivate
+            {dict.reactivate}
           </button>
         )}
       </div>
 
       {/* Expiry date */}
       <div>
-        <label className="block text-sm font-medium mb-1.5">Set Expiry Date</label>
+        <label className="block text-sm font-medium mb-1.5">{dict.setExpiry}</label>
         <div className="flex gap-2">
           <input
             type="date"
@@ -83,16 +89,20 @@ export function StudentActions({ student }: { student: Profile }) {
             className="text-sm px-3 py-2 rounded-lg font-medium transition-colors hover:opacity-90 disabled:opacity-50"
             style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}
           >
-            Save
+            {loading ? "..." : "Save"}
           </button>
         </div>
       </div>
 
       {/* Extend */}
       <div>
-        <label className="block text-sm font-medium mb-1.5">Extend Access</label>
+        <label className="block text-sm font-medium mb-1.5">{dict.extend30.replace("30", "").trim()}</label>
         <div className="flex gap-2">
-          {[30, 60, 90].map((days) => (
+          {[
+            { days: 30, label: dict.extend30 },
+            { days: 60, label: dict.extend60 },
+            { days: 90, label: dict.extend90 },
+          ].map(({ days, label }) => (
             <button
               key={days}
               disabled={loading}
@@ -100,7 +110,7 @@ export function StudentActions({ student }: { student: Profile }) {
               className="text-sm px-3 py-2 rounded-lg font-medium transition-colors hover:opacity-80 disabled:opacity-50"
               style={{ background: "var(--secondary)", color: "var(--foreground)" }}
             >
-              +{days} days
+              {label}
             </button>
           ))}
         </div>

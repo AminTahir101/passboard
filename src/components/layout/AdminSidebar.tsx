@@ -5,33 +5,41 @@ import { usePathname, useRouter } from "next/navigation";
 import { LayoutDashboard, Users, BookOpen, FileUp, Inbox, LogOut, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-
-const navItems = [
-  { label: "Dashboard", href: "/admin", icon: LayoutDashboard, exact: true },
-  { label: "Access Requests", href: "/admin/access-requests", icon: Inbox },
-  { label: "Students", href: "/admin/students", icon: Users },
-  { label: "Questions", href: "/admin/questions", icon: BookOpen },
-  { label: "Import Questions", href: "/admin/questions/import", icon: FileUp },
-];
+import { localePath } from "@/lib/i18n";
+import LanguageToggle from "@/components/LanguageToggle";
+import type { Dictionary } from "@/lib/i18n";
 
 interface AdminSidebarProps {
   adminName: string;
+  lang: string;
+  nav: Dictionary["nav"];
+  langToggleLabel: string;
 }
 
-export function AdminSidebar({ adminName }: AdminSidebarProps) {
+export function AdminSidebar({ adminName, lang, nav, langToggleLabel }: AdminSidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  const navItems = [
+    { label: nav.adminDashboard, href: localePath(lang, "/admin"), icon: LayoutDashboard, exact: true },
+    { label: nav.accessRequests, href: localePath(lang, "/admin/access-requests"), icon: Inbox },
+    { label: nav.students, href: localePath(lang, "/admin/students"), icon: Users },
+    { label: nav.questions, href: localePath(lang, "/admin/questions"), icon: BookOpen },
+    { label: nav.importQuestions, href: localePath(lang, "/admin/questions/import"), icon: FileUp },
+  ];
+
   function isActive(href: string, exact?: boolean) {
-    if (exact) return pathname === href;
-    return pathname.startsWith(href);
+    const pathWithoutLang = pathname.replace(`/${lang}`, "") || "/";
+    const hrefWithoutLang = href.replace(`/${lang}`, "") || "/";
+    if (exact) return pathWithoutLang === hrefWithoutLang;
+    return pathWithoutLang.startsWith(hrefWithoutLang);
   }
 
   async function handleLogout() {
     const supabase = createClient();
     await supabase.auth.signOut();
-    router.push("/login");
+    router.push(localePath(lang, "/login"));
     router.refresh();
   }
 
@@ -39,7 +47,7 @@ export function AdminSidebar({ adminName }: AdminSidebarProps) {
     <div className="flex flex-col h-full">
       {/* Logo */}
       <div className="px-5 py-5 border-b" style={{ borderColor: "var(--border)" }}>
-        <Link href="/admin" className="font-semibold text-base tracking-tight">
+        <Link href={localePath(lang, "/admin")} className="font-semibold text-base tracking-tight">
           Moraje3 <span className="text-xs font-normal ml-1" style={{ color: "var(--muted-foreground)" }}>Admin</span>
         </Link>
       </div>
@@ -72,13 +80,16 @@ export function AdminSidebar({ adminName }: AdminSidebarProps) {
           <p className="text-xs font-medium truncate">{adminName}</p>
           <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>Administrator</p>
         </div>
+        <div className="mb-1 px-1">
+          <LanguageToggle lang={lang} label={langToggleLabel} />
+        </div>
         <button
           onClick={handleLogout}
           className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm transition-colors hover:opacity-80"
           style={{ color: "var(--muted-foreground)" }}
         >
           <LogOut size={15} />
-          Sign out
+          {nav.logout}
         </button>
       </div>
     </div>
@@ -99,7 +110,7 @@ export function AdminSidebar({ adminName }: AdminSidebarProps) {
         className="lg:hidden flex items-center justify-between px-4 h-14 border-b"
         style={{ background: "var(--card)", borderColor: "var(--border)" }}
       >
-        <Link href="/admin" className="font-semibold text-sm">Moraje3 Admin</Link>
+        <Link href={localePath(lang, "/admin")} className="font-semibold text-sm">Moraje3 Admin</Link>
         <button onClick={() => setMobileOpen(!mobileOpen)} className="p-1.5 rounded-lg">
           {mobileOpen ? <X size={20} /> : <Menu size={20} />}
         </button>

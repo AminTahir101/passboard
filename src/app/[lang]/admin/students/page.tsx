@@ -1,6 +1,7 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { formatDate } from "@/lib/utils";
 import Link from "next/link";
+import { getDictionary, localePath } from "@/lib/i18n";
 
 const accessColors: Record<string, { bg: string; text: string }> = {
   active: { bg: "#f0fdf4", text: "#16a34a" },
@@ -10,11 +11,16 @@ const accessColors: Record<string, { bg: string; text: string }> = {
 };
 
 export default async function StudentsPage({
+  params,
   searchParams,
 }: {
+  params: Promise<{ lang: string }>;
   searchParams: Promise<{ status?: string; q?: string }>;
 }) {
-  const params = await searchParams;
+  const { lang } = await params;
+  const sp = await searchParams;
+  const dict = await getDictionary(lang);
+  const d = dict.admin.students;
   const admin = createAdminClient();
 
   let query = admin
@@ -23,27 +29,29 @@ export default async function StudentsPage({
     .eq("role", "student")
     .order("created_at", { ascending: false });
 
-  if (params.status && params.status !== "all") {
-    query = query.eq("access_status", params.status as import("@/types/database").AccessStatus);
+  if (sp.status && sp.status !== "all") {
+    query = query.eq("access_status", sp.status as import("@/types/database").AccessStatus);
   }
 
   const { data: students } = await query;
 
-  const filtered = params.q
+  const filtered = sp.q
     ? students?.filter(
         (s) =>
-          s.full_name?.toLowerCase().includes(params.q!.toLowerCase()) ||
-          s.email.toLowerCase().includes(params.q!.toLowerCase())
+          s.full_name?.toLowerCase().includes(sp.q!.toLowerCase()) ||
+          s.email.toLowerCase().includes(sp.q!.toLowerCase())
       )
     : students;
+
+  const baseUrl = localePath(lang, "/admin/students");
 
   return (
     <div className="space-y-6">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Students</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">{d.title}</h1>
           <p className="text-sm mt-1" style={{ color: "var(--muted-foreground)" }}>
-            {filtered?.length ?? 0} student{filtered?.length !== 1 ? "s" : ""}
+            {filtered?.length ?? 0}
           </p>
         </div>
       </div>
@@ -53,11 +61,11 @@ export default async function StudentsPage({
         {["all", "active", "pending", "suspended", "expired"].map((s) => (
           <a
             key={s}
-            href={`/admin/students${s !== "all" ? `?status=${s}` : ""}${params.q ? `${s !== "all" ? "&" : "?"}q=${params.q}` : ""}`}
+            href={`${baseUrl}${s !== "all" ? `?status=${s}` : ""}${sp.q ? `${s !== "all" ? "&" : "?"}q=${sp.q}` : ""}`}
             className="px-3 py-1.5 rounded-lg text-sm font-medium capitalize transition-colors"
             style={{
-              background: (params.status ?? "all") === s ? "var(--primary)" : "var(--secondary)",
-              color: (params.status ?? "all") === s ? "var(--primary-foreground)" : "var(--muted-foreground)",
+              background: (sp.status ?? "all") === s ? "var(--primary)" : "var(--secondary)",
+              color: (sp.status ?? "all") === s ? "var(--primary-foreground)" : "var(--muted-foreground)",
             }}
           >
             {s}
@@ -66,8 +74,8 @@ export default async function StudentsPage({
         <form className="ml-auto">
           <input
             name="q"
-            defaultValue={params.q}
-            placeholder="Search name or email…"
+            defaultValue={sp.q}
+            placeholder={dict.common.search}
             className="px-3 py-1.5 text-sm rounded-lg border outline-none"
             style={{ background: "var(--background)", borderColor: "var(--border)", color: "var(--foreground)", minWidth: "200px" }}
           />
@@ -81,12 +89,12 @@ export default async function StudentsPage({
             <table className="w-full text-sm">
               <thead>
                 <tr style={{ background: "var(--secondary)", borderBottom: "1px solid var(--border)" }}>
-                  <th className="text-left px-4 py-3 font-medium" style={{ color: "var(--muted-foreground)" }}>Name</th>
-                  <th className="text-left px-4 py-3 font-medium hidden sm:table-cell" style={{ color: "var(--muted-foreground)" }}>Target Exam</th>
-                  <th className="text-left px-4 py-3 font-medium hidden md:table-cell" style={{ color: "var(--muted-foreground)" }}>Exam Date</th>
-                  <th className="text-left px-4 py-3 font-medium" style={{ color: "var(--muted-foreground)" }}>Status</th>
-                  <th className="text-left px-4 py-3 font-medium hidden lg:table-cell" style={{ color: "var(--muted-foreground)" }}>Expires</th>
-                  <th className="text-left px-4 py-3 font-medium" style={{ color: "var(--muted-foreground)" }}>Actions</th>
+                  <th className="text-left px-4 py-3 font-medium" style={{ color: "var(--muted-foreground)" }}>{dict.common.name}</th>
+                  <th className="text-left px-4 py-3 font-medium hidden sm:table-cell" style={{ color: "var(--muted-foreground)" }}>{d.targetExam}</th>
+                  <th className="text-left px-4 py-3 font-medium hidden md:table-cell" style={{ color: "var(--muted-foreground)" }}>{d.examDate}</th>
+                  <th className="text-left px-4 py-3 font-medium" style={{ color: "var(--muted-foreground)" }}>{d.status}</th>
+                  <th className="text-left px-4 py-3 font-medium hidden lg:table-cell" style={{ color: "var(--muted-foreground)" }}>{d.expires}</th>
+                  <th className="text-left px-4 py-3 font-medium" style={{ color: "var(--muted-foreground)" }}>{dict.common.actions}</th>
                 </tr>
               </thead>
               <tbody style={{ background: "var(--card)" }}>
@@ -113,15 +121,15 @@ export default async function StudentsPage({
                         </span>
                       </td>
                       <td className="px-4 py-3 hidden lg:table-cell text-sm" style={{ color: "var(--muted-foreground)" }}>
-                        {s.access_expires_at ? formatDate(s.access_expires_at) : "Never"}
+                        {s.access_expires_at ? formatDate(s.access_expires_at) : dict.common.never}
                       </td>
                       <td className="px-4 py-3">
                         <Link
-                          href={`/admin/students/${s.id}`}
+                          href={localePath(lang, `/admin/students/${s.id}`)}
                           className="text-xs px-2.5 py-1.5 rounded-lg font-medium transition-colors"
                           style={{ background: "var(--secondary)", color: "var(--foreground)" }}
                         >
-                          Manage
+                          {d.manage}
                         </Link>
                       </td>
                     </tr>
@@ -132,7 +140,7 @@ export default async function StudentsPage({
           </div>
         ) : (
           <div className="py-16 text-center" style={{ background: "var(--card)" }}>
-            <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>No students found</p>
+            <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>{d.noStudents}</p>
           </div>
         )}
       </div>

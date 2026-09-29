@@ -105,12 +105,23 @@ export default function ImportQuestionsPage() {
     }
   }
 
+  // NOTE: This is a client component. The lang-aware back link uses window.location
+  // to derive the current lang prefix at runtime.
+  const getQuestionsHref = () => {
+    if (typeof window !== "undefined") {
+      const segments = window.location.pathname.split("/");
+      const lang = segments[1] ?? "ar";
+      return `/${lang}/admin/questions`;
+    }
+    return "/admin/questions";
+  };
+
   return (
     <div className="space-y-6 max-w-3xl">
       <div className="flex items-center gap-2">
-        <Link href="/admin/questions" className="text-sm hover:underline" style={{ color: "var(--muted-foreground)" }}>
+        <a href={getQuestionsHref()} className="text-sm hover:underline" style={{ color: "var(--muted-foreground)" }}>
           Questions
-        </Link>
+        </a>
         <span style={{ color: "var(--muted-foreground)" }}>/</span>
         <span className="text-sm">Import</span>
       </div>
@@ -300,7 +311,7 @@ export default function ImportQuestionsPage() {
           </p>
           <div className="flex justify-center gap-3 mt-6">
             <button
-              onClick={() => router.push("/admin/questions")}
+              onClick={() => router.push(getQuestionsHref())}
               className="px-5 py-2.5 rounded-lg text-sm font-semibold hover:opacity-90"
               style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}
             >
