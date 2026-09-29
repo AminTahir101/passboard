@@ -78,7 +78,7 @@ export function AdminSidebar({ adminName, lang, nav, langToggleLabel }: AdminSid
       <div className="p-3 border-t" style={{ borderColor: "var(--border)" }}>
         <div className="px-3 py-2 mb-1">
           <p className="text-xs font-medium truncate">{adminName}</p>
-          <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>Administrator</p>
+          <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>{lang === "ar" ? "مسؤول" : "Administrator"}</p>
         </div>
         <div className="mb-1 px-1">
           <LanguageToggle lang={lang} label={langToggleLabel} />

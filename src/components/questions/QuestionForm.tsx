@@ -254,7 +254,7 @@ export function QuestionForm({ initialData, questionId, dict, lang }: QuestionFo
           className="px-4 py-2.5 rounded-lg text-sm font-medium transition-colors"
           style={{ background: "var(--secondary)", color: "var(--muted-foreground)" }}
         >
-          Cancel
+          {lang === "ar" ? "إلغاء" : "Cancel"}
         </button>
       </div>
     </form>

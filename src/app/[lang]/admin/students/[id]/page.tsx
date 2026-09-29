@@ -101,7 +101,7 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
       {/* Actions */}
       <div className="rounded-xl border p-6" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
         <h2 className="font-semibold mb-4">{d.performanceStats}</h2>
-        <StudentActions student={student} dict={d} />
+        <StudentActions student={student} dict={d} lang={lang} />
       </div>
 
       {/* Recent Mock Exams */}
