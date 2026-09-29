@@ -1,23 +1,55 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { SUPPORTED_LOCALES, DEFAULT_LOCALE } from "@/lib/i18n";
+
+function detectLocale(request: NextRequest): string {
+  const cookie = request.cookies.get("NEXT_LOCALE")?.value;
+  if (cookie && SUPPORTED_LOCALES.includes(cookie as "ar" | "en")) return cookie;
+  const accept = request.headers.get("accept-language") ?? "";
+  if (accept.startsWith("ar")) return "ar";
+  if (accept.startsWith("en")) return "en";
+  return DEFAULT_LOCALE;
+}
 
 export async function proxy(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
-    request,
-  });
+  const { pathname } = request.nextUrl;
 
+  // Never touch API routes, auth, or static files
+  if (
+    pathname.startsWith("/api/") ||
+    pathname.startsWith("/auth/") ||
+    pathname.startsWith("/_next/") ||
+    pathname.includes(".")
+  ) {
+    return NextResponse.next({ request });
+  }
+
+  // Redirect bare paths to /{locale}/...
+  const pathnameHasLocale = SUPPORTED_LOCALES.some(
+    (l) => pathname.startsWith(`/${l}/`) || pathname === `/${l}`
+  );
+
+  if (!pathnameHasLocale) {
+    const locale = detectLocale(request);
+    const redirectUrl = new URL(`/${locale}${pathname === "/" ? "" : pathname}`, request.url);
+    // Preserve query string
+    redirectUrl.search = request.nextUrl.search;
+    return NextResponse.redirect(redirectUrl);
+  }
+
+  // Extract lang (first segment)
+  const lang = pathname.split("/")[1]; // "ar" | "en"
+
+  // Supabase session refresh
+  let supabaseResponse = NextResponse.next({ request });
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
+        getAll() { return request.cookies.getAll(); },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value)
-          );
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
           supabaseResponse = NextResponse.next({ request });
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options)
@@ -27,44 +59,28 @@ export async function proxy(request: NextRequest) {
     }
   );
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: { user } } = await supabase.auth.getUser();
+  const pathWithoutLang = "/" + pathname.split("/").slice(2).join("/");
 
-  const pathname = request.nextUrl.pathname;
+  // Protect student and admin routes
+  const protectedPrefixes = [
+    "/dashboard", "/practice", "/questions", "/mock-exams",
+    "/tutor", "/mistakes", "/performance", "/profile", "/admin",
+  ];
+  const isProtected = protectedPrefixes.some((p) => pathWithoutLang.startsWith(p));
 
-  // Public routes — always accessible
-  const publicRoutes = ["/", "/login", "/request-access"];
-  const isPublic = publicRoutes.some((r) => pathname === r || pathname.startsWith(r + "/"));
-
-  // Auth routes
-  if (pathname.startsWith("/dashboard") || pathname.startsWith("/practice") ||
-      pathname.startsWith("/questions") || pathname.startsWith("/mock-exams") ||
-      pathname.startsWith("/tutor") || pathname.startsWith("/mistakes") ||
-      pathname.startsWith("/performance") || pathname.startsWith("/profile")) {
-    if (!user) {
-      return NextResponse.redirect(new URL("/login", request.url));
-    }
-    // Access check done server-side in each page/layout
-  }
-
-  if (pathname.startsWith("/admin")) {
-    if (!user) {
-      return NextResponse.redirect(new URL("/login", request.url));
-    }
-    // Role check done in admin layout
+  if (isProtected && !user) {
+    return NextResponse.redirect(new URL(`/${lang}/login`, request.url));
   }
 
   // Redirect logged-in users away from login
-  if (pathname === "/login" && user) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+  if (pathWithoutLang === "/login" && user) {
+    return NextResponse.redirect(new URL(`/${lang}/dashboard`, request.url));
   }
 
   return supabaseResponse;
 }
 
 export const config = {
-  matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
-  ],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)"],
 };
