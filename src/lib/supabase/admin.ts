@@ -1,11 +1,11 @@
 import { createClient } from "@supabase/supabase-js";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/types/database";
 import { createMockClient } from "@/lib/supabase/mock";
 
-export function createAdminClient() {
+export function createAdminClient(): SupabaseClient<Database> {
   if (process.env.NEXT_PUBLIC_DEV_BYPASS_AUTH) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return createMockClient() as any;
+    return createMockClient() as unknown as SupabaseClient<Database>;
   }
   return createClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
