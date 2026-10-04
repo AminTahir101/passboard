@@ -2,6 +2,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { formatDate } from "@/lib/utils";
 import Link from "next/link";
 import { getDictionary, localePath } from "@/lib/i18n";
+import PublishAllButton from "./PublishAllButton";
 
 const diffColors: Record<string, { bg: string; text: string }> = {
   easy:   { bg: "var(--success-muted)",     text: "var(--success)" },
@@ -36,6 +37,11 @@ export default async function QuestionsPage({
 
   const { data: questions } = await query.limit(100);
 
+  const { count: draftCount } = await admin
+    .from("questions")
+    .select("*", { count: "exact", head: true })
+    .eq("status", "draft");
+
   const baseUrl = localePath(lang, "/admin/questions");
 
   const buildUrl = (overrides: Record<string, string | undefined>) => {
@@ -58,6 +64,7 @@ export default async function QuestionsPage({
           </p>
         </div>
         <div className="flex gap-2">
+          <PublishAllButton draftCount={draftCount ?? 0} />
           <Link
             href={localePath(lang, "/admin/questions/import")}
             className="text-sm px-3 py-2 rounded-lg font-medium border transition-colors hover:opacity-80"

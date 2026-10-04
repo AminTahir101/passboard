@@ -10,6 +10,32 @@ async function verifyAdmin() {
   return profile?.role === "admin" ? user : null;
 }
 
+export async function PATCH(request: Request) {
+  const user = await verifyAdmin();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { action, ids } = await request.json();
+  if (action !== "publish" && action !== "archive" && action !== "draft") {
+    return NextResponse.json({ error: "Invalid action" }, { status: 400 });
+  }
+
+  const admin = createAdminClient();
+  let query = admin.from("questions").update({ status: action, updated_at: new Date().toISOString() } as import("@/types/database").Database["public"]["Tables"]["questions"]["Update"]);
+
+  if (ids && Array.isArray(ids) && ids.length > 0) {
+    query = query.in("id", ids);
+  } else if (action === "publish") {
+    // Bulk-publish all drafts when no IDs provided
+    query = query.eq("status", "draft");
+  } else {
+    return NextResponse.json({ error: "ids required for this action" }, { status: 400 });
+  }
+
+  const { error } = await query;
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  return NextResponse.json({ success: true });
+}
+
 export async function POST(request: Request) {
   const user = await verifyAdmin();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
