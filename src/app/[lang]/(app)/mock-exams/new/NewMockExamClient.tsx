@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ChevronLeft, ClipboardList, Loader2 } from "lucide-react";
 import { localePath } from "@/lib/i18n";
@@ -28,8 +28,16 @@ export default function NewMockExamClient({ dict, lang }: Props) {
   const router = useRouter();
   const [examName, setExamName] = useState("");
   const [questionCount, setQuestionCount] = useState<50 | 100>(50);
+  const [category, setCategory] = useState("");
+  const [categories, setCategories] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch("/api/practice/filters")
+      .then((r) => r.json())
+      .then(({ categories: c }) => setCategories(c ?? []));
+  }, []);
 
   const examOptions = [
     { value: "", label: dict.allExams },
@@ -52,7 +60,7 @@ export default function NewMockExamClient({ dict, lang }: Props) {
       const res = await fetch("/api/mock-exams/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ examName, questionCount }),
+        body: JSON.stringify({ examName, questionCount, category }),
       });
 
       const data = await res.json();
@@ -133,6 +141,27 @@ export default function NewMockExamClient({ dict, lang }: Props) {
               {dict.selectExam}
             </p>
           </div>
+
+          {/* Specialty / Category filter */}
+          {categories.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium mb-2" style={{ color: "var(--foreground)" }}>
+                {lang === "ar" ? "التخصص (اختياري)" : "Specialty (optional)"}
+              </label>
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="w-full rounded-lg border px-3 py-2.5 text-sm outline-none"
+                style={{ borderColor: "var(--border)", background: "var(--background)", color: "var(--foreground)" }}
+              >
+                <option value="">{lang === "ar" ? "كل التخصصات" : "All Specialties"}</option>
+                {categories.map((c) => <option key={c} value={c}>{c}</option>)}
+              </select>
+              <p className="text-xs mt-1.5" style={{ color: "var(--muted-foreground)" }}>
+                {lang === "ar" ? "اترك فارغاً للأسئلة من جميع التخصصات" : "Leave blank to draw from all specialties"}
+              </p>
+            </div>
+          )}
 
           {/* Question count */}
           <div>

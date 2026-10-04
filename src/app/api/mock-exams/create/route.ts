@@ -32,9 +32,10 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { examName, questionCount } = body as {
+    const { examName, questionCount, category } = body as {
       examName?: string;
       questionCount: number;
+      category?: string;
     };
 
     if (!questionCount || ![50, 100].includes(questionCount)) {
@@ -52,6 +53,9 @@ export async function POST(request: NextRequest) {
 
     if (examName && examName.trim() !== "") {
       query = query.eq("exam", examName.trim());
+    }
+    if (category && category.trim() !== "") {
+      query = query.eq("category", category.trim());
     }
 
     const { data: allQuestions, error: qError } = await query;
