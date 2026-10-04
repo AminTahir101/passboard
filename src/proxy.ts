@@ -39,6 +39,15 @@ export async function proxy(request: NextRequest) {
 
   // Extract lang (first segment)
   const lang = pathname.split("/")[1]; // "ar" | "en"
+  const pathWithoutLang = "/" + pathname.split("/").slice(2).join("/");
+
+  // In dev bypass mode, treat all requests as authenticated
+  if (process.env.NEXT_PUBLIC_DEV_BYPASS_AUTH) {
+    if (pathWithoutLang === "/login") {
+      return NextResponse.redirect(new URL(`/${lang}/dashboard`, request.url));
+    }
+    return NextResponse.next({ request });
+  }
 
   // Supabase session refresh
   let supabaseResponse = NextResponse.next({ request });
@@ -60,7 +69,6 @@ export async function proxy(request: NextRequest) {
   );
 
   const { data: { user } } = await supabase.auth.getUser();
-  const pathWithoutLang = "/" + pathname.split("/").slice(2).join("/");
 
   // Protect student and admin routes
   const protectedPrefixes = [

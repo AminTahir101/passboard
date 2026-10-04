@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase/client";
 import { localePath } from "@/lib/i18n";
 import LanguageToggle from "@/components/LanguageToggle";
 import type { Dictionary } from "@/lib/i18n";
+import { Logo } from "@/components/landing/ui";
 
 interface AdminSidebarProps {
   adminName: string;
@@ -46,10 +47,14 @@ export function AdminSidebar({ adminName, lang, nav, langToggleLabel }: AdminSid
   const sidebarContent = (
     <div className="flex flex-col h-full">
       {/* Logo */}
-      <div className="px-5 py-5 border-b" style={{ borderColor: "var(--border)" }}>
-        <Link href={localePath(lang, "/admin")} className="font-semibold text-base tracking-tight">
-          Moraje3 <span className="text-xs font-normal ml-1" style={{ color: "var(--muted-foreground)" }}>Admin</span>
+      <div className="flex items-center gap-3 px-5 py-5 border-b" style={{ borderColor: "var(--border)" }}>
+        <Link href={localePath(lang, "/admin")} className="flex items-center gap-3">
+          <Logo size={32} />
+          <span className="font-serif text-xl font-medium" style={{ color: "var(--foreground)" }}>
+            Passboard
+          </span>
         </Link>
+        <span className="text-xs font-mono px-1.5 py-0.5 rounded" style={{ background: "var(--accent)", color: "var(--accent-foreground)" }}>admin</span>
       </div>
 
       {/* Nav */}
@@ -63,8 +68,9 @@ export function AdminSidebar({ adminName, lang, nav, langToggleLabel }: AdminSid
               onClick={() => setMobileOpen(false)}
               className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors"
               style={{
-                background: active ? "var(--secondary)" : "transparent",
-                color: active ? "var(--foreground)" : "var(--muted-foreground)",
+                background: active ? "var(--accent)" : "transparent",
+                color: active ? "var(--accent-foreground)" : "var(--muted-foreground)",
+                fontWeight: active ? 600 : undefined,
               }}
             >
               <item.icon size={17} />
@@ -99,7 +105,7 @@ export function AdminSidebar({ adminName, lang, nav, langToggleLabel }: AdminSid
     <>
       {/* Desktop sidebar */}
       <aside
-        className="hidden lg:flex flex-col w-56 border-r flex-shrink-0"
+        className="hidden lg:flex flex-col w-56 border-e flex-shrink-0"
         style={{ background: "var(--card)", borderColor: "var(--border)" }}
       >
         {sidebarContent}
@@ -110,7 +116,10 @@ export function AdminSidebar({ adminName, lang, nav, langToggleLabel }: AdminSid
         className="lg:hidden flex items-center justify-between px-4 h-14 border-b"
         style={{ background: "var(--card)", borderColor: "var(--border)" }}
       >
-        <Link href={localePath(lang, "/admin")} className="font-semibold text-sm">Moraje3 Admin</Link>
+        <Link href={localePath(lang, "/admin")} className="flex items-center gap-2.5">
+          <Logo size={26} />
+          <span className="font-serif text-base font-medium">Passboard</span>
+        </Link>
         <button onClick={() => setMobileOpen(!mobileOpen)} className="p-1.5 rounded-lg">
           {mobileOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
@@ -118,9 +127,9 @@ export function AdminSidebar({ adminName, lang, nav, langToggleLabel }: AdminSid
 
       {/* Mobile overlay */}
       {mobileOpen && (
-        <div className="lg:hidden fixed inset-0 z-50 flex">
+        <div className="lg:hidden fixed inset-0 z-50 flex rtl:flex-row-reverse">
           <div
-            className="w-56 flex flex-col border-r"
+            className="w-56 flex flex-col border-e"
             style={{ background: "var(--card)", borderColor: "var(--border)" }}
           >
             {sidebarContent}

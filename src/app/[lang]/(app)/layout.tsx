@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import AppSidebar from "@/components/layout/AppSidebar";
 import type { Profile } from "@/types/database";
 import { getDictionary, localePath } from "@/lib/i18n";
+import { getDevProfile } from "@/lib/dev-user";
 
 export default async function AppLayout({
   children,
@@ -14,14 +15,19 @@ export default async function AppLayout({
 }) {
   const { lang } = await params;
   const dict = await getDictionary(lang);
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) redirect(localePath(lang, "/login"));
+  let profile: Profile | null = getDevProfile();
 
-  const { data: profileData } = await supabase.from("profiles").select("*").eq("id", user.id).single();
-  const profile = profileData as Profile | null;
-  if (!profile) redirect(localePath(lang, "/login"));
+  if (!profile) {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) redirect(localePath(lang, "/login"));
+
+    const { data: profileData } = await supabase.from("profiles").select("*").eq("id", user.id).single();
+    profile = profileData as Profile | null;
+    if (!profile) redirect(localePath(lang, "/login"));
+  }
 
   if (profile.access_status === "suspended") redirect(localePath(lang, "/unauthorized") + "?reason=suspended");
   if (profile.access_status === "expired") redirect(localePath(lang, "/unauthorized") + "?reason=expired");
@@ -41,7 +47,7 @@ export default async function AppLayout({
         nav={dict.nav}
         langToggleLabel={dict.lang.toggle}
       />
-      <div className="min-h-screen lg:pl-60 pt-[57px] lg:pt-0" style={{ background: "var(--background)" }}>
+      <div className="min-h-screen lg:ps-60 pt-[57px] lg:pt-0" style={{ background: "var(--background)" }}>
         <main className="p-6">{children}</main>
       </div>
     </>

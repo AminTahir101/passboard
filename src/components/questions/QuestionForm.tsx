@@ -97,7 +97,7 @@ export function QuestionForm({ initialData, questionId, dict, lang }: QuestionFo
       {error && (
         <div
           className="p-3 rounded-lg text-sm"
-          style={{ background: "#fef2f2", color: "#dc2626", border: "1px solid #fecaca" }}
+          style={{ background: "var(--destructive-muted)", color: "var(--destructive)", border: "1px solid var(--destructive-muted-border)" }}
         >
           {error}
         </div>

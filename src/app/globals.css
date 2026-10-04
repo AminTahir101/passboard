@@ -1,32 +1,51 @@
 @import "tailwindcss";
 
+/*
+ * Design system — warm paper / gold palette
+ * Matches the landing page colour language throughout the whole app.
+ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #0f172a;
+  --background: #f6f3ec;       /* paper */
+  --foreground: #10202e;       /* lp-ink */
   --card: #ffffff;
-  --card-foreground: #0f172a;
+  --card-foreground: #10202e;
   --popover: #ffffff;
-  --popover-foreground: #0f172a;
-  --primary: #0f172a;
-  --primary-foreground: #f8fafc;
-  --secondary: #f1f5f9;
-  --secondary-foreground: #0f172a;
-  --muted: #f1f5f9;
-  --muted-foreground: #64748b;
-  --accent: #f1f5f9;
-  --accent-foreground: #0f172a;
-  --destructive: #ef4444;
-  --destructive-foreground: #fafafa;
-  --border: #e2e8f0;
-  --input: #e2e8f0;
-  --ring: #0f172a;
+  --popover-foreground: #10202e;
+  --primary: #f2b632;          /* gold */
+  --primary-foreground: #1b1a17;
+  --secondary: #efebe2;        /* sand */
+  --secondary-foreground: #10202e;
+  --muted: #efebe2;            /* sand */
+  --muted-foreground: #5a6470; /* lp-muted */
+  --accent: #fcefc7;           /* gold-soft */
+  --accent-foreground: #6b4700;/* amber-ink */
+  --destructive: #b4541f;      /* rust */
+  --destructive-foreground: #ffffff;
+  --border: #ddd6c8;           /* lp-line */
+  --input: #ece6da;            /* lp-line-2 */
+  --ring: #e0a21c;             /* gold-deep */
   --radius: 0.5rem;
-  --brand: #2563eb;
-  --brand-foreground: #ffffff;
+  --brand: #e0a21c;            /* gold-deep */
+  --brand-foreground: #1b1a17;
   --success: #16a34a;
   --success-foreground: #ffffff;
-  --warning: #d97706;
+  --warning: #9a6200;          /* amber */
   --warning-foreground: #ffffff;
+  --highlight: #f2b632;        /* gold */
+  --highlight-foreground: #1b1a17;
+
+  /* Semantic muted surfaces — used for status badges and alert banners */
+  --success-muted: color-mix(in srgb, var(--success) 10%, var(--secondary));
+  --success-muted-border: color-mix(in srgb, var(--success) 25%, var(--border));
+  --destructive-muted: color-mix(in srgb, var(--destructive) 8%, var(--background));
+  --destructive-muted-border: color-mix(in srgb, var(--destructive) 20%, var(--border));
+  --warning-muted: color-mix(in srgb, var(--warning) 10%, var(--secondary));
+  --warning-muted-border: color-mix(in srgb, var(--warning) 25%, var(--border));
+  --highlight-muted: color-mix(in srgb, var(--highlight) 12%, var(--secondary));
+  --highlight-muted-border: color-mix(in srgb, var(--highlight) 30%, var(--border));
+  --brand-muted: color-mix(in srgb, var(--brand) 10%, var(--secondary));
+  --brand-muted-border: color-mix(in srgb, var(--brand) 20%, var(--border));
 }
 
 @theme inline {
@@ -55,6 +74,8 @@
   --color-success-foreground: var(--success-foreground);
   --color-warning: var(--warning);
   --color-warning-foreground: var(--warning-foreground);
+  --color-highlight: var(--highlight);
+  --color-highlight-foreground: var(--highlight-foreground);
   --radius-sm: 0.25rem;
   --radius-md: 0.375rem;
   --radius-lg: 0.5rem;
@@ -65,12 +86,51 @@
   border-color: var(--border);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Landing page — warm paper / gold palette ──────────────────────────────── */
+@theme {
+  --color-paper:          #f6f3ec;
+  --color-paper-2:        #fbfaf6;
+  --color-sand:           #efebe2;
+  --color-lp-ink:         #10202e;
+  --color-lp-ink-2:       #3d4854;
+  --color-lp-muted:       #5a6470;
+  --color-lp-line:        #ddd6c8;
+  --color-lp-line-2:      #ece6da;
+  --color-lp-line-strong: #cfc7b6;
+  --color-gold:           #f2b632;
+  --color-gold-deep:      #e0a21c;
+  --color-gold-soft:      #fcefc7;
+  --color-gold-tint:      #fdf4da;
+  --color-gold-line:      #e8cf8e;
+  --color-amber:          #9a6200;
+  --color-amber-ink:      #6b4700;
+  --color-amber-tint:     #fbefcf;
+  --color-rust:           #b4541f;
+  --color-rust-ink:       #8a3a12;
+  --color-rust-tint:      #f6e3d7;
+
+  --font-sans:  var(--font-plex-sans), system-ui, sans-serif;
+  --font-serif: var(--font-newsreader), Georgia, serif;
+  --font-mono:  var(--font-plex-mono), ui-monospace, monospace;
+}
+
+@utility eyebrow {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-lp-muted);
 }
 
 /* Scrollbar */
@@ -86,10 +146,30 @@ body {
   border-radius: 3px;
 }
 
-/* RTL adjustments */
-[dir="rtl"] .lucide {
-  /* Icons that indicate direction need to flip */
+/* Arabic: use Almarai for all text (serif display + body sans) */
+html[lang="ar"] {
+  --font-serif: var(--font-almarai), serif;
+  --font-sans:  var(--font-almarai), sans-serif;
 }
+html[lang="ar"] em {
+  font-style: normal;
+}
+
+/* RTL adjustments */
 [dir="rtl"] .flip-rtl {
   transform: scaleX(-1);
 }
+
+/* Grain / noise overlay — apply to any element for premium surface texture */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  border-radius: inherit;
+  z-index: 0;
+}
+.grain > * { position: relative; z-index: 1; }

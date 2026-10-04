@@ -15,11 +15,11 @@ import {
   LogOut,
   Menu,
   X,
-  GraduationCap,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { localePath } from "@/lib/i18n";
 import LanguageToggle from "@/components/LanguageToggle";
+import { Logo } from "@/components/landing/ui";
 
 interface AppSidebarProps {
   userName: string | null;
@@ -64,15 +64,10 @@ export default function AppSidebar({ userName, userEmail, lang, nav, langToggleL
   const SidebarContent = () => (
     <div className="flex flex-col h-full">
       {/* Logo */}
-      <div className="flex items-center gap-2 px-5 py-5 border-b" style={{ borderColor: "var(--border)" }}>
-        <div
-          className="w-8 h-8 rounded-lg flex items-center justify-center"
-          style={{ background: "var(--brand)" }}
-        >
-          <GraduationCap size={18} style={{ color: "var(--brand-foreground)" }} />
-        </div>
-        <span className="font-semibold text-base" style={{ color: "var(--foreground)" }}>
-          Moraje3
+      <div className="flex items-center gap-3 px-5 py-5 border-b" style={{ borderColor: "var(--border)" }}>
+        <Logo size={32} />
+        <span className="font-serif text-xl font-medium" style={{ color: "var(--foreground)" }}>
+          Passboard
         </span>
       </div>
 
@@ -88,8 +83,9 @@ export default function AppSidebar({ userName, userEmail, lang, nav, langToggleL
                   onClick={() => setMobileOpen(false)}
                   className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors"
                   style={{
-                    background: active ? "var(--brand)" : "transparent",
-                    color: active ? "var(--brand-foreground)" : "var(--muted-foreground)",
+                    background: active ? "var(--accent)" : "transparent",
+                    color: active ? "var(--accent-foreground)" : "var(--muted-foreground)",
+                    fontWeight: active ? 600 : undefined,
                   }}
                   onMouseEnter={(e) => {
                     if (!active) {
@@ -118,7 +114,7 @@ export default function AppSidebar({ userName, userEmail, lang, nav, langToggleL
         <div className="flex items-center gap-3 px-3 py-2 rounded-lg mb-1" style={{ background: "var(--muted)" }}>
           <div
             className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold shrink-0"
-            style={{ background: "var(--brand)", color: "var(--brand-foreground)" }}
+            style={{ background: "var(--accent)", color: "var(--accent-foreground)" }}
           >
             {(userName || userEmail).charAt(0).toUpperCase()}
           </div>
@@ -158,7 +154,7 @@ export default function AppSidebar({ userName, userEmail, lang, nav, langToggleL
     <>
       {/* Desktop sidebar - fixed */}
       <aside
-        className="hidden lg:flex flex-col w-60 border-r fixed inset-y-0 left-0 z-30"
+        className="hidden lg:flex flex-col w-60 border-e fixed inset-y-0 start-0 z-30"
         style={{ borderColor: "var(--border)", background: "var(--card)" }}
       >
         <SidebarContent />
@@ -169,15 +165,10 @@ export default function AppSidebar({ userName, userEmail, lang, nav, langToggleL
         className="lg:hidden flex items-center justify-between px-4 py-3 border-b fixed top-0 left-0 right-0 z-30"
         style={{ borderColor: "var(--border)", background: "var(--card)" }}
       >
-        <div className="flex items-center gap-2">
-          <div
-            className="w-7 h-7 rounded-lg flex items-center justify-center"
-            style={{ background: "var(--brand)" }}
-          >
-            <GraduationCap size={15} style={{ color: "var(--brand-foreground)" }} />
-          </div>
-          <span className="font-semibold text-sm" style={{ color: "var(--foreground)" }}>
-            Moraje3
+        <div className="flex items-center gap-2.5">
+          <Logo size={28} />
+          <span className="font-serif text-lg font-medium" style={{ color: "var(--foreground)" }}>
+            Passboard
           </span>
         </div>
         <button
@@ -199,8 +190,8 @@ export default function AppSidebar({ userName, userEmail, lang, nav, langToggleL
             onClick={() => setMobileOpen(false)}
           />
           <div
-            className="lg:hidden fixed inset-y-0 left-0 z-50 w-64 flex flex-col"
-            style={{ background: "var(--card)", borderRight: "1px solid var(--border)" }}
+            className="lg:hidden fixed inset-y-0 start-0 z-50 w-64 flex flex-col border-e"
+            style={{ background: "var(--card)", borderColor: "var(--border)" }}
           >
             <SidebarContent />
           </div>

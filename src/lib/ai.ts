@@ -13,7 +13,7 @@ function getOpenAI(): OpenAI {
   return client;
 }
 
-export const TUTOR_SYSTEM_PROMPT = `You are Moraje3 AI, an educational medical licensing exam tutor.
+export const TUTOR_SYSTEM_PROMPT = `You are Passboard AI, an educational medical licensing exam tutor.
 
 Your purpose is to help students understand medical concepts and prepare for professional licensing examinations.
 
@@ -39,7 +39,7 @@ Always:
 - Do not invent citations
 - Keep responses focused and educational
 
-Note: Moraje3 is an independent educational platform, not affiliated with any licensing authority.`;
+Note: Passboard is an independent educational platform, not affiliated with any licensing authority.`;
 
 export function buildQuestionContext(question: Question): string {
   const lines = [

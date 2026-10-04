@@ -1,14 +1,43 @@
 import type { Metadata } from "next";
-import { Inter, Cairo } from "next/font/google";
+import { Almarai, IBM_Plex_Mono, IBM_Plex_Sans, IBM_Plex_Sans_Arabic, Newsreader } from "next/font/google";
 import "@/app/globals.css";
 
 export const metadata: Metadata = {
-  title: "Moraje3 — AI-Powered Medical Exam Preparation",
-  description: "Moraje3 is an independent AI-powered platform for professional medical licensing exam preparation.",
+  title: "Passboard — AI-Powered Medical Exam Preparation",
+  description: "Passboard is an independent AI-powered platform for professional medical licensing exam preparation.",
 };
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
-const cairo = Cairo({ subsets: ["arabic", "latin"], variable: "--font-cairo", display: "swap" });
+const almarai = Almarai({
+  weight: ["300", "400", "700", "800"],
+  subsets: ["arabic"],
+  variable: "--font-almarai",
+  display: "swap",
+});
+const newsreader = Newsreader({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  weight: ["400", "500"],
+  variable: "--font-newsreader",
+  display: "swap",
+});
+const plexSans = IBM_Plex_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-plex-sans",
+  display: "swap",
+});
+const plexMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-plex-mono",
+  display: "swap",
+});
+const plexArabic = IBM_Plex_Sans_Arabic({
+  subsets: ["arabic"],
+  weight: ["400", "500", "600"],
+  variable: "--font-plex-arabic",
+  display: "swap",
+});
 
 export default async function LocaleLayout({
   children,
@@ -24,12 +53,9 @@ export default async function LocaleLayout({
     <html
       lang={lang}
       dir={isRtl ? "rtl" : "ltr"}
-      className={`h-full ${inter.variable} ${cairo.variable}`}
+      className={`h-full ${almarai.variable} ${newsreader.variable} ${plexSans.variable} ${plexMono.variable} ${plexArabic.variable}`}
     >
-      <body
-        className="min-h-full"
-        style={{ fontFamily: isRtl ? "var(--font-cairo), sans-serif" : "var(--font-inter), sans-serif" }}
-      >
+      <body className="min-h-full font-sans">
         {children}
       </body>
     </html>

@@ -163,7 +163,7 @@ export default function ImportClient({ dict, lang }: ImportClientProps) {
 
           {/* Upload */}
           {parseError && (
-            <div className="p-3 rounded-lg text-sm" style={{ background: "#fef2f2", color: "#dc2626", border: "1px solid #fecaca" }}>
+            <div className="p-3 rounded-lg text-sm" style={{ background: "var(--destructive-muted)", color: "var(--destructive)", border: "1px solid var(--destructive-muted-border)" }}>
               {parseError}
             </div>
           )}
@@ -206,33 +206,33 @@ export default function ImportClient({ dict, lang }: ImportClientProps) {
               <p className="text-2xl font-bold">{validation.valid.length + validation.invalid.length}</p>
               <p className="text-xs mt-1" style={{ color: "var(--muted-foreground)" }}>{lang === "ar" ? "الإجمالي" : "Total Rows"}</p>
             </div>
-            <div className="rounded-xl border p-4 text-center" style={{ background: "#f0fdf4", borderColor: "#bbf7d0" }}>
-              <p className="text-2xl font-bold" style={{ color: "#16a34a" }}>{validation.valid.length}</p>
-              <p className="text-xs mt-1" style={{ color: "#16a34a" }}>{dict.validRows}</p>
+            <div className="rounded-xl border p-4 text-center" style={{ background: "var(--success-muted)", borderColor: "var(--success-muted-border)" }}>
+              <p className="text-2xl font-bold" style={{ color: "var(--success)" }}>{validation.valid.length}</p>
+              <p className="text-xs mt-1" style={{ color: "var(--success)" }}>{dict.validRows}</p>
             </div>
-            <div className="rounded-xl border p-4 text-center" style={{ background: validation.invalid.length ? "#fef2f2" : "var(--card)", borderColor: validation.invalid.length ? "#fecaca" : "var(--border)" }}>
-              <p className="text-2xl font-bold" style={{ color: validation.invalid.length ? "#dc2626" : "var(--muted-foreground)" }}>
+            <div className="rounded-xl border p-4 text-center" style={{ background: validation.invalid.length ? "var(--destructive-muted)" : "var(--card)", borderColor: validation.invalid.length ? "var(--destructive-muted-border)" : "var(--border)" }}>
+              <p className="text-2xl font-bold" style={{ color: validation.invalid.length ? "var(--destructive)" : "var(--muted-foreground)" }}>
                 {validation.invalid.length}
               </p>
-              <p className="text-xs mt-1" style={{ color: validation.invalid.length ? "#dc2626" : "var(--muted-foreground)" }}>{dict.invalidRows}</p>
+              <p className="text-xs mt-1" style={{ color: validation.invalid.length ? "var(--destructive)" : "var(--muted-foreground)" }}>{dict.invalidRows}</p>
             </div>
           </div>
 
           {/* Errors */}
           {validation.invalid.length > 0 && (
-            <div className="rounded-xl border" style={{ borderColor: "#fecaca" }}>
-              <div className="px-4 py-3 border-b" style={{ background: "#fef2f2", borderColor: "#fecaca" }}>
-                <p className="text-sm font-medium" style={{ color: "#dc2626" }}>{dict.errors}</p>
+            <div className="rounded-xl border" style={{ borderColor: "var(--destructive-muted-border)" }}>
+              <div className="px-4 py-3 border-b" style={{ background: "var(--destructive-muted)", borderColor: "var(--destructive-muted-border)" }}>
+                <p className="text-sm font-medium" style={{ color: "var(--destructive)" }}>{dict.errors}</p>
               </div>
-              <div className="divide-y" style={{ borderColor: "#fecaca", maxHeight: "200px", overflowY: "auto" }}>
+              <div className="divide-y" style={{ borderColor: "var(--destructive-muted-border)", maxHeight: "200px", overflowY: "auto" }}>
                 {validation.invalid.slice(0, 10).map((inv) => (
-                  <div key={inv.row} className="px-4 py-2 text-xs" style={{ background: "#fffafa" }}>
-                    <p className="font-medium mb-0.5" style={{ color: "#dc2626" }}>{lang === "ar" ? `صف ${inv.row}` : `Row ${inv.row}`}</p>
-                    {inv.errors.map((err) => <p key={err} style={{ color: "#6b7280" }}>• {err}</p>)}
+                  <div key={inv.row} className="px-4 py-2 text-xs" style={{ background: "var(--card)" }}>
+                    <p className="font-medium mb-0.5" style={{ color: "var(--destructive)" }}>{lang === "ar" ? `صف ${inv.row}` : `Row ${inv.row}`}</p>
+                    {inv.errors.map((err) => <p key={err} style={{ color: "var(--muted-foreground)" }}>• {err}</p>)}
                   </div>
                 ))}
                 {validation.invalid.length > 10 && (
-                  <p className="px-4 py-2 text-xs" style={{ color: "#6b7280", background: "#fffafa" }}>
+                  <p className="px-4 py-2 text-xs" style={{ color: "var(--muted-foreground)", background: "var(--card)" }}>
                     {lang === "ar" ? `…و${validation.invalid.length - 10} أخطاء أخرى` : `…and ${validation.invalid.length - 10} more errors`}
                   </p>
                 )}
@@ -299,7 +299,7 @@ export default function ImportClient({ dict, lang }: ImportClientProps) {
 
       {step === "done" && importResult && (
         <div className="rounded-xl border p-8 text-center" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
-          <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: "#f0fdf4" }}>
+          <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: "var(--success-muted)" }}>
             <span style={{ fontSize: "1.5rem" }}>✓</span>
           </div>
           <h2 className="text-xl font-semibold mb-2">{dict.title}</h2>

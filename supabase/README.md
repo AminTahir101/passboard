@@ -1,10 +1,10 @@
-# Moraje3 — Supabase Setup Guide
+# Passboard — Supabase Setup Guide
 
 ## 1. Create a Supabase Project
 
 1. Go to [https://supabase.com](https://supabase.com) and sign in or create an account.
 2. Click **New project** and fill in:
-   - **Name**: `moraje3` (or any name you prefer)
+   - **Name**: `passboard` (or any name you prefer)
    - **Database Password**: choose a strong password and save it securely
    - **Region**: pick the region closest to your users
 3. Wait for the project to finish provisioning (about 1-2 minutes).

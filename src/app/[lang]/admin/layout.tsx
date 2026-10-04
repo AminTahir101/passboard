@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { AdminSidebar } from "@/components/layout/AdminSidebar";
 import { getDictionary, localePath } from "@/lib/i18n";
+import { getDevProfile } from "@/lib/dev-user";
 
 export default async function AdminLayout({
   children,
@@ -12,21 +13,28 @@ export default async function AdminLayout({
 }) {
   const { lang } = await params;
   const dict = await getDictionary(lang);
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) redirect(localePath(lang, "/login"));
+  let profile: { role: string; full_name: string | null; email: string } | null = getDevProfile();
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role, full_name, email")
-    .eq("id", user.id)
-    .single();
+  if (!profile) {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) redirect(localePath(lang, "/login"));
+
+    const { data } = await supabase
+      .from("profiles")
+      .select("role, full_name, email")
+      .eq("id", user.id)
+      .single();
+
+    profile = data;
+  }
 
   if (!profile || profile.role !== "admin") redirect(localePath(lang, "/dashboard"));
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ background: "var(--background)" }}>
+    <div className="flex rtl:flex-row-reverse h-screen overflow-hidden" style={{ background: "var(--background)" }}>
       <AdminSidebar
         adminName={profile.full_name ?? profile.email}
         lang={lang}

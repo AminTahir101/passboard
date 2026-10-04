@@ -46,7 +46,7 @@ export function StudentActions({ student, dict, lang }: StudentActionsProps) {
             disabled={loading}
             onClick={() => patch({ access_status: "active" })}
             className="text-sm px-3 py-2 rounded-lg font-medium transition-colors hover:opacity-90 disabled:opacity-50"
-            style={{ background: "#f0fdf4", color: "#16a34a" }}
+            style={{ background: "var(--success-muted)", color: "var(--success)" }}
           >
             {dict.activate}
           </button>
@@ -56,7 +56,7 @@ export function StudentActions({ student, dict, lang }: StudentActionsProps) {
             disabled={loading}
             onClick={() => patch({ access_status: "suspended" })}
             className="text-sm px-3 py-2 rounded-lg font-medium transition-colors hover:opacity-90 disabled:opacity-50"
-            style={{ background: "#fef2f2", color: "#dc2626" }}
+            style={{ background: "var(--destructive-muted)", color: "var(--destructive)" }}
           >
             {dict.suspend}
           </button>
@@ -66,7 +66,7 @@ export function StudentActions({ student, dict, lang }: StudentActionsProps) {
             disabled={loading}
             onClick={() => patch({ access_status: "active" })}
             className="text-sm px-3 py-2 rounded-lg font-medium transition-colors hover:opacity-90 disabled:opacity-50"
-            style={{ background: "#eff6ff", color: "#2563eb" }}
+            style={{ background: "var(--brand-muted)", color: "var(--brand)" }}
           >
             {dict.reactivate}
           </button>

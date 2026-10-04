@@ -35,6 +35,37 @@ export type Dictionary = {
     ctaTitle: string; ctaDesc: string;
     footerDisclaimer: string;
     features: { title: string; desc: string }[];
+    navLinks: { platform: string; exams: string; results: string; langSwitch: string };
+    hero: {
+      badge: string;
+      titleA: string; titleEm: string; titleB: string;
+      sub: string; cta: string;
+      pills: { n: string; t: string }[];
+      examsPill: { n: string; t: string };
+      selectorLabel: string;
+      orbit: string[];
+      chip: { v: string; t: string };
+      explore: { text: string; cta: string };
+    };
+    stats: { n: string; t: string }[];
+    exams: { eyebrow: string; title: string; items: { code: string; name: string }[] };
+    platform: {
+      eyebrow: string; titleA: string; titleEm: string; titleB: string; sub: string;
+      feats: {
+        practice: { title: string; desc: string; correct: string };
+        understand: { title: string; desc: string; caption: string };
+        ai: { title: string; desc: string; label: string };
+        progress: { title: string; desc: string };
+        mock: { title: string; desc: string; questions: string; minutes: string; pass: string };
+        mistakes: { title: string; desc: string; review: string; improving: string };
+      };
+    };
+    testimonials: {
+      eyebrow: string; title: string;
+      featured: { metric: string; quote: string; name: string; role: string };
+      others: { metric: string; label: string; quote: string; name: string; role: string }[];
+    };
+    ctaSection: { eyebrow: string; titleA: string; titleEm: string; sub: string; button: string };
   };
   login: {
     title: string; subtitle: string; emailLabel: string;

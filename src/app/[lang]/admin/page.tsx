@@ -51,19 +51,19 @@ export default async function AdminDashboard({ params }: { params: Promise<{ lan
     { label: d.totalAttempts, value: totalAttempts ?? 0 },
   ];
 
-  const statusColors: Record<string, string> = {
-    new: "#2563eb",
-    contacted: "#d97706",
-    paid: "#7c3aed",
-    approved: "#16a34a",
-    rejected: "#dc2626",
+  const statusColors: Record<string, { bg: string; text: string }> = {
+    new:       { bg: "var(--brand-muted)",       text: "var(--brand)" },
+    contacted: { bg: "var(--warning-muted)",     text: "var(--warning)" },
+    paid:      { bg: "var(--brand-muted)",       text: "var(--accent)" },
+    approved:  { bg: "var(--success-muted)",     text: "var(--success)" },
+    rejected:  { bg: "var(--destructive-muted)", text: "var(--destructive)" },
   };
 
-  const accessColors: Record<string, string> = {
-    active: "#16a34a",
-    pending: "#d97706",
-    suspended: "#dc2626",
-    expired: "#6b7280",
+  const accessColors: Record<string, { bg: string; text: string }> = {
+    active:    { bg: "var(--success-muted)",     text: "var(--success)" },
+    pending:   { bg: "var(--warning-muted)",     text: "var(--warning)" },
+    suspended: { bg: "var(--destructive-muted)", text: "var(--destructive)" },
+    expired:   { bg: "var(--secondary)",         text: "var(--muted-foreground)" },
   };
 
   return (
@@ -104,7 +104,7 @@ export default async function AdminDashboard({ params }: { params: Promise<{ lan
                   </div>
                   <span
                     className="text-xs px-2 py-0.5 rounded-full font-medium flex-shrink-0"
-                    style={{ background: `${statusColors[r.status]}18`, color: statusColors[r.status] }}
+                    style={{ background: (statusColors[r.status] ?? statusColors.new).bg, color: (statusColors[r.status] ?? statusColors.new).text }}
                   >
                     {r.status}
                   </span>
@@ -132,7 +132,7 @@ export default async function AdminDashboard({ params }: { params: Promise<{ lan
                   </div>
                   <span
                     className="text-xs px-2 py-0.5 rounded-full font-medium flex-shrink-0"
-                    style={{ background: `${accessColors[s.access_status]}18`, color: accessColors[s.access_status] }}
+                    style={{ background: (accessColors[s.access_status] ?? accessColors.expired).bg, color: (accessColors[s.access_status] ?? accessColors.expired).text }}
                   >
                     {s.access_status}
                   </span>

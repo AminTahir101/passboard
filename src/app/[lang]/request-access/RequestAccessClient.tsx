@@ -65,7 +65,7 @@ export default function RequestAccessClient({ lang, homePath, loginPath, dict }:
         style={{ background: "var(--secondary)" }}
       >
         <Link href={homePath} className="mb-8 font-semibold text-xl tracking-tight">
-          Moraje3
+          Passboard
         </Link>
         <div
           className="w-full max-w-md rounded-xl border p-8 shadow-sm text-center"
@@ -73,7 +73,7 @@ export default function RequestAccessClient({ lang, homePath, loginPath, dict }:
         >
           <div
             className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4"
-            style={{ background: "#f0fdf4" }}
+            style={{ background: "var(--success-muted)" }}
           >
             <span style={{ fontSize: "1.5rem" }}>✓</span>
           </div>
@@ -99,7 +99,7 @@ export default function RequestAccessClient({ lang, homePath, loginPath, dict }:
       style={{ background: "var(--secondary)" }}
     >
       <Link href={homePath} className="mb-8 font-semibold text-xl tracking-tight">
-        Moraje3
+        Passboard
       </Link>
 
       <div
@@ -114,7 +114,7 @@ export default function RequestAccessClient({ lang, homePath, loginPath, dict }:
         {error && (
           <div
             className="text-sm p-3 rounded-lg mb-4"
-            style={{ background: "#fef2f2", color: "#dc2626", border: "1px solid #fecaca" }}
+            style={{ background: "var(--destructive-muted)", color: "var(--destructive)", border: "1px solid var(--destructive-muted-border)" }}
           >
             {error}
           </div>

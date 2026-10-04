@@ -6,11 +6,11 @@ import { getDictionary, localePath } from "@/lib/i18n";
 const STATUS_OPTIONS = ["all", "new", "contacted", "paid", "approved", "rejected"] as const;
 
 const statusColors: Record<string, { bg: string; text: string }> = {
-  new: { bg: "#eff6ff", text: "#2563eb" },
-  contacted: { bg: "#fffbeb", text: "#d97706" },
-  paid: { bg: "#f5f3ff", text: "#7c3aed" },
-  approved: { bg: "#f0fdf4", text: "#16a34a" },
-  rejected: { bg: "#fef2f2", text: "#dc2626" },
+  new:       { bg: "var(--brand-muted)",       text: "var(--brand)" },
+  contacted: { bg: "var(--warning-muted)",     text: "var(--warning)" },
+  paid:      { bg: "var(--brand-muted)",       text: "var(--accent)" },
+  approved:  { bg: "var(--success-muted)",     text: "var(--success)" },
+  rejected:  { bg: "var(--destructive-muted)", text: "var(--destructive)" },
 };
 
 export default async function AccessRequestsPage({

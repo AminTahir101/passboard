@@ -84,7 +84,7 @@ function UnauthorizedContent({ lang, loginPath, dashboardPath, dict }: Unauthori
         {/* Actions */}
         <div className="space-y-3">
           <a
-            href="mailto:support@moraje3.com"
+            href="mailto:support@passboard.com"
             className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium"
             style={{ background: "var(--brand)", color: "var(--brand-foreground)" }}
           >

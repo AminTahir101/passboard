@@ -4,10 +4,10 @@ import Link from "next/link";
 import { getDictionary, localePath } from "@/lib/i18n";
 
 const accessColors: Record<string, { bg: string; text: string }> = {
-  active: { bg: "#f0fdf4", text: "#16a34a" },
-  pending: { bg: "#fffbeb", text: "#d97706" },
-  suspended: { bg: "#fef2f2", text: "#dc2626" },
-  expired: { bg: "#f9fafb", text: "#6b7280" },
+  active:    { bg: "var(--success-muted)",     text: "var(--success)" },
+  pending:   { bg: "var(--warning-muted)",     text: "var(--warning)" },
+  suspended: { bg: "var(--destructive-muted)", text: "var(--destructive)" },
+  expired:   { bg: "var(--secondary)",         text: "var(--muted-foreground)" },
 };
 
 export default async function StudentsPage({

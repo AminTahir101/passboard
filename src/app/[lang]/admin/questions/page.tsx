@@ -4,15 +4,15 @@ import Link from "next/link";
 import { getDictionary, localePath } from "@/lib/i18n";
 
 const diffColors: Record<string, { bg: string; text: string }> = {
-  easy: { bg: "#f0fdf4", text: "#16a34a" },
-  medium: { bg: "#fffbeb", text: "#d97706" },
-  hard: { bg: "#fef2f2", text: "#dc2626" },
+  easy:   { bg: "var(--success-muted)",     text: "var(--success)" },
+  medium: { bg: "var(--warning-muted)",     text: "var(--warning)" },
+  hard:   { bg: "var(--destructive-muted)", text: "var(--destructive)" },
 };
 
 const statusColors: Record<string, { bg: string; text: string }> = {
-  draft: { bg: "#f9fafb", text: "#6b7280" },
-  published: { bg: "#f0fdf4", text: "#16a34a" },
-  archived: { bg: "#fef2f2", text: "#dc2626" },
+  draft:     { bg: "var(--secondary)",         text: "var(--muted-foreground)" },
+  published: { bg: "var(--success-muted)",     text: "var(--success)" },
+  archived:  { bg: "var(--destructive-muted)", text: "var(--destructive)" },
 };
 
 export default async function QuestionsPage({

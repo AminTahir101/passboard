@@ -87,7 +87,7 @@ export default function LoginClient({ lang, homePath, requestAccessPath, dashboa
     >
       {/* Logo */}
       <Link href={homePath} className="mb-8 font-semibold text-xl tracking-tight">
-        Moraje3
+        Passboard
       </Link>
 
       <div
@@ -102,7 +102,7 @@ export default function LoginClient({ lang, homePath, requestAccessPath, dashboa
         {error && (
           <div
             className="text-sm p-3 rounded-lg mb-4"
-            style={{ background: "#fef2f2", color: "#dc2626", border: "1px solid #fecaca" }}
+            style={{ background: "var(--destructive-muted)", color: "var(--destructive)", border: "1px solid var(--destructive-muted-border)" }}
           >
             {error}
           </div>

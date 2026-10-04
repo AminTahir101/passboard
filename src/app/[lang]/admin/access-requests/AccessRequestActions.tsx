@@ -58,9 +58,9 @@ export function AccessRequestActions({ request, dict }: AccessRequestActionsProp
     return (
       <div
         className="p-3 rounded-lg text-xs space-y-1"
-        style={{ background: "#f0fdf4", border: "1px solid #bbf7d0" }}
+        style={{ background: "var(--success-muted)", border: "1px solid var(--success-muted-border)" }}
       >
-        <p className="font-semibold" style={{ color: "#16a34a" }}>{dict.accountCreated}</p>
+        <p className="font-semibold" style={{ color: "var(--success)" }}>{dict.accountCreated}</p>
         <p>Email: <strong>{createdEmail}</strong></p>
         <p>{dict.tempPassword}: <strong>{tempPassword}</strong></p>
       </div>
