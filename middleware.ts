@@ -1,10 +1,12 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-import { SUPPORTED_LOCALES, DEFAULT_LOCALE } from "@/lib/i18n";
+
+const SUPPORTED_LOCALES = ["ar", "en"] as const;
+const DEFAULT_LOCALE = "ar";
 
 function detectLocale(request: NextRequest): string {
   const cookie = request.cookies.get("NEXT_LOCALE")?.value;
-  if (cookie && SUPPORTED_LOCALES.includes(cookie as "ar" | "en")) return cookie;
+  if (cookie && (SUPPORTED_LOCALES as readonly string[]).includes(cookie)) return cookie;
   const accept = request.headers.get("accept-language") ?? "";
   if (accept.startsWith("ar")) return "ar";
   if (accept.startsWith("en")) return "en";
@@ -14,7 +16,6 @@ function detectLocale(request: NextRequest): string {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Never touch API routes, auth, or static files
   if (
     pathname.startsWith("/api/") ||
     pathname.startsWith("/auth/") ||
@@ -24,7 +25,6 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next({ request });
   }
 
-  // Redirect bare paths to /{locale}/...
   const pathnameHasLocale = SUPPORTED_LOCALES.some(
     (l) => pathname.startsWith(`/${l}/`) || pathname === `/${l}`
   );
@@ -39,7 +39,6 @@ export async function middleware(request: NextRequest) {
   const lang = pathname.split("/")[1];
   const pathWithoutLang = "/" + pathname.split("/").slice(2).join("/");
 
-  // In dev bypass mode, treat all requests as authenticated
   if (process.env.NEXT_PUBLIC_DEV_BYPASS_AUTH) {
     if (pathWithoutLang === "/login") {
       return NextResponse.redirect(new URL(`/${lang}/dashboard`, request.url));
@@ -47,7 +46,6 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next({ request });
   }
 
-  // Supabase session refresh
   let supabaseResponse = NextResponse.next({ request });
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
