@@ -114,6 +114,35 @@ export default function ImportClient({ dict, lang }: ImportClientProps) {
 
   const questionsHref = localePath(lang, "/admin/questions");
 
+  function downloadTemplate() {
+    const headers = ALL_COLUMNS.join(",");
+    const example = [
+      '"What is the normal fasting blood glucose range?"',
+      '"70–99 mg/dL"',
+      '"100–125 mg/dL"',
+      '"126–140 mg/dL"',
+      '"60–80 mg/dL"',
+      '"A"',
+      '"Normal fasting glucose is 70–99 mg/dL per ADA guidelines."',
+      '""', '""', '""', '""', // explanation_a–d
+      '"USMLE Step 1"',
+      '"Endocrinology"',
+      '"Diabetes"',
+      '"Diagnosis"',
+      '"easy"',
+      '"2023"',
+      '"ADA Standards of Care"',
+    ].join(",");
+    const csv = `${headers}\n${example}\n`;
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "passboard_questions_template.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
   return (
     <div className="space-y-6 max-w-3xl">
       <div className="flex items-center gap-2">
@@ -159,6 +188,26 @@ export default function ImportClient({ dict, lang }: ImportClientProps) {
                 </tbody>
               </table>
             </div>
+          </div>
+
+          {/* Download template */}
+          <div className="flex items-center justify-between rounded-xl border p-4" style={{ background: "var(--secondary)", borderColor: "var(--border)" }}>
+            <div>
+              <p className="text-sm font-medium">{lang === "ar" ? "تحميل قالب CSV" : "Download CSV Template"}</p>
+              <p className="text-xs mt-0.5" style={{ color: "var(--muted-foreground)" }}>
+                {lang === "ar" ? "قالب جاهز مع صف مثال" : "Ready-to-fill template with one example row"}
+              </p>
+            </div>
+            <button
+              onClick={downloadTemplate}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all hover:opacity-90"
+              style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              {lang === "ar" ? "تحميل القالب" : "Download Template"}
+            </button>
           </div>
 
           {/* Upload */}
