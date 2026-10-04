@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import type { Dictionary } from "@/lib/i18n";
+import { Logo } from "@/components/landing/ui";
 
 interface RequestAccessClientProps {
   lang: string;
@@ -64,8 +65,9 @@ export default function RequestAccessClient({ lang, homePath, loginPath, dict }:
         className="min-h-screen flex flex-col items-center justify-center px-4"
         style={{ background: "var(--secondary)" }}
       >
-        <Link href={homePath} className="mb-8 font-semibold text-xl tracking-tight">
-          Passboard
+        <Link href={homePath} className="mb-8 flex items-center gap-2.5 font-semibold text-xl tracking-tight">
+          <Logo size={36} />
+          <span style={{ fontFamily: "var(--font-newsreader), Georgia, serif" }}>Passboard</span>
         </Link>
         <div
           className="w-full max-w-md rounded-xl border p-8 shadow-sm text-center"

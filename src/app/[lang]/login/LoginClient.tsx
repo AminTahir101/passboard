@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import type { Dictionary } from "@/lib/i18n";
 import { localePath } from "@/lib/i18n";
+import { Logo } from "@/components/landing/ui";
 
 interface LoginClientProps {
   lang: string;
@@ -86,8 +87,9 @@ export default function LoginClient({ lang, homePath, requestAccessPath, dashboa
       style={{ background: "var(--secondary)" }}
     >
       {/* Logo */}
-      <Link href={homePath} className="mb-8 font-semibold text-xl tracking-tight">
-        Passboard
+      <Link href={homePath} className="mb-8 flex items-center gap-2.5 font-semibold text-xl tracking-tight">
+        <Logo size={36} />
+        <span style={{ fontFamily: "var(--font-newsreader), Georgia, serif" }}>Passboard</span>
       </Link>
 
       <div

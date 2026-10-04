@@ -6,19 +6,18 @@ export function Container({ children, className = "" }: { children: ReactNode; c
 
 export function Logo({ size = 38 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 36 36" aria-hidden="true">
-      <path d="M18 2l14 8v16l-14 8-14-8V10z" fill="var(--color-gold)" />
-      <text
-        x="18"
-        y="24.5"
-        textAnchor="middle"
-        fontFamily="var(--font-newsreader), Georgia, serif"
-        fontStyle="italic"
-        fontSize="19"
-        fill="#1b1a17"
-      >
-        m
-      </text>
+    <svg width={size} height={size} viewBox="0 0 36 36" aria-label="Passboard" role="img">
+      {/* Dark navy rounded-square background */}
+      <rect x="0" y="0" width="36" height="36" rx="7" fill="#10202e" />
+      {/* ECG heartbeat line transitioning into a checkmark, in gold */}
+      <polyline
+        points="3,18 7,18 9,9 12,27 15,18 18,18 20.5,23.5 29,11"
+        fill="none"
+        stroke="#f2b632"
+        strokeWidth="2.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
