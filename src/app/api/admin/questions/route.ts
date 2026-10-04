@@ -15,12 +15,18 @@ export async function PATCH(request: Request) {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { action, ids } = await request.json();
-  if (action !== "publish" && action !== "archive" && action !== "draft") {
+  const statusMap: Record<string, import("@/types/database").QuestionStatus> = {
+    publish: "published",
+    archive: "archived",
+    draft: "draft",
+  };
+  const newStatus = statusMap[action];
+  if (!newStatus) {
     return NextResponse.json({ error: "Invalid action" }, { status: 400 });
   }
 
   const admin = createAdminClient();
-  let query = admin.from("questions").update({ status: action, updated_at: new Date().toISOString() } as import("@/types/database").Database["public"]["Tables"]["questions"]["Update"]);
+  let query = admin.from("questions").update({ status: newStatus, updated_at: new Date().toISOString() } as import("@/types/database").Database["public"]["Tables"]["questions"]["Update"]);
 
   if (ids && Array.isArray(ids) && ids.length > 0) {
     query = query.in("id", ids);
