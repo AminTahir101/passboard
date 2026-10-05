@@ -56,7 +56,7 @@ export const en: Dictionary = {
       sub: "Practice real-world questions, understand every answer, and prepare with an AI tutor that teaches you to think clinically.",
       cta: "Request access",
       pills: [
-        { n: "800+", t: "hand-curated questions" },
+        { n: "10,000+", t: "hand-curated questions" },
         { n: "20+", t: "medical disciplines, one AI tutor" },
       ],
       examsPill: { n: "5", t: "licensing exams covered" },
@@ -66,7 +66,7 @@ export const en: Dictionary = {
       explore: { text: "See how the AI tutor explains every option — correct and incorrect.", cta: "Explore platform" },
     },
     stats: [
-      { n: "800+", t: "hand-curated questions" },
+      { n: "10,000+", t: "hand-curated questions" },
       { n: "20+", t: "medical disciplines" },
       { n: "5", t: "licensing exams covered" },
       { n: "AI", t: "tutor included with every question" },
