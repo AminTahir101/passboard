@@ -25,8 +25,8 @@ export function Footer({ lang, login, requestAccess, disclaimer }: FooterProps) 
           <nav className="flex flex-wrap gap-x-8 gap-y-3 text-sm">
             <Link className="hover:text-amber" href={localePath(lang, "/login")}>{login}</Link>
             <Link className="hover:text-amber" href={localePath(lang, "/request-access")}>{requestAccess}</Link>
-            <Link className="hover:text-amber" href="#">{privacy}</Link>
-            <Link className="hover:text-amber" href="#">{terms}</Link>
+            <Link className="hover:text-amber" href={localePath(lang, "/privacy")}>{privacy}</Link>
+            <Link className="hover:text-amber" href={localePath(lang, "/terms")}>{terms}</Link>
           </nav>
         </div>
         <div className="flex flex-col justify-between gap-4 border-t border-lp-line pt-6 text-[13px] leading-relaxed text-lp-muted sm:flex-row sm:gap-16">
