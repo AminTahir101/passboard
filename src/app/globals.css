@@ -133,6 +133,21 @@ body {
   color: var(--color-lp-muted);
 }
 
+@utility input-lp {
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  border-radius: 0.625rem;
+  border: 1px solid var(--color-lp-line-2);
+  background: var(--color-paper);
+  color: var(--color-lp-ink);
+  outline: none;
+  transition: border-color 0.15s;
+  &:focus {
+    border-color: var(--color-gold-deep);
+  }
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
