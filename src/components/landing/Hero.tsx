@@ -154,28 +154,6 @@ export function Hero({ lang, t }: HeroProps) {
 
           <QuestionCard />
 
-          {/* Accuracy chip */}
-          <div className="absolute left-[70px] top-[560px] hidden items-center gap-2.5 rounded-2xl border border-lp-line-2 bg-white px-3.5 py-2.5 shadow-[0_16px_30px_-18px_rgba(107,71,0,0.4)] lg:flex">
-            <span className="flex size-8 items-center justify-center rounded-lg bg-gold-soft">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="var(--color-amber-ink)"
-                strokeWidth="2"
-                strokeLinecap="round"
-                aria-hidden="true"
-              >
-                <path d="M5 20V12M12 20V6M19 20v-9" />
-              </svg>
-            </span>
-            <div dir="auto" className="flex flex-col">
-              <span dir="ltr" className="text-[15px] font-semibold rtl:text-right">{t.chip.v}</span>
-              <span className="text-xs text-lp-muted">{t.chip.t}</span>
-            </div>
-          </div>
-
           {/* Explore card */}
           <div
             dir="auto"

@@ -44,7 +44,7 @@ export type Dictionary = {
       examsPill: { n: string; t: string };
       selectorLabel: string;
       orbit: string[];
-      chip: { v: string; t: string };
+      chip?: { v: string; t: string };
       explore: { text: string; cta: string };
     };
     stats: { n: string; t: string }[];
