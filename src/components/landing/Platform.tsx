@@ -95,7 +95,7 @@ function PracticeVisual({ t }: { t: F["practice"] }) {
 function UnderstandVisual({ t }: { t: F["understand"] }) {
   return (
     <div className="flex flex-col gap-3.5">
-      <span className="font-serif text-[88px] leading-[0.9] tracking-[-0.03em]">4,823</span>
+      <span className="font-serif text-[88px] leading-[0.9] tracking-[-0.03em]">800+</span>
       <span className="text-sm text-lp-muted">{t.caption}</span>
       <div dir="ltr" className="flex flex-col gap-2 border-t border-lp-line pt-3.5 text-left text-[13px] leading-normal">
         <div className="grid grid-cols-[28px_minmax(0,1fr)] gap-2">
