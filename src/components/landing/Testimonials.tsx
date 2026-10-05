@@ -1,8 +1,7 @@
 import type { Dictionary } from "@/lib/i18n";
 import { Container } from "./ui";
 
-export function Testimonials({ t }: { t: Dictionary["landing"]["testimonials"] }) {
-  const f = t.featured;
+export function Testimonials({ t }: { t: Dictionary["landing"]["howItWorks"] }) {
   return (
     <section id="results" className="scroll-mt-8 bg-sand py-20 lg:py-[120px]">
       <Container>
@@ -14,29 +13,21 @@ export function Testimonials({ t }: { t: Dictionary["landing"]["testimonials"] }
         </div>
 
         <div className="mt-14 grid gap-px border-t border-lp-ink bg-lp-line-strong lg:grid-cols-[1.4fr_1fr_1fr]">
-          <figure className="flex flex-col gap-7 bg-sand pt-10 pb-10 lg:pe-12">
-            <span dir="ltr" className="font-serif text-6xl leading-none text-amber rtl:text-right lg:text-7xl">
-              {f.metric}
-            </span>
-            <blockquote className="font-serif text-2xl leading-[1.35] italic lg:text-[28px]">{f.quote}</blockquote>
-            <figcaption className="flex flex-col gap-0.5 text-sm">
-              <span className="font-medium">{f.name}</span>
-              <span className="text-lp-muted">{f.role}</span>
-            </figcaption>
-          </figure>
+          {/* Featured column */}
+          <div className="flex flex-col gap-6 bg-sand pt-10 pb-10 lg:pe-12">
+            <h3 className="font-serif text-[28px] leading-[1.2] font-normal lg:text-[32px]">
+              {t.featured.headline}
+            </h3>
+            <p className="text-[17px] leading-relaxed text-lp-ink-2">{t.featured.body}</p>
+          </div>
 
-          {t.others.map((o) => (
-            <figure key={o.name} className="flex flex-col gap-5 bg-sand py-10 lg:px-9 lg:last:pe-0">
-              <div className="flex flex-col gap-1">
-                <span className="font-serif text-[44px] leading-none">{o.metric}</span>
-                <span className="font-mono text-xs text-lp-muted uppercase">{o.label}</span>
-              </div>
-              <blockquote className="text-base leading-relaxed text-lp-ink-2">{o.quote}</blockquote>
-              <figcaption className="flex flex-col gap-0.5 text-sm">
-                <span className="font-medium">{o.name}</span>
-                <span className="text-lp-muted">{o.role}</span>
-              </figcaption>
-            </figure>
+          {/* Pillars */}
+          {t.pillars.map((p) => (
+            <div key={p.n} className="flex flex-col gap-5 bg-sand py-10 lg:px-9 lg:last:pe-0">
+              <span className="font-mono text-[13px] text-amber">{p.n}</span>
+              <h3 className="font-serif text-[22px] leading-[1.25] font-normal">{p.title}</h3>
+              <p className="text-[15px] leading-relaxed text-lp-ink-2">{p.desc}</p>
+            </div>
           ))}
         </div>
       </Container>

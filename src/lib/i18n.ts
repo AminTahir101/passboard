@@ -60,10 +60,10 @@ export type Dictionary = {
         mistakes: { title: string; desc: string; review: string; improving: string };
       };
     };
-    testimonials: {
+    howItWorks: {
       eyebrow: string; title: string;
-      featured: { metric: string; quote: string; name: string; role: string };
-      others: { metric: string; label: string; quote: string; name: string; role: string }[];
+      featured: { headline: string; body: string };
+      pillars: { n: string; title: string; desc: string }[];
     };
     ctaSection: { eyebrow: string; titleA: string; titleEm: string; sub: string; button: string };
   };

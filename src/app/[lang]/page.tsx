@@ -27,7 +27,7 @@ export default async function LandingPage({ params }: { params: Promise<{ lang: 
         <StatsBand stats={d.stats} />
         <Exams t={d.exams} />
         <Platform t={d.platform} />
-        <Testimonials t={d.testimonials} />
+        <Testimonials t={d.howItWorks} />
         <Cta lang={lang} t={d.ctaSection} />
       </main>
 

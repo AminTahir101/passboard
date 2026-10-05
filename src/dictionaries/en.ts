@@ -97,13 +97,24 @@ export const en: Dictionary = {
         mistakes: { title: "Review your mistakes", desc: "Questions you got wrong resurface automatically, so you practise them until you master them.", review: "review", improving: "improving" },
       },
     },
-    testimonials: {
-      eyebrow: "What students say",
-      title: "Real results from real students.",
-      featured: { metric: "54 → 83%", quote: "\u201cGoing from 54% to 83% in six weeks. The mistake-review feature is what made the difference for me.\u201d", name: "Lena Khalil", role: "SDLE candidate" },
-      others: [
-        { metric: "81%", label: "Accuracy after 5 weeks", quote: "\u201cThe AI explanations finally helped me understand the \u2018why\u2019 behind each answer \u2014 not just memorize the right choice.\u201d", name: "Nora Al-Ghamdi", role: "SMLE candidate" },
-        { metric: "78%", label: "Accuracy after 4 weeks", quote: "\u201cMock exams felt just like the real thing. The timing and question style gave me exactly the confidence I needed going in.\u201d", name: "Faris Mansour", role: "USMLE Step 1 prep" },
+    howItWorks: {
+      eyebrow: "How it works",
+      title: "Practice. Understand. Improve.",
+      featured: {
+        headline: "A closed loop — not just a question bank.",
+        body: "Most question banks stop at the question. Passboard closes the loop: targeted practice surfaces your gaps, clinical explanations build real understanding, and your mistake history ensures nothing slips through before exam day.",
+      },
+      pillars: [
+        {
+          n: "01",
+          title: "Filter to what matters",
+          desc: "Practice by specialty, topic, or exam type. Set the question count and start a focused session — not a random draw from 800+ questions.",
+        },
+        {
+          n: "02",
+          title: "Learn from every answer",
+          desc: "Full clinical rationale and per-option explanations for every question. Bring any question to the AI tutor for a deeper teaching moment — structured, clinical, and specific to what you got wrong.",
+        },
       ],
     },
     ctaSection: { eyebrow: "Get started", titleA: "Ready to start ", titleEm: "preparing?", sub: "Passboard is private-access. Request a place and we\u2019ll contact you with the next steps.", button: "Request access" },
