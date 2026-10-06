@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, Suspense, useCallback, useMemo } from 'react';
+import { useRef, Suspense, useCallback } from 'react';
 import { Canvas, useThree, useFrame } from '@react-three/fiber';
 import { OrbitControls, Environment, Text, useProgress, Html } from '@react-three/drei';
 import * as THREE from 'three';
@@ -32,7 +32,7 @@ function Loader() {
   );
 }
 
-// ── Idle orbit animation ──────────────────────────────────────
+// ── Idle camera orbit ──────────────────────────────────────────
 
 function IdleOrbit({ active }: { active: boolean }) {
   const { camera } = useThree();
@@ -41,19 +41,18 @@ function IdleOrbit({ active }: { active: boolean }) {
   useFrame((_, delta) => {
     if (!active) return;
     angle.current += delta * 0.12;
-    const r = 5.5;
-    camera.position.x = Math.sin(angle.current) * r;
-    camera.position.z = Math.cos(angle.current) * r;
-    camera.position.y = 0.8;
+    camera.position.x = Math.sin(angle.current) * 5.5;
+    camera.position.z = Math.cos(angle.current) * 5.5;
+    camera.position.y = 0.3;
     camera.lookAt(0, 0.2, 0);
   });
 
   return null;
 }
 
-// ── Body segment ──────────────────────────────────────────────
+// ── Body segment helper ───────────────────────────────────────
 
-function BodySegment({
+function BodySeg({
   position,
   rotation,
   children,
@@ -68,7 +67,7 @@ function BodySegment({
       <meshStandardMaterial
         color="#3a8fbf"
         transparent
-        opacity={0.13}
+        opacity={0.11}
         roughness={0.5}
         metalness={0.1}
         side={THREE.FrontSide}
@@ -78,263 +77,189 @@ function BodySegment({
   );
 }
 
-// ── Full body silhouette built from primitives ────────────────
-// Coordinate system: y=0 at navel. Body ≈ 3.6 units tall (crown y=1.95, feet y=-1.65)
+// ── Full body silhouette ──────────────────────────────────────
+// y=0 at navel. Total height ~3.6 units.
 
 function BodyFigure({ sex }: { sex: 'male' | 'female' }) {
   const isFemale = sex === 'female';
-
-  // Female has slightly wider hips and narrower shoulders ratio
-  const chestRadius = isFemale ? 0.31 : 0.35;
-  const hipRadius = isFemale ? 0.36 : 0.32;
-  const abdomenRadius = isFemale ? 0.29 : 0.3;
+  const chestR = isFemale ? 0.31 : 0.35;
+  const hipR = isFemale ? 0.36 : 0.32;
+  const abdR = isFemale ? 0.29 : 0.3;
 
   return (
     <group>
-      {/* ─ Head ─ */}
-      <BodySegment position={[0, 1.78, 0]}>
-        <sphereGeometry args={[0.19, 20, 14]} />
-      </BodySegment>
-
-      {/* ─ Neck ─ */}
-      <BodySegment position={[0, 1.59, 0]}>
-        <cylinderGeometry args={[0.075, 0.085, 0.18, 14]} />
-      </BodySegment>
-
-      {/* ─ Upper chest / thorax ─ */}
-      <BodySegment position={[0, 1.06, 0]}>
-        <cylinderGeometry args={[chestRadius * 0.92, chestRadius, 0.72, 18]} />
-      </BodySegment>
-
-      {/* ─ Lower chest / ribcage bottom ─ */}
-      <BodySegment position={[0, 0.62, 0]}>
-        <cylinderGeometry args={[abdomenRadius + 0.01, chestRadius * 0.92, 0.35, 18]} />
-      </BodySegment>
-
-      {/* ─ Abdomen ─ */}
-      <BodySegment position={[0, 0.27, 0]}>
-        <cylinderGeometry args={[abdomenRadius, abdomenRadius + 0.01, 0.42, 18]} />
-      </BodySegment>
-
-      {/* ─ Pelvis / hips ─ */}
-      <BodySegment position={[0, 0.02, 0]}>
-        <cylinderGeometry args={[hipRadius, abdomenRadius, 0.32, 18]} />
-      </BodySegment>
-
-      {/* ─ Crotch cap ─ */}
-      <BodySegment position={[0, -0.16, 0]}>
-        <cylinderGeometry args={[hipRadius * 0.7, hipRadius, 0.18, 18]} />
-      </BodySegment>
-
-      {/* ─ Shoulders (spheres bridging torso to arms) ─ */}
-      <BodySegment position={[-0.44, 1.38, 0]}>
-        <sphereGeometry args={[0.13, 12, 10]} />
-      </BodySegment>
-      <BodySegment position={[0.44, 1.38, 0]}>
-        <sphereGeometry args={[0.13, 12, 10]} />
-      </BodySegment>
-
-      {/* ─ Upper arms (angled outward ~20°) ─ */}
-      <BodySegment
-        position={[-0.58, 1.05, 0]}
-        rotation={[0, 0, 0.34]}
-      >
-        <cylinderGeometry args={[0.09, 0.08, 0.6, 12]} />
-      </BodySegment>
-      <BodySegment
-        position={[0.58, 1.05, 0]}
-        rotation={[0, 0, -0.34]}
-      >
-        <cylinderGeometry args={[0.09, 0.08, 0.6, 12]} />
-      </BodySegment>
-
-      {/* ─ Elbows ─ */}
-      <BodySegment position={[-0.73, 0.73, 0]}>
-        <sphereGeometry args={[0.085, 10, 8]} />
-      </BodySegment>
-      <BodySegment position={[0.73, 0.73, 0]}>
-        <sphereGeometry args={[0.085, 10, 8]} />
-      </BodySegment>
-
-      {/* ─ Forearms (angled slightly inward from elbow) ─ */}
-      <BodySegment
-        position={[-0.75, 0.37, 0]}
-        rotation={[0, 0, 0.12]}
-      >
-        <cylinderGeometry args={[0.072, 0.062, 0.58, 12]} />
-      </BodySegment>
-      <BodySegment
-        position={[0.75, 0.37, 0]}
-        rotation={[0, 0, -0.12]}
-      >
-        <cylinderGeometry args={[0.072, 0.062, 0.58, 12]} />
-      </BodySegment>
-
-      {/* ─ Hands ─ */}
-      <BodySegment position={[-0.77, 0.06, 0]}>
-        <sphereGeometry args={[0.068, 10, 8]} />
-      </BodySegment>
-      <BodySegment position={[0.77, 0.06, 0]}>
-        <sphereGeometry args={[0.068, 10, 8]} />
-      </BodySegment>
-
-      {/* ─ Upper thighs ─ */}
-      <BodySegment
-        position={[-0.2, -0.57, 0]}
-        rotation={[0, 0, 0.04]}
-      >
-        <cylinderGeometry args={[0.13, 0.11, 0.65, 14]} />
-      </BodySegment>
-      <BodySegment
-        position={[0.2, -0.57, 0]}
-        rotation={[0, 0, -0.04]}
-      >
-        <cylinderGeometry args={[0.13, 0.11, 0.65, 14]} />
-      </BodySegment>
-
-      {/* ─ Knees ─ */}
-      <BodySegment position={[-0.21, -0.92, 0]}>
-        <sphereGeometry args={[0.1, 10, 8]} />
-      </BodySegment>
-      <BodySegment position={[0.21, -0.92, 0]}>
-        <sphereGeometry args={[0.1, 10, 8]} />
-      </BodySegment>
-
-      {/* ─ Lower legs ─ */}
-      <BodySegment
-        position={[-0.21, -1.25, 0]}
-        rotation={[0.04, 0, 0]}
-      >
-        <cylinderGeometry args={[0.09, 0.075, 0.62, 12]} />
-      </BodySegment>
-      <BodySegment
-        position={[0.21, -1.25, 0]}
-        rotation={[0.04, 0, 0]}
-      >
-        <cylinderGeometry args={[0.09, 0.075, 0.62, 12]} />
-      </BodySegment>
-
-      {/* ─ Ankles ─ */}
-      <BodySegment position={[-0.21, -1.58, 0.02]}>
-        <sphereGeometry args={[0.072, 10, 8]} />
-      </BodySegment>
-      <BodySegment position={[0.21, -1.58, 0.02]}>
-        <sphereGeometry args={[0.072, 10, 8]} />
-      </BodySegment>
-
-      {/* ─ Feet ─ */}
-      <BodySegment position={[-0.21, -1.62, 0.09]}>
-        <boxGeometry args={[0.14, 0.07, 0.28]} />
-      </BodySegment>
-      <BodySegment position={[0.21, -1.62, 0.09]}>
-        <boxGeometry args={[0.14, 0.07, 0.28]} />
-      </BodySegment>
-
-      {/* ─ Highlighted thorax region outline (subtle) ─ */}
-      <mesh position={[0, 0.88, 0]}>
-        <cylinderGeometry args={[chestRadius + 0.01, chestRadius + 0.01, 1.0, 18, 1, true]} />
-        <meshBasicMaterial
-          color="#e53e3e"
-          transparent
-          opacity={0.06}
-          side={THREE.BackSide}
-          depthWrite={false}
-        />
-      </mesh>
+      {/* Head */}
+      <BodySeg position={[0, 1.78, 0]}><sphereGeometry args={[0.19, 20, 14]} /></BodySeg>
+      {/* Neck */}
+      <BodySeg position={[0, 1.59, 0]}><cylinderGeometry args={[0.075, 0.085, 0.18, 14]} /></BodySeg>
+      {/* Upper chest */}
+      <BodySeg position={[0, 1.06, 0]}><cylinderGeometry args={[chestR * 0.92, chestR, 0.72, 18]} /></BodySeg>
+      {/* Lower chest */}
+      <BodySeg position={[0, 0.62, 0]}><cylinderGeometry args={[abdR + 0.01, chestR * 0.92, 0.35, 18]} /></BodySeg>
+      {/* Abdomen */}
+      <BodySeg position={[0, 0.27, 0]}><cylinderGeometry args={[abdR, abdR + 0.01, 0.42, 18]} /></BodySeg>
+      {/* Pelvis */}
+      <BodySeg position={[0, 0.02, 0]}><cylinderGeometry args={[hipR, abdR, 0.32, 18]} /></BodySeg>
+      {/* Crotch cap */}
+      <BodySeg position={[0, -0.16, 0]}><cylinderGeometry args={[hipR * 0.7, hipR, 0.18, 18]} /></BodySeg>
+      {/* Shoulders */}
+      <BodySeg position={[-0.44, 1.38, 0]}><sphereGeometry args={[0.13, 12, 10]} /></BodySeg>
+      <BodySeg position={[0.44, 1.38, 0]}><sphereGeometry args={[0.13, 12, 10]} /></BodySeg>
+      {/* Upper arms */}
+      <BodySeg position={[-0.58, 1.05, 0]} rotation={[0, 0, 0.34]}><cylinderGeometry args={[0.09, 0.08, 0.6, 12]} /></BodySeg>
+      <BodySeg position={[0.58, 1.05, 0]} rotation={[0, 0, -0.34]}><cylinderGeometry args={[0.09, 0.08, 0.6, 12]} /></BodySeg>
+      {/* Elbows */}
+      <BodySeg position={[-0.73, 0.73, 0]}><sphereGeometry args={[0.085, 10, 8]} /></BodySeg>
+      <BodySeg position={[0.73, 0.73, 0]}><sphereGeometry args={[0.085, 10, 8]} /></BodySeg>
+      {/* Forearms */}
+      <BodySeg position={[-0.75, 0.37, 0]} rotation={[0, 0, 0.12]}><cylinderGeometry args={[0.072, 0.062, 0.58, 12]} /></BodySeg>
+      <BodySeg position={[0.75, 0.37, 0]} rotation={[0, 0, -0.12]}><cylinderGeometry args={[0.072, 0.062, 0.58, 12]} /></BodySeg>
+      {/* Hands */}
+      <BodySeg position={[-0.77, 0.06, 0]}><sphereGeometry args={[0.068, 10, 8]} /></BodySeg>
+      <BodySeg position={[0.77, 0.06, 0]}><sphereGeometry args={[0.068, 10, 8]} /></BodySeg>
+      {/* Upper thighs */}
+      <BodySeg position={[-0.2, -0.57, 0]} rotation={[0, 0, 0.04]}><cylinderGeometry args={[0.13, 0.11, 0.65, 14]} /></BodySeg>
+      <BodySeg position={[0.2, -0.57, 0]} rotation={[0, 0, -0.04]}><cylinderGeometry args={[0.13, 0.11, 0.65, 14]} /></BodySeg>
+      {/* Knees */}
+      <BodySeg position={[-0.21, -0.92, 0]}><sphereGeometry args={[0.1, 10, 8]} /></BodySeg>
+      <BodySeg position={[0.21, -0.92, 0]}><sphereGeometry args={[0.1, 10, 8]} /></BodySeg>
+      {/* Lower legs */}
+      <BodySeg position={[-0.21, -1.25, 0]} rotation={[0.04, 0, 0]}><cylinderGeometry args={[0.09, 0.075, 0.62, 12]} /></BodySeg>
+      <BodySeg position={[0.21, -1.25, 0]} rotation={[0.04, 0, 0]}><cylinderGeometry args={[0.09, 0.075, 0.62, 12]} /></BodySeg>
+      {/* Ankles */}
+      <BodySeg position={[-0.21, -1.58, 0.02]}><sphereGeometry args={[0.072, 10, 8]} /></BodySeg>
+      <BodySeg position={[0.21, -1.58, 0.02]}><sphereGeometry args={[0.072, 10, 8]} /></BodySeg>
+      {/* Feet */}
+      <BodySeg position={[-0.21, -1.62, 0.09]}><boxGeometry args={[0.14, 0.07, 0.28]} /></BodySeg>
+      <BodySeg position={[0.21, -1.62, 0.09]}><boxGeometry args={[0.14, 0.07, 0.28]} /></BodySeg>
     </group>
   );
 }
 
-// ── Organ nodes (thorax) ──────────────────────────────────────
-// Positioned correctly inside the body's thoracic cavity
-// y range for thorax: ~0.52 (diaphragm) to ~1.4 (clavicles)
-// x range: ±0.32 (inside the rib cage)
+// ── Organ placeholder definition ─────────────────────────────
 
-interface PlaceholderNode {
+interface OrganDef {
   id: string;
   nameEn: string;
   nameAr: string;
   position: [number, number, number];
   color: string;
   scale: [number, number, number];
-  shape: 'sphere' | 'cylinder' | 'flat';
+  shape: 'sphere' | 'cylinder' | 'box';
+  regionId: string;   // which L1 region this belongs to
 }
 
-const PLACEHOLDER_NODES: PlaceholderNode[] = [
-  {
-    id: 'FMA:7088',
-    nameEn: 'Heart',
-    nameAr: 'القلب',
-    position: [0.04, 0.9, 0.09],
-    color: '#e53e3e',
-    scale: [0.155, 0.155, 0.14],
-    shape: 'sphere',
-  },
-  {
-    id: 'FMA:7310',
-    nameEn: 'Left Lung',
-    nameAr: 'الرئة اليسرى',
-    position: [-0.21, 0.95, 0.06],
-    color: '#90cdf4',
-    scale: [0.175, 0.31, 0.13],
-    shape: 'sphere',
-  },
-  {
-    id: 'FMA:7303',
-    nameEn: 'Right Lung',
-    nameAr: 'الرئة اليمنى',
-    position: [0.24, 0.95, 0.06],
-    color: '#90cdf4',
-    scale: [0.185, 0.31, 0.13],
-    shape: 'sphere',
-  },
-  {
-    id: 'FMA:7394',
-    nameEn: 'Trachea',
-    nameAr: 'القصبة الهوائية',
-    position: [0, 1.34, 0.09],
-    color: '#fbd38d',
-    scale: [0.052, 0.18, 0.052],
-    shape: 'cylinder',
-  },
-  {
-    id: 'FMA:3734',
-    nameEn: 'Aortic arch',
-    nameAr: 'قوس الأبهر',
-    position: [0.04, 1.08, 0.13],
-    color: '#fc8181',
-    scale: [0.065, 0.065, 0.065],
-    shape: 'sphere',
-  },
-  {
-    id: 'FMA:13295',
-    nameEn: 'Diaphragm',
-    nameAr: 'الحجاب الحاجز',
-    position: [0, 0.55, 0],
-    color: '#f6ad55',
-    scale: [0.52, 0.022, 0.3],
-    shape: 'flat',
-  },
+// Coordinate system: y=0 = navel
+// Thorax: y=0.55–1.40 | Abdomen: y=-0.20–0.55 | Pelvis: y=-0.50– -0.18
+// Head: y=1.50–1.98  | Neck: y=1.40–1.58
+// Arms: x=±0.55–0.77 | Legs: x=±0.21, y=-0.40– -1.62
+// Spine: z=-0.10 (behind body center)
+
+const ALL_ORGANS: OrganDef[] = [
+  // ── Head (FMA:7154) ─────────────────────────────────────────
+  { id: 'FMA:50801', nameEn: 'Brain', nameAr: 'الدماغ',
+    position: [0, 1.82, -0.01], color: '#b794f4', scale: [0.15, 0.14, 0.13], shape: 'sphere', regionId: 'FMA:7154' },
+  { id: 'FMA:9597', nameEn: 'Thyroid gland', nameAr: 'الغدة الدرقية',
+    position: [0, 1.52, 0.09], color: '#ffd89b', scale: [0.1, 0.06, 0.06], shape: 'box', regionId: 'FMA:7154' },
+
+  // ── Neck (FMA:7155) ─────────────────────────────────────────
+  { id: 'FMA:9605', nameEn: 'Larynx', nameAr: 'الحنجرة',
+    position: [0, 1.55, 0.08], color: '#fbd38d', scale: [0.055, 0.07, 0.055], shape: 'sphere', regionId: 'FMA:7155' },
+
+  // ── Thorax (FMA:9648) ───────────────────────────────────────
+  { id: 'FMA:7088', nameEn: 'Heart', nameAr: 'القلب',
+    position: [0.04, 0.9, 0.09], color: '#e53e3e', scale: [0.155, 0.155, 0.14], shape: 'sphere', regionId: 'FMA:9648' },
+  { id: 'FMA:7311', nameEn: 'Left Lung', nameAr: 'الرئة اليسرى',
+    position: [-0.21, 0.95, 0.06], color: '#90cdf4', scale: [0.175, 0.31, 0.13], shape: 'sphere', regionId: 'FMA:9648' },
+  { id: 'FMA:7310', nameEn: 'Right Lung', nameAr: 'الرئة اليمنى',
+    position: [0.24, 0.95, 0.06], color: '#90cdf4', scale: [0.185, 0.31, 0.13], shape: 'sphere', regionId: 'FMA:9648' },
+  { id: 'FMA:7394', nameEn: 'Trachea', nameAr: 'القصبة الهوائية',
+    position: [0, 1.34, 0.09], color: '#fbd38d', scale: [0.052, 0.18, 0.052], shape: 'cylinder', regionId: 'FMA:9648' },
+  { id: 'FMA:3734', nameEn: 'Aortic arch', nameAr: 'قوس الأبهر',
+    position: [0.04, 1.08, 0.13], color: '#fc8181', scale: [0.065, 0.065, 0.065], shape: 'sphere', regionId: 'FMA:9648' },
+  { id: 'FMA:13295', nameEn: 'Diaphragm', nameAr: 'الحجاب الحاجز',
+    position: [0, 0.55, 0], color: '#f6ad55', scale: [0.52, 0.022, 0.3], shape: 'box', regionId: 'FMA:9648' },
+
+  // ── Abdomen (FMA:9600) ──────────────────────────────────────
+  { id: 'FMA:7197', nameEn: 'Liver', nameAr: 'الكبد',
+    position: [0.18, 0.4, 0.08], color: '#c05621', scale: [0.26, 0.19, 0.15], shape: 'sphere', regionId: 'FMA:9600' },
+  { id: 'FMA:7148', nameEn: 'Stomach', nameAr: 'المعدة',
+    position: [-0.1, 0.22, 0.1], color: '#f6ad55', scale: [0.18, 0.17, 0.11], shape: 'sphere', regionId: 'FMA:9600' },
+  { id: 'FMA:7196', nameEn: 'Spleen', nameAr: 'الطحال',
+    position: [-0.27, 0.3, 0.02], color: '#9f7aea', scale: [0.09, 0.14, 0.07], shape: 'sphere', regionId: 'FMA:9600' },
+  { id: 'FMA:7198', nameEn: 'Pancreas', nameAr: 'البنكرياس',
+    position: [0, 0.1, 0.06], color: '#fbd38d', scale: [0.2, 0.06, 0.07], shape: 'box', regionId: 'FMA:9600' },
+  { id: 'FMA:7203', nameEn: 'Right Kidney', nameAr: 'الكلية اليمنى',
+    position: [0.23, -0.02, -0.05], color: '#fc8181', scale: [0.09, 0.13, 0.07], shape: 'sphere', regionId: 'FMA:9600' },
+  { id: 'FMA:7204', nameEn: 'Left Kidney', nameAr: 'الكلية اليسرى',
+    position: [-0.23, 0.0, -0.05], color: '#fc8181', scale: [0.09, 0.13, 0.07], shape: 'sphere', regionId: 'FMA:9600' },
+  { id: 'FMA:7209', nameEn: 'Gallbladder', nameAr: 'المرارة',
+    position: [0.2, 0.27, 0.12], color: '#d69e2e', scale: [0.07, 0.09, 0.065], shape: 'sphere', regionId: 'FMA:9600' },
+  { id: 'abdomen_small_intestine', nameEn: 'Small Intestine', nameAr: 'الأمعاء الدقيقة',
+    position: [0, -0.08, 0.07], color: '#e8c4a0', scale: [0.22, 0.17, 0.14], shape: 'sphere', regionId: 'FMA:9600' },
+  { id: 'FMA:14541', nameEn: 'Cecum & Appendix', nameAr: 'الأعور والزائدة',
+    position: [0.2, -0.18, 0.08], color: '#e8b4b8', scale: [0.08, 0.1, 0.07], shape: 'sphere', regionId: 'FMA:9600' },
+
+  // ── Pelvis (FMA:9578) ───────────────────────────────────────
+  { id: 'FMA:15900', nameEn: 'Urinary Bladder', nameAr: 'المثانة البولية',
+    position: [0, -0.28, 0.1], color: '#fbd38d', scale: [0.13, 0.1, 0.11], shape: 'sphere', regionId: 'FMA:9578' },
+  { id: 'FMA:17558', nameEn: 'Uterus', nameAr: 'الرحم',
+    position: [0, -0.33, 0.05], color: '#f9a8d4', scale: [0.09, 0.09, 0.07], shape: 'sphere', regionId: 'FMA:9578' },
+  { id: 'FMA:9362', nameEn: 'Prostate', nameAr: 'البروستاتة',
+    position: [0, -0.35, 0.05], color: '#fbd38d', scale: [0.07, 0.055, 0.06], shape: 'sphere', regionId: 'FMA:9578' },
+  { id: 'FMA:14227', nameEn: 'Rectum', nameAr: 'المستقيم',
+    position: [0, -0.32, -0.07], color: '#b7791f', scale: [0.065, 0.14, 0.065], shape: 'cylinder', regionId: 'FMA:9578' },
+
+  // ── Upper Limb (FMA:7182) ───────────────────────────────────
+  { id: 'FMA:13883', nameEn: 'Humerus', nameAr: 'عظم العضد',
+    position: [-0.6, 1.04, 0], color: '#e2e8f0', scale: [0.055, 0.32, 0.055], shape: 'cylinder', regionId: 'FMA:7182' },
+  { id: 'FMA:25202', nameEn: 'Shoulder Joint', nameAr: 'مفصل الكتف',
+    position: [-0.46, 1.36, 0], color: '#90cdf4', scale: [0.09, 0.09, 0.09], shape: 'sphere', regionId: 'FMA:7182' },
+  { id: 'FMA:25998', nameEn: 'Elbow Joint', nameAr: 'مفصل المرفق',
+    position: [-0.73, 0.73, 0], color: '#90cdf4', scale: [0.075, 0.075, 0.075], shape: 'sphere', regionId: 'FMA:7182' },
+
+  // ── Lower Limb (FMA:7185) ───────────────────────────────────
+  { id: 'FMA:9611', nameEn: 'Femur', nameAr: 'عظم الفخذ',
+    position: [-0.2, -0.57, 0], color: '#e2e8f0', scale: [0.065, 0.33, 0.065], shape: 'cylinder', regionId: 'FMA:7185' },
+  { id: 'FMA:24476', nameEn: 'Hip Joint', nameAr: 'مفصل الورك',
+    position: [-0.2, -0.2, 0], color: '#90cdf4', scale: [0.09, 0.09, 0.09], shape: 'sphere', regionId: 'FMA:7185' },
+  { id: 'FMA:9622', nameEn: 'Knee Joint', nameAr: 'مفصل الركبة',
+    position: [-0.21, -0.92, 0], color: '#90cdf4', scale: [0.085, 0.085, 0.085], shape: 'sphere', regionId: 'FMA:7185' },
+  { id: 'FMA:24477', nameEn: 'Tibia', nameAr: 'القصبة',
+    position: [-0.21, -1.25, 0], color: '#e2e8f0', scale: [0.055, 0.3, 0.055], shape: 'cylinder', regionId: 'FMA:7185' },
+
+  // ── Back & Spine (FMA:14543) ────────────────────────────────
+  { id: 'FMA:9631', nameEn: 'Vertebral Column', nameAr: 'العمود الفقري',
+    position: [0, 0.1, -0.13], color: '#e2e8f0', scale: [0.055, 1.8, 0.055], shape: 'cylinder', regionId: 'FMA:14543' },
+  { id: 'FMA:7647', nameEn: 'Spinal Cord', nameAr: 'النخاع الشوكي',
+    position: [0, 0.1, -0.11], color: '#b794f4', scale: [0.032, 1.5, 0.032], shape: 'cylinder', regionId: 'FMA:14543' },
 ];
 
+// ── Organ mesh ────────────────────────────────────────────────
+
 function OrganMesh({
-  node,
+  organ,
   selected,
   isolated,
   hidden,
+  activeRegionId,
   onSelect,
   showLabels,
   lang,
 }: {
-  node: PlaceholderNode;
+  organ: OrganDef;
   selected: boolean;
   isolated: boolean;
   hidden: boolean;
+  activeRegionId: string | null;
   onSelect: (id: string) => void;
   showLabels: boolean;
   lang: 'en' | 'ar';
 }) {
   const meshRef = useRef<THREE.Mesh>(null!);
+
+  const inActiveRegion = !activeRegionId || organ.regionId === activeRegionId;
+  const dimmed = !inActiveRegion;
 
   useFrame((_, delta) => {
     if (!meshRef.current || !selected) return;
@@ -343,51 +268,52 @@ function OrganMesh({
 
   if (hidden) return null;
 
-  const opacity = isolated ? 0.12 : selected ? 0.95 : 0.82;
+  const opacity = dimmed ? 0.05 : isolated ? 0.1 : selected ? 0.95 : 0.82;
   const emissive = selected
-    ? new THREE.Color(node.color).multiplyScalar(0.45)
+    ? new THREE.Color(organ.color).multiplyScalar(0.45)
     : new THREE.Color(0, 0, 0);
 
-  const displayName = lang === 'ar' ? node.nameAr : node.nameEn;
-  const labelY = node.shape === 'cylinder'
-    ? node.scale[1] + 0.08
-    : node.shape === 'flat'
-    ? node.scale[1] + 0.05
-    : node.scale[1] + 0.06;
+  const labelY =
+    organ.shape === 'cylinder' ? organ.scale[1] + 0.07 :
+    organ.shape === 'box' ? organ.scale[1] + 0.05 :
+    organ.scale[1] + 0.06;
+
+  const displayName = lang === 'ar' ? organ.nameAr : organ.nameEn;
 
   return (
-    <group position={node.position}>
+    <group position={organ.position}>
       <mesh
         ref={meshRef}
-        scale={node.scale}
-        onClick={(e) => { e.stopPropagation(); onSelect(node.id); }}
+        scale={organ.scale}
+        onClick={(e) => { e.stopPropagation(); onSelect(organ.id); }}
         castShadow
       >
-        {node.shape === 'cylinder' ? (
+        {organ.shape === 'cylinder' ? (
           <cylinderGeometry args={[1, 1, 1, 16]} />
+        ) : organ.shape === 'box' ? (
+          <boxGeometry args={[1, 1, 1]} />
         ) : (
           <sphereGeometry args={[1, 22, 16]} />
         )}
         <meshStandardMaterial
-          color={node.color}
+          color={organ.color}
           transparent
           opacity={opacity}
           emissive={emissive}
           roughness={0.55}
           metalness={0.08}
-          depthWrite={!isolated}
+          depthWrite={!dimmed && !isolated}
         />
       </mesh>
 
-      {/* Hover glow ring when selected */}
       {selected && (
-        <mesh scale={[node.scale[0] * 1.18, node.scale[1] * 1.18, node.scale[2] * 1.18]}>
+        <mesh scale={[organ.scale[0] * 1.2, organ.scale[1] * 1.2, organ.scale[2] * 1.2]}>
           <sphereGeometry args={[1, 22, 16]} />
-          <meshBasicMaterial color={node.color} transparent opacity={0.1} side={THREE.BackSide} />
+          <meshBasicMaterial color={organ.color} transparent opacity={0.1} side={THREE.BackSide} />
         </mesh>
       )}
 
-      {showLabels && (
+      {showLabels && inActiveRegion && (
         <Text
           position={[0, labelY, 0]}
           fontSize={0.055}
@@ -405,25 +331,90 @@ function OrganMesh({
   );
 }
 
-// ── Region highlight ring for thorax ─────────────────────────
+// ── Region zone triggers (invisible clickable meshes) ─────────
+// Clicking a zone navigates to that region's root node
 
-function ThoraxHighlight() {
+const REGION_ZONES = [
+  { id: 'FMA:7154',  pos: [0, 1.78, 0],  scale: [0.42, 0.42, 0.42],  color: '#b794f4' }, // Head
+  { id: 'FMA:7155',  pos: [0, 1.58, 0],  scale: [0.24, 0.2, 0.24],   color: '#68d391' }, // Neck
+  { id: 'FMA:9648',  pos: [0, 0.88, 0],  scale: [0.78, 1.0, 0.7],    color: '#e53e3e' }, // Thorax
+  { id: 'FMA:9600',  pos: [0, 0.27, 0],  scale: [0.68, 0.72, 0.62],  color: '#f6ad55' }, // Abdomen
+  { id: 'FMA:9578',  pos: [0, -0.27, 0], scale: [0.72, 0.42, 0.65],  color: '#fbd38d' }, // Pelvis
+  { id: 'FMA:7182',  pos: [0, 0.8, 0],   scale: [1.7, 1.4, 0.35],    color: '#90cdf4' }, // Upper limbs (wide)
+  { id: 'FMA:7185',  pos: [0, -0.95, 0], scale: [0.56, 1.5, 0.44],   color: '#68d391' }, // Lower limbs
+  { id: 'FMA:14543', pos: [0, 0.1, -0.12], scale: [0.14, 3.6, 0.16], color: '#fc8181' }, // Spine
+] as const;
+
+function RegionZone({
+  id, pos, scale, color, activeRegionId, onSelect,
+}: {
+  id: string;
+  pos: readonly [number, number, number];
+  scale: readonly [number, number, number];
+  color: string;
+  activeRegionId: string | null;
+  onSelect: (id: string) => void;
+}) {
+  const [hovered, setHovered] = (
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    [useRef(false), useRef<THREE.Mesh>(null!)]
+  );
+  const meshRef = useRef<THREE.Mesh>(null!);
+  const isActive = activeRegionId === id;
+
+  return (
+    <mesh
+      ref={meshRef}
+      position={pos as [number, number, number]}
+      scale={scale as [number, number, number]}
+      onClick={(e) => { e.stopPropagation(); onSelect(id); }}
+      onPointerEnter={() => { document.body.style.cursor = 'pointer'; }}
+      onPointerLeave={() => { document.body.style.cursor = 'auto'; }}
+    >
+      <sphereGeometry args={[0.5, 12, 8]} />
+      <meshBasicMaterial
+        color={color}
+        transparent
+        opacity={isActive ? 0.08 : 0}
+        side={THREE.FrontSide}
+        depthWrite={false}
+      />
+    </mesh>
+  );
+}
+
+// ── Active region pulsing ring ────────────────────────────────
+
+function ActiveRegionGlow({ regionId }: { regionId: string | null }) {
   const meshRef = useRef<THREE.Mesh>(null!);
 
   useFrame(({ clock }) => {
     if (!meshRef.current) return;
     const mat = meshRef.current.material as THREE.MeshBasicMaterial;
-    mat.opacity = 0.03 + Math.abs(Math.sin(clock.elapsedTime * 0.8)) * 0.05;
+    mat.opacity = 0.03 + Math.abs(Math.sin(clock.elapsedTime * 0.9)) * 0.06;
   });
 
+  if (!regionId) return null;
+
+  const zone = REGION_ZONES.find((z) => z.id === regionId);
+  if (!zone) return null;
+
   return (
-    <mesh ref={meshRef} position={[0, 0.88, 0]}>
-      <cylinderGeometry args={[0.38, 0.38, 1.0, 24, 1, true]} />
+    <mesh
+      ref={meshRef}
+      position={zone.pos as [number, number, number]}
+      scale={[
+        zone.scale[0] * 1.06,
+        zone.scale[1] * 1.06,
+        zone.scale[2] * 1.06,
+      ]}
+    >
+      <sphereGeometry args={[0.5, 16, 10]} />
       <meshBasicMaterial
-        color="#e53e3e"
+        color={zone.color}
         transparent
         opacity={0.05}
-        side={THREE.DoubleSide}
+        side={THREE.BackSide}
         depthWrite={false}
       />
     </mesh>
@@ -440,15 +431,16 @@ function SceneInner({
   onNodeSelect: (id: string) => void;
 }) {
   const {
-    sex,
-    selectedNodeId,
-    showLabels,
-    isolatedNodeIds,
-    hiddenNodeIds,
-    isAnimating,
+    sex, selectedNodeId, showLabels,
+    isolatedNodeIds, hiddenNodeIds, isAnimating,
+    breadcrumb, nodeCache,
   } = useAnatomyStore();
 
   const hasIsolation = isolatedNodeIds.length > 0;
+
+  // Determine the active region from the current breadcrumb's L1 node
+  const rootNodeId = breadcrumb[0] ?? null;
+  const activeRegionId = rootNodeId;
 
   return (
     <>
@@ -457,46 +449,44 @@ function SceneInner({
       <directionalLight position={[4, 8, 4]} intensity={1.1} castShadow />
       <pointLight position={[-3, 2, -2]} intensity={0.4} color="#90cdf4" />
       <pointLight position={[0, -1.5, 2]} intensity={0.2} color="#ffffff" />
-
-      {/* Environment */}
       <Environment preset="studio" />
 
-      {/* Subtle ground plane */}
+      {/* Ground */}
       <mesh position={[0, -1.72, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <circleGeometry args={[1.2, 32]} />
-        <meshStandardMaterial
-          color="#1a1d26"
-          transparent
-          opacity={0.8}
-          roughness={0.9}
-        />
+        <meshStandardMaterial color="#1a1d26" transparent opacity={0.8} roughness={0.9} />
       </mesh>
-      {/* Ground shadow ring */}
       <mesh position={[0, -1.71, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <ringGeometry args={[0.25, 1.2, 32]} />
-        <meshBasicMaterial
-          color="#000000"
-          transparent
-          opacity={0.25}
-          depthWrite={false}
-        />
+        <meshBasicMaterial color="#000000" transparent opacity={0.25} depthWrite={false} />
       </mesh>
 
-      {/* Full body silhouette */}
+      {/* Full body */}
       <BodyFigure sex={sex === 'female' ? 'female' : 'male'} />
 
-      {/* Thorax region pulsing ring */}
-      <ThoraxHighlight />
+      {/* Active region glow */}
+      <ActiveRegionGlow regionId={activeRegionId} />
 
-      {/* Organ meshes */}
-      {PLACEHOLDER_NODES.map((pn) => (
+      {/* Region zone triggers (invisible hit areas for navigation) */}
+      {REGION_ZONES.map((z) => (
+        <RegionZone
+          key={z.id}
+          {...z}
+          activeRegionId={activeRegionId}
+          onSelect={onNodeSelect}
+        />
+      ))}
+
+      {/* All organ placeholders */}
+      {ALL_ORGANS.map((o) => (
         <OrganMesh
-          key={pn.id}
-          node={pn}
+          key={o.id}
+          organ={o}
           lang={lang}
-          selected={selectedNodeId === pn.id}
-          isolated={hasIsolation && !isolatedNodeIds.includes(pn.id)}
-          hidden={hiddenNodeIds.includes(pn.id)}
+          selected={selectedNodeId === o.id}
+          isolated={hasIsolation && !isolatedNodeIds.includes(o.id)}
+          hidden={hiddenNodeIds.includes(o.id)}
+          activeRegionId={activeRegionId}
           onSelect={onNodeSelect}
           showLabels={showLabels}
         />
@@ -546,7 +536,6 @@ export default function ViewerScene({ lang, onNodeSelect }: ViewerSceneProps) {
         </Suspense>
       </Canvas>
 
-      {/* Schematic notice */}
       <div
         className="absolute bottom-16 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-full text-xs pointer-events-none whitespace-nowrap"
         style={{ color: 'rgba(255,255,255,0.22)', background: 'rgba(0,0,0,0.45)' }}

@@ -46,11 +46,10 @@ export default function AnatomyModule({ lang, userId }: AnatomyModuleProps) {
       .finally(() => setLoadingNode(false));
   }, [selectedNodeId, nodeCache, cacheNode, cacheContent]);
 
-  const handleSelectSex = useCallback((s: AnatomySex) => {
+  const handleSelectSex = useCallback((s: AnatomySex, regionId: string) => {
     setSex(s);
     setPhase('viewer');
-    // Start at Thorax (L1 root)
-    drillDown('FMA:9648');
+    drillDown(regionId);
   }, [setSex, drillDown]);
 
   const handleBack = useCallback(() => {
