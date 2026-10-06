@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, Suspense, useCallback } from 'react';
+import { useRef, Suspense, useCallback, useMemo } from 'react';
 import { Canvas, useThree, useFrame } from '@react-three/fiber';
 import { OrbitControls, Environment, Text, useProgress, Html } from '@react-three/drei';
 import * as THREE from 'three';
@@ -52,6 +52,9 @@ function IdleOrbit({ active }: { active: boolean }) {
 
 // ── Body segment helper ───────────────────────────────────────
 
+const BODY_MAT_COLOR = '#2a8db8';
+const BODY_OPACITY = 0.15;
+
 function BodySeg({
   position,
   rotation,
@@ -62,15 +65,15 @@ function BodySeg({
   children: React.ReactNode;
 }) {
   return (
-    <mesh position={position} rotation={rotation ?? [0, 0, 0]} castShadow receiveShadow>
+    <mesh position={position} rotation={rotation ?? [0, 0, 0]} castShadow>
       {children}
       <meshStandardMaterial
-        color="#3a8fbf"
+        color={BODY_MAT_COLOR}
         transparent
-        opacity={0.11}
-        roughness={0.5}
-        metalness={0.1}
-        side={THREE.FrontSide}
+        opacity={BODY_OPACITY}
+        roughness={0.55}
+        metalness={0.04}
+        side={THREE.DoubleSide}
         depthWrite={false}
       />
     </mesh>
@@ -79,59 +82,156 @@ function BodySeg({
 
 // ── Full body silhouette ──────────────────────────────────────
 // y=0 at navel. Total height ~3.6 units.
+// Torso uses LatheGeometry (smooth profile revolution) scaled
+// 0.68 on Z so it's elliptical (human torsos are flatter front-to-back).
 
 function BodyFigure({ sex }: { sex: 'male' | 'female' }) {
   const isFemale = sex === 'female';
-  const chestR = isFemale ? 0.31 : 0.35;
-  const hipR = isFemale ? 0.36 : 0.32;
-  const abdR = isFemale ? 0.29 : 0.3;
+
+  // Profile points [radius, height] for surface-of-revolution.
+  // Male: wider shoulders & chest, narrower hips.
+  // Female: wider hips, narrower waist, slightly narrower shoulders.
+  const torsoProfile = useMemo<THREE.Vector2[]>(() => {
+    const pts = isFemale
+      ? [
+          [0.20, -0.26], // groin
+          [0.35, -0.05], // hip widest
+          [0.33, 0.08],  // upper hip
+          [0.24, 0.30],  // waist narrowest
+          [0.27, 0.52],  // sub-costal
+          [0.32, 0.74],  // lower ribcage
+          [0.33, 0.93],  // chest
+          [0.30, 1.12],  // upper chest
+          [0.28, 1.30],  // clavicle
+          [0.23, 1.44],  // neck base
+        ]
+      : [
+          [0.20, -0.26], // groin
+          [0.32, -0.05], // hip
+          [0.30, 0.08],  // upper hip
+          [0.27, 0.30],  // waist
+          [0.30, 0.52],  // sub-costal
+          [0.36, 0.74],  // lower ribcage
+          [0.37, 0.93],  // mid chest
+          [0.35, 1.12],  // upper chest
+          [0.31, 1.30],  // clavicle
+          [0.26, 1.44],  // neck base
+        ];
+    return pts.map(([x, y]) => new THREE.Vector2(x, y));
+  }, [isFemale]);
 
   return (
     <group>
-      {/* Head */}
-      <BodySeg position={[0, 1.78, 0]}><sphereGeometry args={[0.19, 20, 14]} /></BodySeg>
-      {/* Neck */}
-      <BodySeg position={[0, 1.59, 0]}><cylinderGeometry args={[0.075, 0.085, 0.18, 14]} /></BodySeg>
-      {/* Upper chest */}
-      <BodySeg position={[0, 1.06, 0]}><cylinderGeometry args={[chestR * 0.92, chestR, 0.72, 18]} /></BodySeg>
-      {/* Lower chest */}
-      <BodySeg position={[0, 0.62, 0]}><cylinderGeometry args={[abdR + 0.01, chestR * 0.92, 0.35, 18]} /></BodySeg>
-      {/* Abdomen */}
-      <BodySeg position={[0, 0.27, 0]}><cylinderGeometry args={[abdR, abdR + 0.01, 0.42, 18]} /></BodySeg>
-      {/* Pelvis */}
-      <BodySeg position={[0, 0.02, 0]}><cylinderGeometry args={[hipR, abdR, 0.32, 18]} /></BodySeg>
-      {/* Crotch cap */}
-      <BodySeg position={[0, -0.16, 0]}><cylinderGeometry args={[hipR * 0.7, hipR, 0.18, 18]} /></BodySeg>
-      {/* Shoulders */}
-      <BodySeg position={[-0.44, 1.38, 0]}><sphereGeometry args={[0.13, 12, 10]} /></BodySeg>
-      <BodySeg position={[0.44, 1.38, 0]}><sphereGeometry args={[0.13, 12, 10]} /></BodySeg>
-      {/* Upper arms */}
-      <BodySeg position={[-0.58, 1.05, 0]} rotation={[0, 0, 0.34]}><cylinderGeometry args={[0.09, 0.08, 0.6, 12]} /></BodySeg>
-      <BodySeg position={[0.58, 1.05, 0]} rotation={[0, 0, -0.34]}><cylinderGeometry args={[0.09, 0.08, 0.6, 12]} /></BodySeg>
-      {/* Elbows */}
-      <BodySeg position={[-0.73, 0.73, 0]}><sphereGeometry args={[0.085, 10, 8]} /></BodySeg>
-      <BodySeg position={[0.73, 0.73, 0]}><sphereGeometry args={[0.085, 10, 8]} /></BodySeg>
-      {/* Forearms */}
-      <BodySeg position={[-0.75, 0.37, 0]} rotation={[0, 0, 0.12]}><cylinderGeometry args={[0.072, 0.062, 0.58, 12]} /></BodySeg>
-      <BodySeg position={[0.75, 0.37, 0]} rotation={[0, 0, -0.12]}><cylinderGeometry args={[0.072, 0.062, 0.58, 12]} /></BodySeg>
-      {/* Hands */}
-      <BodySeg position={[-0.77, 0.06, 0]}><sphereGeometry args={[0.068, 10, 8]} /></BodySeg>
-      <BodySeg position={[0.77, 0.06, 0]}><sphereGeometry args={[0.068, 10, 8]} /></BodySeg>
-      {/* Upper thighs */}
-      <BodySeg position={[-0.2, -0.57, 0]} rotation={[0, 0, 0.04]}><cylinderGeometry args={[0.13, 0.11, 0.65, 14]} /></BodySeg>
-      <BodySeg position={[0.2, -0.57, 0]} rotation={[0, 0, -0.04]}><cylinderGeometry args={[0.13, 0.11, 0.65, 14]} /></BodySeg>
-      {/* Knees */}
-      <BodySeg position={[-0.21, -0.92, 0]}><sphereGeometry args={[0.1, 10, 8]} /></BodySeg>
-      <BodySeg position={[0.21, -0.92, 0]}><sphereGeometry args={[0.1, 10, 8]} /></BodySeg>
-      {/* Lower legs */}
-      <BodySeg position={[-0.21, -1.25, 0]} rotation={[0.04, 0, 0]}><cylinderGeometry args={[0.09, 0.075, 0.62, 12]} /></BodySeg>
-      <BodySeg position={[0.21, -1.25, 0]} rotation={[0.04, 0, 0]}><cylinderGeometry args={[0.09, 0.075, 0.62, 12]} /></BodySeg>
-      {/* Ankles */}
-      <BodySeg position={[-0.21, -1.58, 0.02]}><sphereGeometry args={[0.072, 10, 8]} /></BodySeg>
-      <BodySeg position={[0.21, -1.58, 0.02]}><sphereGeometry args={[0.072, 10, 8]} /></BodySeg>
-      {/* Feet */}
-      <BodySeg position={[-0.21, -1.62, 0.09]}><boxGeometry args={[0.14, 0.07, 0.28]} /></BodySeg>
-      <BodySeg position={[0.21, -1.62, 0.09]}><boxGeometry args={[0.14, 0.07, 0.28]} /></BodySeg>
+      {/* ── Torso: smooth revolution, squashed front-to-back ── */}
+      <mesh scale={[1, 1, 0.68]} castShadow>
+        <latheGeometry args={[torsoProfile, 30]} />
+        <meshStandardMaterial
+          color={BODY_MAT_COLOR}
+          transparent
+          opacity={BODY_OPACITY}
+          roughness={0.55}
+          metalness={0.04}
+          side={THREE.DoubleSide}
+          depthWrite={false}
+        />
+      </mesh>
+
+      {/* ── Head (slightly prolate ellipsoid) ── */}
+      <mesh position={[0, 1.76, 0]} scale={[1, 1.12, 0.93]} castShadow>
+        <sphereGeometry args={[0.175, 24, 18]} />
+        <meshStandardMaterial
+          color={BODY_MAT_COLOR}
+          transparent
+          opacity={BODY_OPACITY}
+          roughness={0.55}
+          metalness={0.04}
+          side={THREE.DoubleSide}
+          depthWrite={false}
+        />
+      </mesh>
+
+      {/* ── Neck ── */}
+      <BodySeg position={[0, 1.58, 0]}>
+        <cylinderGeometry args={[0.069, 0.088, 0.22, 16]} />
+      </BodySeg>
+
+      {/* ── Shoulder spheres ── */}
+      <BodySeg position={[-0.41, 1.37, 0]}><sphereGeometry args={[0.115, 14, 10]} /></BodySeg>
+      <BodySeg position={[ 0.41, 1.37, 0]}><sphereGeometry args={[0.115, 14, 10]} /></BodySeg>
+
+      {/* ── Upper arms (gentle outward angle) ── */}
+      <BodySeg position={[-0.54, 1.03, 0]} rotation={[0, 0,  0.24]}>
+        <cylinderGeometry args={[0.084, 0.074, 0.58, 14]} />
+      </BodySeg>
+      <BodySeg position={[ 0.54, 1.03, 0]} rotation={[0, 0, -0.24]}>
+        <cylinderGeometry args={[0.084, 0.074, 0.58, 14]} />
+      </BodySeg>
+
+      {/* ── Elbows ── */}
+      <BodySeg position={[-0.67, 0.73, 0]}><sphereGeometry args={[0.075, 12, 8]} /></BodySeg>
+      <BodySeg position={[ 0.67, 0.73, 0]}><sphereGeometry args={[0.075, 12, 8]} /></BodySeg>
+
+      {/* ── Forearms ── */}
+      <BodySeg position={[-0.69, 0.38, 0]} rotation={[0, 0,  0.09]}>
+        <cylinderGeometry args={[0.064, 0.054, 0.58, 14]} />
+      </BodySeg>
+      <BodySeg position={[ 0.69, 0.38, 0]} rotation={[0, 0, -0.09]}>
+        <cylinderGeometry args={[0.064, 0.054, 0.58, 14]} />
+      </BodySeg>
+
+      {/* ── Wrists + Hands ── */}
+      <BodySeg position={[-0.70, 0.06, 0]}><sphereGeometry args={[0.056, 10, 8]} /></BodySeg>
+      <BodySeg position={[ 0.70, 0.06, 0]}><sphereGeometry args={[0.056, 10, 8]} /></BodySeg>
+      <mesh position={[-0.70, -0.05, 0]} scale={[1, 1, 0.62]} castShadow>
+        <sphereGeometry args={[0.068, 12, 8]} />
+        <meshStandardMaterial color={BODY_MAT_COLOR} transparent opacity={BODY_OPACITY}
+          roughness={0.55} side={THREE.DoubleSide} depthWrite={false} />
+      </mesh>
+      <mesh position={[0.70, -0.05, 0]} scale={[1, 1, 0.62]} castShadow>
+        <sphereGeometry args={[0.068, 12, 8]} />
+        <meshStandardMaterial color={BODY_MAT_COLOR} transparent opacity={BODY_OPACITY}
+          roughness={0.55} side={THREE.DoubleSide} depthWrite={false} />
+      </mesh>
+
+      {/* ── Hip joint caps ── */}
+      <BodySeg position={[-0.18, -0.27, 0]}><sphereGeometry args={[0.098, 12, 8]} /></BodySeg>
+      <BodySeg position={[ 0.18, -0.27, 0]}><sphereGeometry args={[0.098, 12, 8]} /></BodySeg>
+
+      {/* ── Thighs ── */}
+      <BodySeg position={[-0.19, -0.55, 0]} rotation={[0, 0,  0.04]}>
+        <cylinderGeometry args={[0.122, 0.104, 0.55, 16]} />
+      </BodySeg>
+      <BodySeg position={[ 0.19, -0.55, 0]} rotation={[0, 0, -0.04]}>
+        <cylinderGeometry args={[0.122, 0.104, 0.55, 16]} />
+      </BodySeg>
+
+      {/* ── Knees ── */}
+      <BodySeg position={[-0.20, -0.89, 0]}><sphereGeometry args={[0.090, 12, 8]} /></BodySeg>
+      <BodySeg position={[ 0.20, -0.89, 0]}><sphereGeometry args={[0.090, 12, 8]} /></BodySeg>
+
+      {/* ── Shins ── */}
+      <BodySeg position={[-0.20, -1.22, 0]}>
+        <cylinderGeometry args={[0.080, 0.063, 0.64, 14]} />
+      </BodySeg>
+      <BodySeg position={[ 0.20, -1.22, 0]}>
+        <cylinderGeometry args={[0.080, 0.063, 0.64, 14]} />
+      </BodySeg>
+
+      {/* ── Ankles ── */}
+      <BodySeg position={[-0.20, -1.57, 0]}><sphereGeometry args={[0.060, 10, 8]} /></BodySeg>
+      <BodySeg position={[ 0.20, -1.57, 0]}><sphereGeometry args={[0.060, 10, 8]} /></BodySeg>
+
+      {/* ── Feet (tapered box) ── */}
+      <mesh position={[-0.20, -1.625, 0.07]} scale={[1, 1, 1]} castShadow>
+        <boxGeometry args={[0.125, 0.060, 0.25]} />
+        <meshStandardMaterial color={BODY_MAT_COLOR} transparent opacity={BODY_OPACITY}
+          roughness={0.55} side={THREE.DoubleSide} depthWrite={false} />
+      </mesh>
+      <mesh position={[0.20, -1.625, 0.07]} scale={[1, 1, 1]} castShadow>
+        <boxGeometry args={[0.125, 0.060, 0.25]} />
+        <meshStandardMaterial color={BODY_MAT_COLOR} transparent opacity={BODY_OPACITY}
+          roughness={0.55} side={THREE.DoubleSide} depthWrite={false} />
+      </mesh>
     </group>
   );
 }
