@@ -1,4 +1,4 @@
-#!/usr/bin/env tsx
+#!/usr/bin/env npx tsx
 /**
  * Seed anatomy module with thorax hierarchy and heart content.
  * Usage: npx tsx scripts/anatomy/seed-thorax.ts
@@ -9,17 +9,34 @@ import { createClient } from '@supabase/supabase-js';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
+import { ALL_THORAX_NODES } from '../../src/data/anatomy/thorax-nodes';
+import {
+  CONTENT_HEART,
+  CONTENT_SA_NODE,
+  CONTENT_AV_NODE,
+  CONTENT_LAD,
+  CONTENT_FOSSA_OVALIS,
+  CONTENT_MITRAL_VALVE,
+  CONTENT_MODERATOR_BAND,
+  CONTENT_RCA,
+} from '../../src/data/anatomy/heart-content';
+import type { AnatomyNode, AnatomyContent } from '../../src/types/anatomy';
 
-// Load env
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.resolve(__dirname, '../../.env.local') });
 
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+const rawUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? '';
+const SUPABASE_URL = rawUrl.replace(/\\n/g, '').trim();
+const rawKey = process.env.SUPABASE_SERVICE_ROLE_KEY ?? '';
+const SERVICE_KEY = rawKey.replace(/\\n/g, '').trim();
 
-if (!SUPABASE_URL || !SERVICE_KEY) {
-  console.error('Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY');
+if (!SUPABASE_URL || SUPABASE_URL.includes('placeholder')) {
+  console.error('Missing or placeholder NEXT_PUBLIC_SUPABASE_URL');
+  process.exit(1);
+}
+if (!SERVICE_KEY || SERVICE_KEY.includes('placeholder')) {
+  console.error('Missing or placeholder SUPABASE_SERVICE_ROLE_KEY');
   process.exit(1);
 }
 
@@ -27,30 +44,9 @@ const supabase = createClient(SUPABASE_URL, SERVICE_KEY, {
   auth: { autoRefreshToken: false, persistSession: false },
 });
 
-// ── Import seed data ──────────────────────────────────────────
+// ── Row mappers ───────────────────────────────────────────────
 
-// We inline minimal node definitions here so the script is standalone
-// (thorax-nodes.ts has TS types that tsx handles fine, but we re-export
-// from the source directly)
-
-const THORAX_NODES = await import('../../src/data/anatomy/thorax-nodes')
-  .then((m) => m.ALL_THORAX_NODES);
-
-const HEART_CONTENTS = await import('../../src/data/anatomy/heart-content')
-  .then((m) => [
-    m.CONTENT_HEART,
-    m.CONTENT_SA_NODE,
-    m.CONTENT_AV_NODE,
-    m.CONTENT_LAD,
-    m.CONTENT_FOSSA_OVALIS,
-    m.CONTENT_MITRAL_VALVE,
-    m.CONTENT_MODERATOR_BAND,
-    m.CONTENT_RCA,
-  ]);
-
-// ── Helpers ───────────────────────────────────────────────────
-
-function nodeToRow(n: typeof THORAX_NODES[0]) {
+function nodeToRow(n: AnatomyNode) {
   return {
     id:              n.id,
     fma_id:          n.fmaId,
@@ -77,7 +73,7 @@ function nodeToRow(n: typeof THORAX_NODES[0]) {
   };
 }
 
-function contentToRow(c: typeof HEART_CONTENTS[0]) {
+function contentToRow(c: AnatomyContent) {
   return {
     id:                     c.id,
     node_id:                c.nodeId,
@@ -144,13 +140,23 @@ function contentToRow(c: typeof HEART_CONTENTS[0]) {
 // ── Main ──────────────────────────────────────────────────────
 
 async function main() {
+  const HEART_CONTENTS: AnatomyContent[] = [
+    CONTENT_HEART,
+    CONTENT_SA_NODE,
+    CONTENT_AV_NODE,
+    CONTENT_LAD,
+    CONTENT_FOSSA_OVALIS,
+    CONTENT_MITRAL_VALVE,
+    CONTENT_MODERATOR_BAND,
+    CONTENT_RCA,
+  ];
+
   console.log(`\n🦴 Seeding anatomy module…`);
-  console.log(`   ${THORAX_NODES.length} nodes, ${HEART_CONTENTS.length} content records`);
+  console.log(`   ${ALL_THORAX_NODES.length} nodes, ${HEART_CONTENTS.length} content records`);
   console.log(`   Target: ${SUPABASE_URL}\n`);
 
-  // 1. Upsert all nodes (insert in sort-order to satisfy FK)
-  // Level 1 first, then 2, 3 … (parent must exist before child)
-  const sorted = [...THORAX_NODES].sort((a, b) => a.level - b.level);
+  // Sort by level so parents come before children
+  const sorted = [...ALL_THORAX_NODES].sort((a, b) => a.level - b.level);
   const nodeRows = sorted.map(nodeToRow);
 
   console.log('  → Inserting nodes…');
@@ -164,7 +170,7 @@ async function main() {
   }
   console.log(`  ✓ ${nodeRows.length} nodes upserted`);
 
-  // 2. Upsert content records
+  // Content records
   const contentRows = HEART_CONTENTS.map(contentToRow);
   console.log('  → Inserting content records…');
 
@@ -172,21 +178,30 @@ async function main() {
     const { error: cErr } = await (supabase as any)
       .from('anatomy_content')
       .upsert(row, { onConflict: 'id' });
+
     if (cErr) {
-      console.error(`  ✗ Content insert failed for ${row.node_id}:`, cErr.message);
+      console.error(`  ✗ Content failed for ${row.node_id}:`, cErr.message);
     } else {
-      // Update anatomy_nodes.content_id
+      // Wire up content_id on the node
       await (supabase as any)
         .from('anatomy_nodes')
         .update({ content_id: row.id })
         .eq('id', row.node_id);
-      console.log(`  ✓ Content for ${row.node_id}`);
+      console.log(`  ✓ ${row.node_id}`);
     }
   }
 
-  console.log('\n✅ Seed complete!\n');
-  console.log('   Run the migration first if tables do not exist:');
-  console.log('   supabase db push  (or apply migration manually)\n');
+  // Final counts
+  const { count: nodeCount } = await (supabase as any)
+    .from('anatomy_nodes')
+    .select('*', { count: 'exact', head: true });
+  const { count: contentCount } = await (supabase as any)
+    .from('anatomy_content')
+    .select('*', { count: 'exact', head: true });
+
+  console.log(`\n✅ Seed complete!`);
+  console.log(`   anatomy_nodes:   ${nodeCount} rows`);
+  console.log(`   anatomy_content: ${contentCount} rows\n`);
 }
 
 main().catch((err) => {
