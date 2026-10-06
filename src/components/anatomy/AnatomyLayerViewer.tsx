@@ -6,6 +6,8 @@ import { useAnatomyStore } from '@/store/anatomyStore';
 interface Props {
   lang: 'en' | 'ar';
   onNodeSelect: (nodeId: string) => void;
+  /** Suppress label overlay regardless of store showLabels (used in body-selection screen) */
+  hideLabels?: boolean;
 }
 
 interface ClickRegion {
@@ -576,8 +578,8 @@ function SvgLayer({
 // COMPONENT
 // ─────────────────────────────────────────────────────────────
 
-export default function AnatomyLayerViewer({ lang, onNodeSelect }: Props) {
-  const { layerVisibility, selectedNodeId, showLabels } = useAnatomyStore();
+export default function AnatomyLayerViewer({ lang, onNodeSelect, hideLabels = false }: Props) {
+  const { layerVisibility, selectedNodeId, showLabels, sex } = useAnatomyStore();
 
   const [zoom, setZoom] = useState(1);
   const [pan, setPan]   = useState({ x: 0, y: 0 });
@@ -735,6 +737,93 @@ export default function AnatomyLayerViewer({ lang, onNodeSelect }: Props) {
           {/* ═══ LAYER 1 — INTEGUMENTARY ═══ */}
           <SvgLayer html={LAYER_INTEGUMENTARY} opacity={op('integumentary')} />
 
+          {/* ═══ SEX-SPECIFIC ANATOMY (overlaid on integumentary) ═══ */}
+          <g opacity={op('integumentary')} style={{ transition: 'opacity .5s' }}>
+            {sex === 'female' ? (
+              <>
+                {/* ── Female: wider hip silhouette ── */}
+                {/* Left hip extension (viewer's left = patient's right) */}
+                <path d="M108 358 C96 368 86 390 84 415 C82 435 88 448 98 450 L108 450 L108 358 Z"
+                  fill="url(#fgSkin)" opacity="0.95"/>
+                {/* Right hip extension */}
+                <path d="M292 358 C304 368 314 390 316 415 C318 435 312 448 302 450 L292 450 L292 358 Z"
+                  fill="url(#fgSkin)" opacity="0.95"/>
+
+                {/* ── Female: breast mounds ── */}
+                {/* Patient's right breast (viewer's left) */}
+                <ellipse cx="174" cy="182" rx="24" ry="20"
+                  fill="url(#fgSkin)" stroke="#B47C68" strokeWidth="0.4" opacity="0.97"/>
+                {/* Patient's left breast (viewer's right) */}
+                <ellipse cx="226" cy="182" rx="24" ry="20"
+                  fill="url(#fgSkin)" stroke="#B47C68" strokeWidth="0.4" opacity="0.97"/>
+                {/* Inframammary fold lines */}
+                <path d="M152 196 C162 202 168 204 174 202 C180 200 186 196 192 193"
+                  fill="none" stroke="#B47C68" strokeWidth="0.8" opacity="0.35"/>
+                <path d="M248 196 C238 202 232 204 226 202 C220 200 214 196 208 193"
+                  fill="none" stroke="#B47C68" strokeWidth="0.8" opacity="0.35"/>
+                {/* Cleavage shadow */}
+                <path d="M196 168 C197 174 198 180 200 184 C202 180 203 174 204 168"
+                  fill="none" stroke="#B47C68" strokeWidth="1.2" opacity="0.2"/>
+                {/* Areolae */}
+                <circle cx="173" cy="186" r="9" fill="#C8997A" fillOpacity="0.28"/>
+                <circle cx="227" cy="186" r="9" fill="#C8997A" fillOpacity="0.28"/>
+                {/* Nipples */}
+                <circle cx="173" cy="186" r="4.2" fill="#B07060" opacity="0.85"/>
+                <circle cx="227" cy="186" r="4.2" fill="#B07060" opacity="0.85"/>
+
+                {/* ── Female: pubic area / mons pubis ── */}
+                <path d="M183 484 C180 490 178 498 180 506 C182 516 190 524 200 525 C210 524 218 516 220 506 C222 498 220 490 217 484 C212 481 206 480 200 480 C194 480 188 481 183 484 Z"
+                  fill="url(#fgSkin)" stroke="#B47C68" strokeWidth="0.5" opacity="0.95"/>
+                {/* Labia majora */}
+                <path d="M194 500 C191 506 190 514 192 520 C194 526 197 528 200 528 C203 528 206 526 208 520 C210 514 209 506 206 500 C204 496 196 496 194 500 Z"
+                  fill="#C8997A" opacity="0.6"/>
+                {/* Central crease */}
+                <path d="M200 498 C200 506 200 514 200 522"
+                  fill="none" stroke="#B47C68" strokeWidth="0.7" opacity="0.45"/>
+                {/* Clitoral hood hint */}
+                <path d="M197 499 C199 496 201 496 203 499"
+                  fill="none" stroke="#B47C68" strokeWidth="1" strokeLinecap="round" opacity="0.4"/>
+              </>
+            ) : (
+              <>
+                {/* ── Male: nipples ── */}
+                <circle cx="178" cy="168" r="3" fill="#B07060" opacity="0.72"/>
+                <circle cx="222" cy="168" r="3" fill="#B07060" opacity="0.72"/>
+                <circle cx="178" cy="168" r="6" fill="#C8997A" fillOpacity="0.18"/>
+                <circle cx="222" cy="168" r="6" fill="#C8997A" fillOpacity="0.18"/>
+
+                {/* ── Male: genitalia ── */}
+                {/* Pubic mound base */}
+                <path d="M185 476 C182 480 180 486 182 492 L218 492 C220 486 218 480 215 476 C210 473 190 473 185 476 Z"
+                  fill="url(#fgSkin)" opacity="0.95"/>
+                {/* Penis shaft */}
+                <path d="M193 492 L193 466 C193 460 196 456 200 454 C204 456 207 460 207 466 L207 492 Z"
+                  fill="url(#fgSkin)" stroke="#B47C68" strokeWidth="0.5" opacity="0.95"/>
+                {/* Glans */}
+                <path d="M192 468 C192 459 195 452 200 450 C205 452 208 459 208 468 C208 472 204 474 200 474 C196 474 192 472 192 468 Z"
+                  fill="url(#fgSkin)" stroke="#B47C68" strokeWidth="0.6" opacity="0.97"/>
+                {/* Corona sulcus */}
+                <path d="M192 468 C192 471 196 474 200 474 C204 474 208 471 208 468"
+                  fill="none" stroke="#B47C68" strokeWidth="0.8" opacity="0.45"/>
+                {/* Median raphe (shaft) */}
+                <line x1="200" y1="474" x2="200" y2="492"
+                  stroke="#B47C68" strokeWidth="0.6" opacity="0.35"/>
+                {/* Scrotum */}
+                <ellipse cx="200" cy="508" rx="19" ry="14"
+                  fill="url(#fgSkin)" stroke="#B47C68" strokeWidth="0.5" opacity="0.95"/>
+                {/* Scrotal raphe */}
+                <line x1="200" y1="494" x2="200" y2="520"
+                  stroke="#B47C68" strokeWidth="0.6" opacity="0.4"/>
+                {/* Left testicular bulge */}
+                <ellipse cx="191" cy="510" rx="9" ry="10"
+                  fill="#C8997A" fillOpacity="0.2"/>
+                {/* Right testicular bulge */}
+                <ellipse cx="209" cy="510" rx="9" ry="10"
+                  fill="#C8997A" fillOpacity="0.2"/>
+              </>
+            )}
+          </g>
+
           {/* ═══ LAYER 2 — MUSCULAR ═══ */}
           <SvgLayer html={LAYER_MUSCULAR} opacity={op('muscular')} />
 
@@ -779,7 +868,7 @@ export default function AnatomyLayerViewer({ lang, onNodeSelect }: Props) {
           })}
 
           {/* ═══ LABELS ═══ */}
-          {showLabels && LABELS.map((lb, i) => {
+          {showLabels && !hideLabels && LABELS.map((lb, i) => {
             const label = lang === 'ar' ? lb.ar : lb.en;
             const isRight = lb.side === 'right';
             return (

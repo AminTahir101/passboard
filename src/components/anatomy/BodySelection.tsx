@@ -78,15 +78,11 @@ export default function BodySelection({ lang, onSelect }: BodySelectionProps) {
   const { setAllLayers, setSex } = useAnatomyStore();
   const isAr = lang === 'ar';
 
-  // Show all layers in the selection view so the full illustration is visible
+  // Show all layers and keep store sex in sync whenever local sex changes
   useEffect(() => {
+    setSex(sex);           // setSex resets layers → need setAllLayers after
     setAllLayers(true);
-  }, [setAllLayers]);
-
-  // Keep store sex in sync
-  useEffect(() => {
-    setSex(sex);
-  }, [sex, setSex]);
+  }, [sex, setSex, setAllLayers]);
 
   const hovered = REGIONS.find(r => r.id === hoveredId) ?? null;
 
@@ -133,6 +129,7 @@ export default function BodySelection({ lang, onSelect }: BodySelectionProps) {
         {/* The full anatomical illustration */}
         <AnatomyLayerViewer
           lang={lang}
+          hideLabels
           onNodeSelect={(nodeId) => {
             // Map a structure click to its L1 region
             const region = STRUCTURE_TO_REGION[nodeId] ?? nodeId;
