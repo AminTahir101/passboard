@@ -1,87 +1,67 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useAnatomyStore } from '@/store/anatomyStore';
+import AnatomyLayerViewer from './AnatomyLayerViewer';
 import type { AnatomySex } from '@/types/anatomy';
-import { Layers } from 'lucide-react';
 
-// ── Region definitions ────────────────────────────────────────
+// ── Region definitions (L1 FMA roots) ────────────────────────
+// Overlay hit areas are in viewBox "0 0 260 520" coordinates,
+// matching AnatomyLayerViewer exactly.
 
 interface BodyRegion {
-  id: string;               // root FMA node id
+  id: string;
   nameEn: string;
   nameAr: string;
-  color: string;            // highlight color
-  svgPaths: string;         // SVG path(s) for the hit area
+  color: string;
+  // SVG path for the clickable hit area (viewBox 0 0 260 520)
+  path: string;
   labelX: number;
   labelY: number;
+  side: 'left' | 'right';
 }
 
-// SVG viewBox: 0 0 100 220
-const BODY_REGIONS: BodyRegion[] = [
+const REGIONS: BodyRegion[] = [
   {
-    id: 'FMA:7154',
-    nameEn: 'Head',
-    nameAr: 'الرأس',
-    color: '#b794f4',
-    svgPaths: 'M36,2 Q50,-1 64,2 Q75,6 75,20 Q75,36 64,40 Q50,44 36,40 Q25,36 25,20 Q25,6 36,2 Z',
-    labelX: 80, labelY: 22,
+    id: 'FMA:7154', nameEn: 'Head', nameAr: 'الرأس', color: '#b794f4',
+    path: 'M95,10 C70,10 66,26 66,50 C66,74 78,92 95,100 L130,104 L165,100 C182,92 194,74 194,50 C194,26 190,10 165,10 Z',
+    labelX: 210, labelY: 52, side: 'right',
   },
   {
-    id: 'FMA:7155',
-    nameEn: 'Neck',
-    nameAr: 'العنق',
-    color: '#68d391',
-    svgPaths: 'M44,44 L56,44 L58,55 L42,55 Z',
-    labelX: 60, labelY: 50,
+    id: 'FMA:7155', nameEn: 'Neck', nameAr: 'العنق', color: '#68d391',
+    path: 'M108,100 L152,100 L156,120 L104,120 Z',
+    labelX: 210, labelY: 112, side: 'right',
   },
   {
-    id: 'FMA:9648',
-    nameEn: 'Thorax',
-    nameAr: 'الصدر',
-    color: '#e53e3e',
-    svgPaths: 'M28,55 Q22,63 22,75 L22,100 L78,100 L78,75 Q78,63 72,55 Z',
-    labelX: 80, labelY: 78,
+    id: 'FMA:9648', nameEn: 'Thorax', nameAr: 'الصدر', color: '#e53e3e',
+    path: 'M72,118 C58,128 55,145 55,162 L55,240 L205,240 L205,162 C205,145 202,128 188,118 Z',
+    labelX: 210, labelY: 180, side: 'right',
   },
   {
-    id: 'FMA:9600',
-    nameEn: 'Abdomen',
-    nameAr: 'البطن',
-    color: '#f6ad55',
-    svgPaths: 'M22,100 L22,130 Q22,138 30,140 L70,140 Q78,138 78,130 L78,100 Z',
-    labelX: 80, labelY: 120,
+    id: 'FMA:9600', nameEn: 'Abdomen', nameAr: 'البطن', color: '#f6ad55',
+    path: 'M55,240 L55,310 C55,326 70,332 80,334 L180,334 C190,332 205,326 205,310 L205,240 Z',
+    labelX: 210, labelY: 290, side: 'right',
   },
   {
-    id: 'FMA:9578',
-    nameEn: 'Pelvis',
-    nameAr: 'الحوض',
-    color: '#fbd38d',
-    svgPaths: 'M28,140 Q22,145 22,152 L22,162 L78,162 L78,152 Q78,145 72,140 Z',
-    labelX: 80, labelY: 152,
+    id: 'FMA:9578', nameEn: 'Pelvis', nameAr: 'الحوض', color: '#fbd38d',
+    path: 'M68,334 C58,340 54,352 54,364 L54,390 L206,390 L206,364 C206,352 202,340 192,334 Z',
+    labelX: 210, labelY: 364, side: 'right',
   },
   {
-    id: 'FMA:7182',
-    nameEn: 'Upper Limb',
-    nameAr: 'الطرف العلوي',
-    color: '#90cdf4',
+    id: 'FMA:7182', nameEn: 'Upper Limb', nameAr: 'الطرف العلوي', color: '#90cdf4',
     // Both arms combined
-    svgPaths: 'M22,58 Q14,68 14,95 L14,105 Q12,108 13,112 L20,112 L20,105 L22,100 Z M78,58 Q86,68 86,95 L86,105 Q88,108 87,112 L80,112 L80,105 L78,100 Z',
-    labelX: 2, labelY: 85,
+    path: 'M36,118 C24,132 20,155 20,178 L20,310 L55,310 L55,118 Z M205,118 L205,310 L240,310 L240,178 C240,155 236,132 224,118 Z',
+    labelX: 5, labelY: 210, side: 'left',
   },
   {
-    id: 'FMA:7185',
-    nameEn: 'Lower Limb',
-    nameAr: 'الطرف السفلي',
-    color: '#68d391',
-    svgPaths: 'M35,162 Q33,185 34,210 L45,210 L45,162 Z M55,162 L55,210 L66,210 Q67,185 65,162 Z',
-    labelX: 80, labelY: 186,
+    id: 'FMA:7185', nameEn: 'Lower Limb', nameAr: 'الطرف السفلي', color: '#68d391',
+    path: 'M80,390 L80,510 L130,510 L130,390 Z M130,390 L130,510 L180,510 L180,390 Z',
+    labelX: 210, labelY: 455, side: 'right',
   },
   {
-    id: 'FMA:14543',
-    nameEn: 'Back & Spine',
-    nameAr: 'الظهر والعمود الفقري',
-    color: '#fc8181',
-    svgPaths: 'M44,55 L56,55 L56,162 L44,162 Z',
-    labelX: -2, labelY: 108,
+    id: 'FMA:14543', nameEn: 'Back & Spine', nameAr: 'الظهر والعمود الفقري', color: '#fc8181',
+    path: 'M118,120 L142,120 L142,390 L118,390 Z',
+    labelX: 5, labelY: 260, side: 'left',
   },
 ];
 
@@ -91,245 +71,170 @@ interface BodySelectionProps {
 }
 
 export default function BodySelection({ lang, onSelect }: BodySelectionProps) {
-  const [sex, setSex] = useState<AnatomySex>('male');
-  const [hoveredRegion, setHoveredRegion] = useState<string | null>(null);
+  const [sex, setSexLocal] = useState<AnatomySex>('male');
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const { setAllLayers, setSex } = useAnatomyStore();
   const isAr = lang === 'ar';
 
-  const hovered = BODY_REGIONS.find((r) => r.id === hoveredRegion);
+  // Show all layers in the selection view so the full illustration is visible
+  useEffect(() => {
+    setAllLayers(true);
+  }, [setAllLayers]);
+
+  // Keep store sex in sync
+  useEffect(() => {
+    setSex(sex);
+  }, [sex, setSex]);
+
+  const hovered = REGIONS.find(r => r.id === hoveredId) ?? null;
 
   return (
     <div
-      className="w-full h-full flex flex-col items-center justify-center gap-6"
-      style={{ background: '#0f1117' }}
+      className="w-full h-full flex flex-col"
+      style={{ background: '#0d0e12' }}
       dir={isAr ? 'rtl' : 'ltr'}
     >
-      {/* Header */}
-      <div className="text-center">
-        <div className="flex items-center justify-center gap-2 mb-2">
-          <Layers size={16} style={{ color: 'rgba(255,255,255,0.3)' }} />
-          <span className="text-xs tracking-widest font-mono uppercase" style={{ color: 'rgba(255,255,255,0.3)' }}>
-            {isAr ? 'علم التشريح التفاعلي' : 'Interactive Anatomy'}
-          </span>
-        </div>
-        <h1 className="text-2xl font-semibold text-white">
+      {/* ── Header ── */}
+      <div className="text-center pt-5 pb-2 shrink-0">
+        <p className="text-xs tracking-widest uppercase font-mono mb-1.5" style={{ color: 'rgba(255,255,255,0.25)' }}>
+          {isAr ? 'علم التشريح التفاعلي' : 'Interactive Anatomy'}
+        </p>
+        <h1 className="text-xl font-semibold text-white">
           {isAr ? 'اختر منطقة لتشريحها' : 'Select a region to explore'}
         </h1>
-        <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.38)' }}>
-          {isAr ? 'انقر على أي جزء من الجسم' : 'Click any body region to begin'}
+        <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.32)' }}>
+          {isAr ? 'انقر على أي منطقة من الجسم' : 'Click any region on the body'}
         </p>
       </div>
 
-      <div className="flex items-center gap-10">
-        {/* Left: region quick-list */}
-        <div className="hidden lg:flex flex-col gap-1.5 w-40">
-          {BODY_REGIONS.filter((_, i) => i < 4).map((r) => (
-            <RegionPill
-              key={r.id}
-              region={r}
-              lang={lang}
-              active={hoveredRegion === r.id}
-              onHover={setHoveredRegion}
-              onClick={() => onSelect(sex, r.id)}
-            />
+      {/* ── Sex toggle ── */}
+      <div className="flex justify-center mt-2 mb-1 shrink-0">
+        <div className="flex rounded-lg overflow-hidden border" style={{ borderColor: 'rgba(255,255,255,0.12)' }}>
+          {(['male', 'female'] as AnatomySex[]).map((s) => (
+            <button
+              key={s}
+              onClick={() => setSexLocal(s)}
+              className="px-5 py-1.5 text-xs font-medium transition-colors"
+              style={{
+                background: sex === s ? 'rgba(255,255,255,0.14)' : 'transparent',
+                color: sex === s ? '#fff' : 'rgba(255,255,255,0.38)',
+              }}
+            >
+              {s === 'male' ? (isAr ? 'ذكر' : 'Male') : (isAr ? 'أنثى' : 'Female')}
+            </button>
           ))}
         </div>
+      </div>
 
-        {/* Center: body SVG */}
-        <div className="flex flex-col items-center gap-4">
-          {/* Sex toggle */}
-          <div
-            className="flex rounded-lg overflow-hidden border"
-            style={{ borderColor: 'rgba(255,255,255,0.12)' }}
-          >
-            {(['male', 'female'] as AnatomySex[]).filter(s => s !== 'both').map((s) => (
-              <button
-                key={s}
-                onClick={() => setSex(s)}
-                className="px-4 py-1.5 text-xs font-medium transition-colors"
+      {/* ── Body viewer with region overlay ── */}
+      <div className="flex-1 relative overflow-hidden">
+        {/* The full anatomical illustration */}
+        <AnatomyLayerViewer
+          lang={lang}
+          onNodeSelect={(nodeId) => {
+            // Map a structure click to its L1 region
+            const region = STRUCTURE_TO_REGION[nodeId] ?? nodeId;
+            onSelect(sex, region);
+          }}
+        />
+
+        {/* Invisible L1 region overlay — sits on top, same viewBox as viewer */}
+        <svg
+          className="absolute inset-0 w-full h-full pointer-events-none"
+          viewBox="0 0 260 520"
+          preserveAspectRatio="xMidYMid meet"
+          style={{ zIndex: 10 }}
+        >
+          {REGIONS.map((r) => (
+            <g key={r.id}>
+              {/* Hit area */}
+              <path
+                d={r.path}
+                fill={hoveredId === r.id ? r.color : 'transparent'}
+                fillOpacity={hoveredId === r.id ? 0.18 : 0}
+                stroke={hoveredId === r.id ? r.color : 'transparent'}
+                strokeWidth="1"
+                strokeOpacity={hoveredId === r.id ? 0.6 : 0}
                 style={{
-                  background: sex === s ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.3)',
-                  color: sex === s ? '#fff' : 'rgba(255,255,255,0.4)',
+                  cursor: 'pointer',
+                  transition: 'fill-opacity 0.15s, stroke-opacity 0.15s',
+                  pointerEvents: 'all',
                 }}
-              >
-                {s === 'male' ? (isAr ? 'ذكر' : 'Male') : (isAr ? 'أنثى' : 'Female')}
-              </button>
-            ))}
-          </div>
+                onMouseEnter={() => setHoveredId(r.id)}
+                onMouseLeave={() => setHoveredId(null)}
+                onClick={() => onSelect(sex, r.id)}
+              />
 
-          {/* Interactive SVG body */}
-          <div className="relative" style={{ width: 200, height: 440 }}>
-            <svg
-              width="200"
-              height="440"
-              viewBox="0 0 100 220"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              {/* ── Base body silhouette ── */}
-              <BodySilhouette sex={sex} />
-
-              {/* ── Region hit areas ── */}
-              {BODY_REGIONS.map((r) => (
-                <g key={r.id}>
-                  <path
-                    d={r.svgPaths}
-                    fill={hoveredRegion === r.id ? r.color : 'transparent'}
-                    fillOpacity={hoveredRegion === r.id ? 0.22 : 0}
-                    stroke={hoveredRegion === r.id ? r.color : 'transparent'}
+              {/* Label — only on hover */}
+              {hoveredId === r.id && (
+                <>
+                  {/* Leader line */}
+                  <line
+                    x1={r.side === 'right' ? r.labelX - 18 : r.labelX + 18}
+                    y1={r.labelY}
+                    x2={r.side === 'right' ? r.labelX - 4 : r.labelX + 4}
+                    y2={r.labelY}
+                    stroke={r.color}
                     strokeWidth="0.8"
-                    strokeDasharray={hoveredRegion === r.id ? 'none' : '3 2'}
-                    style={{ cursor: 'pointer', transition: 'fill 0.15s, stroke 0.15s' }}
-                    onMouseEnter={() => setHoveredRegion(r.id)}
-                    onMouseLeave={() => setHoveredRegion(null)}
-                    onClick={() => onSelect(sex, r.id)}
+                    strokeOpacity="0.7"
+                    style={{ pointerEvents: 'none' }}
                   />
-                </g>
-              ))}
-
-              {/* ── Region label inside SVG ── */}
-              {hovered && (
-                <text
-                  x={50}
-                  y={215}
-                  textAnchor="middle"
-                  fontSize="5"
-                  fill={hovered.color}
-                  fontWeight="600"
-                >
-                  {isAr ? hovered.nameAr : hovered.nameEn}
-                </text>
+                  <text
+                    x={r.labelX}
+                    y={r.labelY + 3}
+                    textAnchor={r.side === 'right' ? 'start' : 'end'}
+                    fontSize="7"
+                    fontWeight="600"
+                    fill={r.color}
+                    style={{ pointerEvents: 'none' }}
+                  >
+                    {isAr ? r.nameAr : r.nameEn}
+                  </text>
+                </>
               )}
-            </svg>
-
-            {/* Region name badge (outside SVG, centered below) */}
-            <div
-              className="absolute bottom-0 left-1/2 -translate-x-1/2 text-center pointer-events-none"
-              style={{ height: 24 }}
-            >
-              {hovered && (
-                <span
-                  className="text-xs font-semibold px-2 py-0.5 rounded"
-                  style={{ color: hovered.color, background: 'rgba(0,0,0,0.6)' }}
-                >
-                  {isAr ? hovered.nameAr : hovered.nameEn}
-                </span>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Right: region quick-list */}
-        <div className="hidden lg:flex flex-col gap-1.5 w-44">
-          {BODY_REGIONS.filter((_, i) => i >= 4).map((r) => (
-            <RegionPill
-              key={r.id}
-              region={r}
-              lang={lang}
-              active={hoveredRegion === r.id}
-              onHover={setHoveredRegion}
-              onClick={() => onSelect(sex, r.id)}
-            />
+            </g>
           ))}
-        </div>
+        </svg>
+
+        {/* Hovered region badge */}
+        {hovered && (
+          <div
+            className="absolute bottom-6 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-full text-xs font-semibold pointer-events-none whitespace-nowrap"
+            style={{
+              background: `${hovered.color}22`,
+              border: `1px solid ${hovered.color}55`,
+              color: hovered.color,
+            }}
+          >
+            {isAr ? hovered.nameAr : hovered.nameEn}
+          </div>
+        )}
       </div>
 
-      {/* Mobile: all region pills */}
-      <div className="flex lg:hidden flex-wrap justify-center gap-2 px-6 max-w-sm">
-        {BODY_REGIONS.map((r) => (
-          <RegionPill
-            key={r.id}
-            region={r}
-            lang={lang}
-            active={hoveredRegion === r.id}
-            onHover={setHoveredRegion}
-            onClick={() => onSelect(sex, r.id)}
-          />
-        ))}
+      {/* ── Footer ── */}
+      <div className="text-center py-2 shrink-0">
+        <p className="text-xs" style={{ color: 'rgba(255,255,255,0.14)' }}>
+          {isAr
+            ? 'مصطلحات FMA / TA2 · محتوى USMLE / SMLE'
+            : 'FMA / TA2 nomenclature · USMLE / SMLE content'}
+        </p>
       </div>
-
-      {/* Footer */}
-      <p className="text-xs" style={{ color: 'rgba(255,255,255,0.18)' }}>
-        {isAr
-          ? 'مصطلحات FMA / TA2 · محتوى USMLE / SMLE'
-          : 'FMA / TA2 nomenclature · USMLE / SMLE content'}
-      </p>
     </div>
   );
 }
 
-// ── Region pill button ────────────────────────────────────────
+// ── Structure → L1 region mapping ────────────────────────────
+// When a specific structure is clicked in the viewer, map it to its L1 region
 
-function RegionPill({
-  region, lang, active, onHover, onClick,
-}: {
-  region: BodyRegion;
-  lang: 'en' | 'ar';
-  active: boolean;
-  onHover: (id: string | null) => void;
-  onClick: () => void;
-}) {
-  const isAr = lang === 'ar';
-  return (
-    <button
-      onClick={onClick}
-      onMouseEnter={() => onHover(region.id)}
-      onMouseLeave={() => onHover(null)}
-      className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium w-full transition-all text-start"
-      style={{
-        background: active ? `${region.color}18` : 'rgba(255,255,255,0.04)',
-        border: `1px solid ${active ? region.color + '55' : 'rgba(255,255,255,0.08)'}`,
-        color: active ? '#fff' : 'rgba(255,255,255,0.55)',
-        transform: active ? 'scale(1.02)' : 'none',
-      }}
-    >
-      <span
-        className="w-2.5 h-2.5 rounded-full shrink-0"
-        style={{ background: region.color, opacity: active ? 1 : 0.6 }}
-      />
-      {isAr ? region.nameAr : region.nameEn}
-    </button>
-  );
-}
-
-// ── SVG body silhouette ───────────────────────────────────────
-
-function BodySilhouette({ sex }: { sex: AnatomySex }) {
-  const fill = 'rgba(255,255,255,0.1)';
-  const stroke = 'rgba(255,255,255,0.18)';
-  const isFemale = sex === 'female';
-
-  return (
-    <g>
-      {/* Head */}
-      <ellipse cx="50" cy="21" rx="14" ry="16" fill={fill} stroke={stroke} strokeWidth="0.5" />
-      {/* Neck */}
-      <rect x="44" y="35" width="12" height="12" rx="4" fill={fill} stroke={stroke} strokeWidth="0.5" />
-      {/* Torso */}
-      {isFemale ? (
-        <path
-          d="M28,55 Q21,63 21,76 L21,130 Q21,138 30,140 L70,140 Q79,138 79,130 L79,76 Q79,63 72,55 Z"
-          fill={fill} stroke={stroke} strokeWidth="0.5"
-        />
-      ) : (
-        <path
-          d="M28,55 Q22,62 22,74 L22,130 Q22,138 30,140 L70,140 Q78,138 78,130 L78,74 Q78,62 72,55 Z"
-          fill={fill} stroke={stroke} strokeWidth="0.5"
-        />
-      )}
-      {/* Left arm */}
-      <path d="M28,60 Q14,70 14,95 L14,112" stroke={fill} strokeWidth="10" strokeLinecap="round" />
-      <path d="M28,60 Q14,70 14,95 L14,112" stroke={stroke} strokeWidth="10.5" strokeLinecap="round" fill="none" />
-      {/* Right arm */}
-      <path d="M72,60 Q86,70 86,95 L86,112" stroke={fill} strokeWidth="10" strokeLinecap="round" />
-      <path d="M72,60 Q86,70 86,95 L86,112" stroke={stroke} strokeWidth="10.5" strokeLinecap="round" fill="none" />
-      {/* Left leg */}
-      <path d="M38,140 Q36,170 35,210" stroke={fill} strokeWidth="13" strokeLinecap="round" />
-      <path d="M38,140 Q36,170 35,210" stroke={stroke} strokeWidth="13.5" strokeLinecap="round" fill="none" />
-      {/* Right leg */}
-      <path d="M62,140 Q64,170 65,210" stroke={fill} strokeWidth="13" strokeLinecap="round" />
-      <path d="M62,140 Q64,170 65,210" stroke={stroke} strokeWidth="13.5" strokeLinecap="round" fill="none" />
-      {/* Spine line (subtle) */}
-      <line x1="50" y1="47" x2="50" y2="160" stroke="rgba(255,255,255,0.08)" strokeWidth="1" strokeDasharray="2 3" />
-    </g>
-  );
-}
+const STRUCTURE_TO_REGION: Record<string, string> = {
+  'FMA:50801': 'FMA:7154',  // brain → head
+  'FMA:7088':  'FMA:9648',  // heart → thorax
+  'FMA:7311':  'FMA:9648',  // left lung → thorax
+  'FMA:7310':  'FMA:9648',  // right lung → thorax
+  'FMA:7197':  'FMA:9600',  // liver → abdomen
+  'FMA:7148':  'FMA:9600',  // stomach → abdomen
+  'FMA:7203':  'FMA:9600',  // right kidney → abdomen
+  'FMA:7204':  'FMA:9600',  // left kidney → abdomen
+  'FMA:15900': 'FMA:9578',  // bladder → pelvis
+  'FMA:9631':  'FMA:14543', // vertebral column → back & spine
+};
