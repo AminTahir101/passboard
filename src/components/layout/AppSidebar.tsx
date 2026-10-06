@@ -15,6 +15,7 @@ import {
   LogOut,
   Menu,
   X,
+  Layers,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { localePath } from "@/lib/i18n";
@@ -28,7 +29,7 @@ interface AppSidebarProps {
   nav: {
     dashboard: string; practice: string; questionBank: string;
     mockExams: string; aiTutor: string; myMistakes: string;
-    performance: string; profile: string; logout: string;
+    performance: string; profile: string; logout: string; anatomy: string;
   };
   langToggleLabel: string;
 }
@@ -43,6 +44,7 @@ export default function AppSidebar({ userName, userEmail, lang, nav, langToggleL
     { label: nav.practice, icon: Play, href: localePath(lang, "/practice") },
     { label: nav.questionBank, icon: BookOpen, href: localePath(lang, "/questions") },
     { label: nav.mockExams, icon: ClipboardList, href: localePath(lang, "/mock-exams") },
+    { label: nav.anatomy, icon: Layers, href: localePath(lang, "/anatomy") },
     { label: nav.aiTutor, icon: Brain, href: localePath(lang, "/tutor") },
     { label: nav.myMistakes, icon: XCircle, href: localePath(lang, "/mistakes") },
     { label: nav.performance, icon: BarChart3, href: localePath(lang, "/performance") },

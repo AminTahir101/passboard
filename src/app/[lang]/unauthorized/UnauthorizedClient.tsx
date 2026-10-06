@@ -24,7 +24,7 @@ function UnauthorizedContent({ lang, loginPath, dashboardPath, dict }: Unauthori
     ? reasonParam
     : "pending") as ReasonKey;
 
-  const configs: Record<ReasonKey, { icon: React.ElementType; iconColor: string; iconBg: string; title: string; description: string }> = {
+  const configs: Record<ReasonKey, { icon: React.ComponentType<{ size?: number; style?: React.CSSProperties }>; iconColor: string; iconBg: string; title: string; description: string }> = {
     suspended: {
       icon: Ban,
       iconColor: "var(--destructive)",

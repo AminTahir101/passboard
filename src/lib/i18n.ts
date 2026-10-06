@@ -25,7 +25,7 @@ export type Dictionary = {
     mockExams: string; aiTutor: string; myMistakes: string;
     performance: string; profile: string; logout: string;
     accessRequests: string; students: string; questions: string;
-    importQuestions: string; adminDashboard: string;
+    importQuestions: string; adminDashboard: string; anatomy: string;
   };
   lang: { toggle: string; ar: string; en: string };
   landing: {
@@ -88,7 +88,7 @@ export type Dictionary = {
     totalAnswered: string; accuracy: string; correct: string; incorrect: string;
     strongestTopic: string; weakestTopic: string; recentActivity: string;
     quickActions: string; startPractice: string; startMockExam: string;
-    askAITutor: string; reviewMistakes: string;
+    askAITutor: string; reviewMistakes: string; exploreAnatomy: string;
     noActivity: string; noTopicData: string; notSet: string; na: string;
   };
   practice: {

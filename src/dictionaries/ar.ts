@@ -26,7 +26,7 @@ export const ar: Dictionary = {
     myMistakes: "أخطائي", performance: "الأداء", profile: "الملف الشخصي",
     logout: "تسجيل الخروج", accessRequests: "طلبات الوصول",
     students: "الطلاب", questions: "الأسئلة", importQuestions: "استيراد الأسئلة",
-    adminDashboard: "لوحة تحكم المسؤول",
+    adminDashboard: "لوحة تحكم المسؤول", anatomy: "التشريح",
   },
   lang: { toggle: "English", ar: "العربية", en: "الإنجليزية" },
   landing: {
@@ -148,7 +148,7 @@ export const ar: Dictionary = {
     strongestTopic: "أقوى موضوع", weakestTopic: "أضعف موضوع",
     recentActivity: "النشاط الأخير", quickActions: "إجراءات سريعة",
     startPractice: "ابدأ التدريب", startMockExam: "اختبار تجريبي",
-    askAITutor: "اسأل المدرب الذكي", reviewMistakes: "راجع الأخطاء",
+    askAITutor: "اسأل المدرب الذكي", reviewMistakes: "راجع الأخطاء", exploreAnatomy: "استكشف التشريح",
     noActivity: "لا يوجد نشاط بعد. ابدأ بالتدريب!", noTopicData: "لا توجد بيانات كافية بعد",
     notSet: "غير محدد", na: "غ/م",
   },

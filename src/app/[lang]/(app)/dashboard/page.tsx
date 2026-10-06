@@ -15,6 +15,7 @@ import {
   BookOpen,
   TrendingUp,
   TrendingDown,
+  Layers,
 } from "lucide-react";
 
 function StatCard({
@@ -26,7 +27,7 @@ function StatCard({
 }: {
   label: string;
   value: string | number;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ size?: number; style?: React.CSSProperties }>;
   color: string;
   sub?: string;
 }) {
@@ -254,6 +255,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
               { label: dict.dashboard.startMockExam, href: localePath(lang, "/mock-exams"), icon: ClipboardList, bg: "var(--secondary)", fg: "var(--secondary-foreground)" },
               { label: dict.dashboard.askAITutor, href: localePath(lang, "/tutor"), icon: Brain, bg: "var(--secondary)", fg: "var(--secondary-foreground)" },
               { label: dict.dashboard.reviewMistakes, href: localePath(lang, "/mistakes"), icon: XCircle, bg: "var(--secondary)", fg: "var(--secondary-foreground)" },
+              { label: dict.dashboard.exploreAnatomy, href: localePath(lang, "/anatomy"), icon: Layers, bg: "var(--secondary)", fg: "var(--secondary-foreground)" },
             ].map(({ label, href, icon: Icon, bg, fg }) => (
               <Link key={href} href={href}
                 className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl text-sm font-medium transition-opacity hover:opacity-90"

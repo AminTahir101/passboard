@@ -26,7 +26,7 @@ export const en: Dictionary = {
     performance: "Performance", profile: "Profile", logout: "Sign Out",
     accessRequests: "Access Requests", students: "Students",
     questions: "Questions", importQuestions: "Import Questions",
-    adminDashboard: "Admin Dashboard",
+    adminDashboard: "Admin Dashboard", anatomy: "Anatomy",
   },
   lang: { toggle: "عربي", ar: "Arabic", en: "English" },
   landing: {
@@ -148,7 +148,7 @@ export const en: Dictionary = {
     strongestTopic: "Strongest Topic", weakestTopic: "Weakest Topic",
     recentActivity: "Recent Activity", quickActions: "Quick Actions",
     startPractice: "Start Practice", startMockExam: "Mock Exam",
-    askAITutor: "Ask AI Tutor", reviewMistakes: "Review Mistakes",
+    askAITutor: "Ask AI Tutor", reviewMistakes: "Review Mistakes", exploreAnatomy: "Explore Anatomy",
     noActivity: "No activity yet. Start practicing!", noTopicData: "Not enough data yet",
     notSet: "Not set", na: "N/A",
   },
