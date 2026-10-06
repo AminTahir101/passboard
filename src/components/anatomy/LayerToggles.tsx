@@ -15,17 +15,17 @@ interface LayerMeta {
   icon: string;
 }
 
+// Corpus Humanum layer order — outside → inside
 const LAYERS: LayerMeta[] = [
-  { key: 'skin',               en: 'Skin',              ar: 'الجلد',           color: '#f6ad55', icon: '◼' },
-  { key: 'superficial_fascia', en: 'Superficial Fascia',ar: 'اللفافة السطحية', color: '#fbd38d', icon: '◼' },
-  { key: 'muscle_superficial', en: 'Superficial Muscles',ar: 'العضلات السطحية', color: '#c05621', icon: '◼' },
-  { key: 'muscle_deep',        en: 'Deep Muscles',      ar: 'العضلات العميقة',  color: '#9c4221', icon: '◼' },
-  { key: 'skeleton',           en: 'Skeleton',          ar: 'الهيكل العظمي',    color: '#e2e8f0', icon: '◼' },
-  { key: 'organ',              en: 'Organs',            ar: 'الأعضاء',          color: '#805ad5', icon: '◼' },
-  { key: 'nerve',              en: 'Nerves',            ar: 'الأعصاب',          color: '#d69e2e', icon: '◼' },
-  { key: 'artery',             en: 'Arteries',          ar: 'الشرايين',         color: '#e53e3e', icon: '◼' },
-  { key: 'vein',               en: 'Veins',             ar: 'الأوردة',          color: '#3182ce', icon: '◼' },
-  { key: 'lymphatic',          en: 'Lymphatics',        ar: 'اللمفاويات',       color: '#38a169', icon: '◼' },
+  { key: 'integumentary', en: 'Integumentary', ar: 'الجلد والأنسجة',    color: '#c8a070', icon: '◼' },
+  { key: 'muscular',      en: 'Muscular',       ar: 'الجهاز العضلي',    color: '#b83049', icon: '◼' },
+  { key: 'nervous',       en: 'Nervous',        ar: 'الجهاز العصبي',    color: '#d4a520', icon: '◼' },
+  { key: 'cardiovascular',en: 'Cardiovascular', ar: 'الجهاز الدوري',    color: '#e53e3e', icon: '◼' },
+  { key: 'lymphatic',     en: 'Lymphatic',      ar: 'الجهاز اللمفاوي',  color: '#38a169', icon: '◼' },
+  { key: 'respiratory',   en: 'Respiratory',    ar: 'الجهاز التنفسي',   color: '#76e4f7', icon: '◼' },
+  { key: 'digestive',     en: 'Digestive',      ar: 'الجهاز الهضمي',    color: '#dd6b20', icon: '◼' },
+  { key: 'urinary',       en: 'Urinary',        ar: 'الجهاز البولي',    color: '#805ad5', icon: '◼' },
+  { key: 'skeletal',      en: 'Skeletal',       ar: 'الجهاز الهيكلي',   color: '#d4c5a9', icon: '◼' },
 ];
 
 export default function LayerToggles({ lang }: LayerTogglesProps) {
@@ -149,7 +149,7 @@ export default function LayerToggles({ lang }: LayerTogglesProps) {
         </div>
         {dissectionLayer > 0 && (
           <p className="text-xs mt-2 text-center" style={{ color: 'rgba(255,255,255,0.25)' }}>
-            {isAr ? `الطبقة ${dissectionLayer + 1} من 10` : `Layer ${dissectionLayer + 1} of 10`}
+            {isAr ? `الطبقة ${dissectionLayer + 1} من 9` : `Layer ${dissectionLayer + 1} of 9`}
           </p>
         )}
       </div>

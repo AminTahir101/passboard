@@ -253,16 +253,15 @@ export interface QuizQuestion {
 // ── Viewer state (Zustand) ────────────────────────────────────
 
 export interface LayerVisibility {
-  skin: boolean;
-  superficial_fascia: boolean;
-  muscle_superficial: boolean;
-  muscle_deep: boolean;
-  skeleton: boolean;
-  organ: boolean;
-  nerve: boolean;
-  artery: boolean;
-  vein: boolean;
-  lymphatic: boolean;
+  integumentary: boolean;
+  muscular:       boolean;
+  nervous:        boolean;
+  cardiovascular: boolean;
+  lymphatic:      boolean;
+  respiratory:    boolean;
+  digestive:      boolean;
+  urinary:        boolean;
+  skeletal:       boolean;
 }
 
 export interface ClipPlane {

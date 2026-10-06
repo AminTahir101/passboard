@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useAnatomyStore } from '@/store/anatomyStore';
 import type { AnatomyNode, AnatomyContent, AnatomySex } from '@/types/anatomy';
 import BodySelection from './BodySelection';
-import ViewerScene from './ViewerScene';
+import AnatomyLayerViewer from './AnatomyLayerViewer';
 import InfoPanel from './InfoPanel';
 import AiTutor from './AiTutor';
 import LayerToggles from './LayerToggles';
@@ -127,7 +127,7 @@ export default function AnatomyModule({ lang, userId }: AnatomyModuleProps) {
 
         {/* 3D Viewer */}
         <div className="flex-1 relative">
-          <ViewerScene
+          <AnatomyLayerViewer
             lang={lang}
             onNodeSelect={handleNodeSelect}
           />

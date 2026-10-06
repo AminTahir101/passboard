@@ -13,16 +13,15 @@ const DEFAULT_CAMERA_POSITION: [number, number, number] = [0, 0, 3.5];
 const DEFAULT_CAMERA_TARGET:   [number, number, number] = [0, 0, 0];
 
 const DEFAULT_LAYERS: LayerVisibility = {
-  skin:               true,
-  superficial_fascia: false,
-  muscle_superficial: false,
-  muscle_deep:        false,
-  skeleton:           false,
-  organ:              false,
-  nerve:              false,
-  artery:             false,
-  vein:               false,
-  lymphatic:          false,
+  integumentary: true,
+  muscular:       false,
+  nervous:        false,
+  cardiovascular: false,
+  lymphatic:      false,
+  respiratory:    false,
+  digestive:      false,
+  urinary:        false,
+  skeletal:       false,
 };
 
 const DEFAULT_CLIP: ClipPlane = {
@@ -99,9 +98,11 @@ interface AnatomyStore extends AnatomyViewerState {
 }
 
 // ── Dissection sequence (anatomical order) ────────────────────
+// Dissection order: outside → inside (Corpus Humanum sequence)
 const DISSECTION_ORDER: (keyof LayerVisibility)[] = [
-  'skin', 'superficial_fascia', 'muscle_superficial',
-  'muscle_deep', 'skeleton', 'organ', 'nerve', 'artery', 'vein', 'lymphatic',
+  'integumentary', 'muscular', 'nervous',
+  'cardiovascular', 'lymphatic', 'respiratory',
+  'digestive', 'urinary', 'skeletal',
 ];
 
 // ── Store ─────────────────────────────────────────────────────
