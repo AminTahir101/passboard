@@ -21,47 +21,49 @@ interface BodyRegion {
   side: 'left' | 'right';
 }
 
+// Region hit areas in viewBox "-170 0 740 920" coordinates,
+// matching AnatomyLayerViewer exactly. Body centre = x:200.
 const REGIONS: BodyRegion[] = [
   {
     id: 'FMA:7154', nameEn: 'Head', nameAr: 'الرأس', color: '#b794f4',
-    path: 'M95,10 C70,10 66,26 66,50 C66,74 78,92 95,100 L130,104 L165,100 C182,92 194,74 194,50 C194,26 190,10 165,10 Z',
-    labelX: 210, labelY: 52, side: 'right',
+    path: 'M160,18 C158,10 172,4 200,4 C228,4 242,10 240,18 C238,42 232,64 226,80 C218,90 210,94 200,94 C190,94 182,90 174,80 C168,64 162,42 160,18 Z',
+    labelX: 380, labelY: 50, side: 'right',
   },
   {
     id: 'FMA:7155', nameEn: 'Neck', nameAr: 'العنق', color: '#68d391',
-    path: 'M108,100 L152,100 L156,120 L104,120 Z',
-    labelX: 210, labelY: 112, side: 'right',
+    path: 'M178,88 L222,88 L226,130 L174,130 Z',
+    labelX: 380, labelY: 110, side: 'right',
   },
   {
     id: 'FMA:9648', nameEn: 'Thorax', nameAr: 'الصدر', color: '#e53e3e',
-    path: 'M72,118 C58,128 55,145 55,162 L55,240 L205,240 L205,162 C205,145 202,128 188,118 Z',
-    labelX: 210, labelY: 180, side: 'right',
+    path: 'M130,126 C110,126 90,132 80,140 C70,148 68,164 68,186 L68,310 L332,310 L332,186 C332,164 330,148 320,140 C310,132 290,126 270,126 Z',
+    labelX: 380, labelY: 220, side: 'right',
   },
   {
     id: 'FMA:9600', nameEn: 'Abdomen', nameAr: 'البطن', color: '#f6ad55',
-    path: 'M55,240 L55,310 C55,326 70,332 80,334 L180,334 C190,332 205,326 205,310 L205,240 Z',
-    labelX: 210, labelY: 290, side: 'right',
+    path: 'M68,310 L68,400 C68,416 90,422 110,424 L290,424 C310,422 332,416 332,400 L332,310 Z',
+    labelX: 380, labelY: 366, side: 'right',
   },
   {
     id: 'FMA:9578', nameEn: 'Pelvis', nameAr: 'الحوض', color: '#fbd38d',
-    path: 'M68,334 C58,340 54,352 54,364 L54,390 L206,390 L206,364 C206,352 202,340 192,334 Z',
-    labelX: 210, labelY: 364, side: 'right',
+    path: 'M96,424 C74,432 60,450 58,468 L58,510 L342,510 L342,468 C340,450 326,432 304,424 Z',
+    labelX: 380, labelY: 468, side: 'right',
   },
   {
     id: 'FMA:7182', nameEn: 'Upper Limb', nameAr: 'الطرف العلوي', color: '#90cdf4',
-    // Both arms combined
-    path: 'M36,118 C24,132 20,155 20,178 L20,310 L55,310 L55,118 Z M205,118 L205,310 L240,310 L240,178 C240,155 236,132 224,118 Z',
-    labelX: 5, labelY: 210, side: 'left',
+    // Both arms: left arm (x=57-130) and right arm (mirrored, x=270-343)
+    path: 'M60,126 C40,140 30,170 30,200 L30,400 L80,400 L80,126 Z M320,126 L320,400 L370,400 L370,200 C370,170 360,140 340,126 Z',
+    labelX: -20, labelY: 268, side: 'left',
   },
   {
     id: 'FMA:7185', nameEn: 'Lower Limb', nameAr: 'الطرف السفلي', color: '#68d391',
-    path: 'M80,390 L80,510 L130,510 L130,390 Z M130,390 L130,510 L180,510 L180,390 Z',
-    labelX: 210, labelY: 455, side: 'right',
+    path: 'M100,510 L100,880 L190,880 L190,510 Z M210,510 L210,880 L300,880 L300,510 Z',
+    labelX: 380, labelY: 700, side: 'right',
   },
   {
     id: 'FMA:14543', nameEn: 'Back & Spine', nameAr: 'الظهر والعمود الفقري', color: '#fc8181',
-    path: 'M118,120 L142,120 L142,390 L118,390 Z',
-    labelX: 5, labelY: 260, side: 'left',
+    path: 'M184,130 L216,130 L216,500 L184,500 Z',
+    labelX: -20, labelY: 330, side: 'left',
   },
 ];
 
@@ -141,7 +143,7 @@ export default function BodySelection({ lang, onSelect }: BodySelectionProps) {
         {/* Invisible L1 region overlay — sits on top, same viewBox as viewer */}
         <svg
           className="absolute inset-0 w-full h-full pointer-events-none"
-          viewBox="0 0 260 520"
+          viewBox="-170 0 740 920"
           preserveAspectRatio="xMidYMid meet"
           style={{ zIndex: 10 }}
         >
@@ -153,7 +155,7 @@ export default function BodySelection({ lang, onSelect }: BodySelectionProps) {
                 fill={hoveredId === r.id ? r.color : 'transparent'}
                 fillOpacity={hoveredId === r.id ? 0.18 : 0}
                 stroke={hoveredId === r.id ? r.color : 'transparent'}
-                strokeWidth="1"
+                strokeWidth="1.5"
                 strokeOpacity={hoveredId === r.id ? 0.6 : 0}
                 style={{
                   cursor: 'pointer',
@@ -170,20 +172,20 @@ export default function BodySelection({ lang, onSelect }: BodySelectionProps) {
                 <>
                   {/* Leader line */}
                   <line
-                    x1={r.side === 'right' ? r.labelX - 18 : r.labelX + 18}
+                    x1={r.side === 'right' ? r.labelX - 28 : r.labelX + 28}
                     y1={r.labelY}
-                    x2={r.side === 'right' ? r.labelX - 4 : r.labelX + 4}
+                    x2={r.side === 'right' ? r.labelX - 6 : r.labelX + 6}
                     y2={r.labelY}
                     stroke={r.color}
-                    strokeWidth="0.8"
+                    strokeWidth="1"
                     strokeOpacity="0.7"
                     style={{ pointerEvents: 'none' }}
                   />
                   <text
                     x={r.labelX}
-                    y={r.labelY + 3}
+                    y={r.labelY + 4}
                     textAnchor={r.side === 'right' ? 'start' : 'end'}
-                    fontSize="7"
+                    fontSize="11"
                     fontWeight="600"
                     fill={r.color}
                     style={{ pointerEvents: 'none' }}
