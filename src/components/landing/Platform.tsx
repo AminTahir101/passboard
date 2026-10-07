@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import type { Dictionary } from "@/lib/i18n";
-import { Container, SparkIcon } from "./ui";
+import Image from "next/image";
+import { Container } from "./ui";
 
 type F = Dictionary["landing"]["platform"]["feats"];
 
@@ -55,9 +56,28 @@ export function Platform({ t }: { t: Dictionary["landing"]["platform"] }) {
           <Feature n="06" title={f.mistakes.title} desc={f.mistakes.desc}>
             <MistakesVisual t={f.mistakes} />
           </Feature>
-          <Feature n="07" title={f.anatomy.title} desc={f.anatomy.desc}>
-            <AnatomyVisual t={f.anatomy} />
-          </Feature>
+          {/* Feature 07 spans the full row with image on the right */}
+          <article className="md:col-span-2 lg:col-span-3 flex min-h-[500px] bg-paper-2">
+            {/* Left: text + small visual */}
+            <div className="flex flex-col p-6 lg:p-9 shrink-0 w-[340px] lg:w-[400px]">
+              <span className="font-mono text-[13px] text-amber">07</span>
+              <h3 className="mt-[18px] font-serif text-[30px] leading-[1.15] font-normal">{f.anatomy.title}</h3>
+              <p className="mt-3 text-[15px] leading-relaxed text-lp-ink-2">{f.anatomy.desc}</p>
+              <div className="mt-auto pt-8">
+                <AnatomyVisual t={f.anatomy} />
+              </div>
+            </div>
+            {/* Right: full-bleed anatomy layers image */}
+            <div className="relative flex-1 overflow-hidden">
+              <Image
+                src="/anatomy-layers.png"
+                alt="Nine anatomical body systems layer by layer"
+                fill
+                className="object-cover object-left"
+                sizes="(max-width: 768px) 100vw, 66vw"
+              />
+            </div>
+          </article>
         </div>
       </Container>
     </section>
