@@ -55,6 +55,9 @@ export function Platform({ t }: { t: Dictionary["landing"]["platform"] }) {
           <Feature n="06" title={f.mistakes.title} desc={f.mistakes.desc}>
             <MistakesVisual t={f.mistakes} />
           </Feature>
+          <Feature n="07" title={f.anatomy.title} desc={f.anatomy.desc}>
+            <AnatomyVisual t={f.anatomy} />
+          </Feature>
         </div>
       </Container>
     </section>
@@ -186,5 +189,65 @@ function MistakesVisual({ t }: { t: F["mistakes"] }) {
         </li>
       ))}
     </ul>
+  );
+}
+
+const ANATOMY_LAYERS = [
+  { label: "Integumentary", color: "#c8a070" },
+  { label: "Muscular",      color: "#b83049" },
+  { label: "Cardiovascular",color: "#e53e3e" },
+  { label: "Nervous",       color: "#d4a520" },
+  { label: "Skeletal",      color: "#d4c5a9" },
+] as const;
+
+function AnatomyVisual({ t }: { t: F["anatomy"] }) {
+  return (
+    <div dir="ltr" className="flex gap-4">
+      {/* Miniature body silhouette */}
+      <div
+        className="shrink-0 rounded-xl flex items-center justify-center"
+        style={{ width: 72, height: 120, background: "#0d0e12", border: "1px solid rgba(255,255,255,0.08)" }}
+      >
+        <svg viewBox="-170 0 740 920" width="44" height="72" aria-hidden="true">
+          <defs>
+            <linearGradient id="lpSkin" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#A57B66" />
+              <stop offset="50%" stopColor="#DDB69D" />
+              <stop offset="100%" stopColor="#EBCDB8" />
+            </linearGradient>
+          </defs>
+          {/* Head */}
+          <ellipse cx="200" cy="60" rx="52" ry="58" fill="url(#lpSkin)" />
+          {/* Neck */}
+          <rect x="178" y="110" width="44" height="36" rx="6" fill="url(#lpSkin)" />
+          {/* Torso */}
+          <path d="M120 146 C100 146 80 152 72 164 L68 310 L332 310 L328 164 C320 152 300 146 280 146 Z" fill="url(#lpSkin)" />
+          {/* Pelvis */}
+          <path d="M96 310 C74 318 60 336 58 354 L58 430 L342 430 L342 354 C340 336 326 318 304 310 Z" fill="url(#lpSkin)" />
+          {/* Arms */}
+          <rect x="32" y="146" width="44" height="240" rx="18" fill="url(#lpSkin)" />
+          <rect x="324" y="146" width="44" height="240" rx="18" fill="url(#lpSkin)" />
+          {/* Legs */}
+          <rect x="100" y="430" width="80" height="440" rx="26" fill="url(#lpSkin)" />
+          <rect x="220" y="430" width="80" height="440" rx="26" fill="url(#lpSkin)" />
+        </svg>
+      </div>
+
+      {/* Layer toggles */}
+      <div className="flex flex-col justify-between py-1 flex-1">
+        {ANATOMY_LAYERS.map((l, i) => (
+          <div key={l.label} className="flex items-center gap-2 text-[12px]">
+            <div
+              className="w-6 h-3.5 rounded-sm shrink-0"
+              style={{ background: l.color, opacity: i === 0 ? 1 : 0.55 }}
+            />
+            <span style={{ color: i === 0 ? "#fff" : "rgba(255,255,255,0.45)" }}>{l.label}</span>
+          </div>
+        ))}
+        <span className="font-mono text-[11px] tracking-wide mt-1" style={{ color: "rgba(255,255,255,0.25)" }}>
+          {t.layers}
+        </span>
+      </div>
+    </div>
   );
 }

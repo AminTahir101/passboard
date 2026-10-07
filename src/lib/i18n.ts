@@ -58,6 +58,7 @@ export type Dictionary = {
         progress: { title: string; desc: string };
         mock: { title: string; desc: string; questions: string; minutes: string; pass: string };
         mistakes: { title: string; desc: string; review: string; improving: string };
+        anatomy: { title: string; desc: string; layers: string };
       };
     };
     howItWorks: {

@@ -95,6 +95,7 @@ export const en: Dictionary = {
         progress: { title: "Track your progress", desc: "See your accuracy by specialty and topic. Know exactly where to focus your study time." },
         mock: { title: "Prepare with mock exams", desc: "Timed, realistic mock exams drawn from the full question bank or filtered to a single specialty — simulate the real exam under real pressure.", questions: "questions", minutes: "minutes", pass: "to pass" },
         mistakes: { title: "Review your mistakes", desc: "Questions you got wrong resurface automatically, so you practise them until you master them.", review: "review", improving: "improving" },
+        anatomy: { title: "Explore interactive anatomy", desc: "A fully-layered anatomical atlas — toggle 9 body systems, drill into any structure, and get AI explanations contextualised to what you're studying.", layers: "9 anatomical layers" },
       },
     },
     howItWorks: {
