@@ -66,6 +66,17 @@ const LAYER_INTEGUMENTARY = `<path fill="url(#fgSkin)" d="M201 18 C181 18 161 31
 <path d="M200 86 L200 99 C198 102 195 102 194 100" fill="none" stroke="#A47662" stroke-width="0.8" opacity="0.5"></path>
 <path d="M192 114 C196 116.5 204 116.5 208 114" fill="none" stroke="#A0645A" stroke-width="1" opacity="0.55"></path>
 </g>
+<g>
+<path d="M196 130 C186 128 170 124 154 122 C146 121 138 122 134 125" fill="none" stroke="#A47662" stroke-width="1.2" opacity="0.5"></path>
+<path d="M204 130 C214 128 230 124 246 122 C254 121 262 122 266 125" fill="none" stroke="#A47662" stroke-width="1.2" opacity="0.5"></path>
+<path d="M197 128 C199 131 200 134 200 134 C200 134 201 131 203 128" fill="none" stroke="#A47662" stroke-width="0.9" opacity="0.45"></path>
+<line x1="200" y1="134" x2="200" y2="212" stroke="#A47662" stroke-width="0.8" opacity="0.28"></line>
+<line x1="200" y1="212" x2="200" y2="386" stroke="#A47662" stroke-width="0.7" opacity="0.32"></line>
+<ellipse cx="167" cy="673" rx="12" ry="14" fill="none" stroke="#A47662" stroke-width="0.8" opacity="0.3"></ellipse>
+<ellipse cx="233" cy="673" rx="12" ry="14" fill="none" stroke="#A47662" stroke-width="0.8" opacity="0.3"></ellipse>
+<ellipse cx="147" cy="824" rx="7" ry="8" fill="none" stroke="#A47662" stroke-width="0.7" opacity="0.28"></ellipse>
+<ellipse cx="253" cy="824" rx="7" ry="8" fill="none" stroke="#A47662" stroke-width="0.7" opacity="0.28"></ellipse>
+</g>
 
 <g opacity="{{lab.skin}}" style="transition: opacity .5s ease" pointer-events="none">
 <path d="M178 36 H-24 M200 392 H-24 M78 560 H-24 M246 92 H424 M232 258 H424 M233 676 H424" fill="none" stroke="#E9E4DA" stroke-opacity="0.38" stroke-width="0.8"></path>
@@ -741,13 +752,18 @@ export default function AnatomyLayerViewer({ lang, onNodeSelect, hideLabels = fa
           <g opacity={op('integumentary')} style={{ transition: 'opacity .5s' }}>
             {sex === 'female' ? (
               <>
-                {/* ── Female: wider hip silhouette ── */}
-                {/* Left hip extension (viewer's left = patient's right) */}
-                <path d="M108 358 C96 368 86 390 84 415 C82 435 88 448 98 450 L108 450 L108 358 Z"
+                {/* ── Female: smooth wide-hip curves (hourglass) ── */}
+                {/* Left hip — flows from torso edge, curves to iliac crest, back to thigh */}
+                <path d="M144 272 C142 302 136 336 122 360 C104 386 80 408 72 434 C66 454 70 474 86 484 C100 492 120 488 136 476 C150 466 156 446 156 418 L156 272 Z"
                   fill="url(#fgSkin)" opacity="0.95"/>
-                {/* Right hip extension */}
-                <path d="M292 358 C304 368 314 390 316 415 C318 435 312 448 302 450 L292 450 L292 358 Z"
+                {/* Right hip */}
+                <path d="M256 272 C258 302 264 336 278 360 C296 386 320 408 328 434 C334 454 330 474 314 484 C300 492 280 488 264 476 C250 466 244 446 244 418 L244 272 Z"
                   fill="url(#fgSkin)" opacity="0.95"/>
+                {/* Iliac crest contour lines */}
+                <path d="M142 312 C128 330 112 356 86 384 C78 394 72 408 72 422"
+                  fill="none" stroke="#B47C68" strokeWidth="0.9" opacity="0.3"/>
+                <path d="M258 312 C272 330 288 356 314 384 C322 394 328 408 328 422"
+                  fill="none" stroke="#B47C68" strokeWidth="0.9" opacity="0.3"/>
 
                 {/* ── Female: breast mounds ── */}
                 {/* Patient's right breast (viewer's left) */}
@@ -786,6 +802,26 @@ export default function AnatomyLayerViewer({ lang, onNodeSelect, hideLabels = fa
               </>
             ) : (
               <>
+                {/* ── Male: broad shoulder caps (deltoid) ── */}
+                {/* Left deltoid cap — extends shoulder width by ~28px */}
+                <path d="M136 158 C126 160 112 168 104 184 C98 198 100 216 112 222 C124 228 138 222 142 212 C136 202 132 188 134 176 Z"
+                  fill="url(#fgSkin)" stroke="#B47C68" strokeWidth="0.4" opacity="0.95"/>
+                {/* Right deltoid cap */}
+                <path d="M264 158 C274 160 288 168 296 184 C302 198 300 216 288 222 C276 228 262 222 258 212 C264 202 268 188 266 176 Z"
+                  fill="url(#fgSkin)" stroke="#B47C68" strokeWidth="0.4" opacity="0.95"/>
+                {/* Left trapezius–deltoid slope */}
+                <path d="M172 126 C162 138 150 152 140 166 C136 172 132 178 130 186"
+                  fill="none" stroke="#A47662" strokeWidth="0.9" opacity="0.32"/>
+                {/* Right trapezius–deltoid slope */}
+                <path d="M228 126 C238 138 250 152 260 166 C264 172 268 178 270 186"
+                  fill="none" stroke="#A47662" strokeWidth="0.9" opacity="0.32"/>
+                {/* Left pectoral definition arc */}
+                <path d="M172 166 C166 174 164 186 168 198 C172 208 180 214 190 216"
+                  fill="none" stroke="#9A7060" strokeWidth="1" opacity="0.28"/>
+                {/* Right pectoral definition arc */}
+                <path d="M228 166 C234 174 236 186 232 198 C228 208 220 214 210 216"
+                  fill="none" stroke="#9A7060" strokeWidth="1" opacity="0.28"/>
+
                 {/* ── Male: nipples ── */}
                 <circle cx="178" cy="168" r="3" fill="#B07060" opacity="0.72"/>
                 <circle cx="222" cy="168" r="3" fill="#B07060" opacity="0.72"/>
