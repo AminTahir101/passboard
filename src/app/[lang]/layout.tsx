@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Almarai, IBM_Plex_Mono, IBM_Plex_Sans, IBM_Plex_Sans_Arabic, Newsreader } from "next/font/google";
+import { Almarai, Cormorant_Garamond, IBM_Plex_Mono, IBM_Plex_Sans, IBM_Plex_Sans_Arabic, Instrument_Sans, Newsreader } from "next/font/google";
 import "@/app/globals.css";
 
 export const metadata: Metadata = {
@@ -7,6 +7,19 @@ export const metadata: Metadata = {
   description: "Passboard is an independent AI-powered platform for professional medical licensing exam preparation.",
 };
 
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  weight: ["400", "500", "600"],
+  variable: "--font-cormorant",
+  display: "swap",
+});
+const instrumentSans = Instrument_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-instrument",
+  display: "swap",
+});
 const almarai = Almarai({
   weight: ["300", "400", "700", "800"],
   subsets: ["arabic"],
@@ -53,7 +66,7 @@ export default async function LocaleLayout({
     <html
       lang={lang}
       dir={isRtl ? "rtl" : "ltr"}
-      className={`h-full ${almarai.variable} ${newsreader.variable} ${plexSans.variable} ${plexMono.variable} ${plexArabic.variable}`}
+      className={`h-full ${almarai.variable} ${newsreader.variable} ${plexSans.variable} ${plexMono.variable} ${plexArabic.variable} ${cormorant.variable} ${instrumentSans.variable}`}
     >
       <body className="min-h-full font-sans">
         {children}
