@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
 import type { Dictionary } from "@/lib/i18n";
 import { localePath } from "@/lib/i18n";
 import { Logo } from "@/components/landing/ui";
@@ -29,53 +28,41 @@ export default function LoginClient({ lang, homePath, requestAccessPath, dashboa
     setError(null);
 
     try {
-      const supabase = createClient();
-      const { data, error: authError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
       });
 
-      if (authError) {
+      const body = await res.json();
+
+      if (res.status === 429) {
+        const mins = body.retryAfterSec ? Math.ceil(body.retryAfterSec / 60) : 15;
+        setError(
+          lang === "ar"
+            ? `عدد كبير من المحاولات الفاشلة. يرجى الانتظار ${mins} دقيقة.`
+            : `Too many failed attempts. Please wait ${mins} minute${mins !== 1 ? "s" : ""} before trying again.`
+        );
+        return;
+      }
+
+      if (res.status === 403) {
         setError(dict.error);
         return;
       }
 
-      if (data.user) {
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("role, access_status, access_expires_at")
-          .eq("id", data.user.id)
-          .single();
-
-        if (profile?.role === "admin") {
-          router.push(localePath(lang, "/admin"));
-          return;
-        }
-
-        if (profile?.access_status === "suspended") {
-          await supabase.auth.signOut();
-          setError(dict.error);
-          return;
-        }
-
-        if (
-          profile?.access_status === "expired" ||
-          (profile?.access_expires_at && new Date(profile.access_expires_at) < new Date())
-        ) {
-          await supabase.auth.signOut();
-          setError(dict.error);
-          return;
-        }
-
-        if (profile?.access_status !== "active") {
-          await supabase.auth.signOut();
-          setError(dict.error);
-          return;
-        }
-
-        router.push(dashboardPath);
-        router.refresh();
+      if (!res.ok) {
+        setError(dict.error);
+        return;
       }
+
+      // Session cookies are set by the server — just navigate
+      if (body.role === "admin") {
+        router.push(localePath(lang, "/admin"));
+      } else {
+        router.push(dashboardPath);
+      }
+      router.refresh();
     } finally {
       setLoading(false);
     }
