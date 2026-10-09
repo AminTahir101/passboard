@@ -17,7 +17,7 @@ export default async function QuestionsPage({
   searchParams,
 }: {
   params: Promise<{ lang: string }>;
-  searchParams: Promise<{ exam?: string; category?: string; topic?: string; difficulty?: string; status?: string }>;
+  searchParams: Promise<{ exam?: string; category?: string; topic?: string; difficulty?: string; status?: string; page?: string }>;
 }) {
   const { lang } = await params;
   const dict = await getDictionary(lang);
@@ -31,21 +31,32 @@ export default async function QuestionsPage({
   if (!user) redirect(localePath(lang, "/login"));
 
   const statusFilter: StatusFilter = (sp.status as StatusFilter) || "all";
+  const PAGE_SIZE = 50;
+  const page = Math.max(0, parseInt(sp.page ?? "0", 10));
 
-  // Build questions query
+  // Fetch filter options from distinct values (efficient)
+  const [{ data: catRows }, { data: examRows }] = await Promise.all([
+    supabase.from("questions").select("category").eq("status", "published").not("category", "is", null),
+    supabase.from("questions").select("exam").eq("status", "published").not("exam", "is", null),
+  ]);
+  const allCategories = [...new Set((catRows ?? []).map((r) => r.category).filter(Boolean))].sort() as string[];
+  const allExams = [...new Set((examRows ?? []).map((r) => r.exam).filter(Boolean))].sort() as string[];
+
+  // Build questions query with pagination
   let query = supabase
     .from("questions")
-    .select("id, question_text, category, topic, difficulty, exam, status")
+    .select("id, question_text, category, topic, difficulty, exam, status", { count: "exact" })
     .eq("status", "published")
     .order("created_at", { ascending: false })
-    .limit(100);
+    .range(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE - 1);
 
   if (sp.exam) query = query.eq("exam", sp.exam);
   if (sp.category) query = query.eq("category", sp.category);
   if (sp.topic) query = query.eq("topic", sp.topic);
   if (sp.difficulty) query = query.eq("difficulty", sp.difficulty as import("@/types/database").Difficulty);
 
-  const { data: questions } = await query;
+  const { data: questions, count: totalCount } = await query;
+  const totalPages = Math.ceil((totalCount ?? 0) / PAGE_SIZE);
 
   // Fetch user attempts
   const { data: attempts } = await supabase
@@ -72,10 +83,8 @@ export default async function QuestionsPage({
     return true;
   });
 
-  // Get distinct filter options
-  const allQuestions = questions ?? [];
-  const exams = [...new Set(allQuestions.map((q) => q.exam).filter(Boolean))];
-  const categories = [...new Set(allQuestions.map((q) => q.category).filter(Boolean))];
+  const exams = allExams;
+  const categories = allCategories;
 
   const statusTabs: { key: StatusFilter; label: string }[] = [
     { key: "all", label: dict.common.all },
@@ -158,7 +167,7 @@ export default async function QuestionsPage({
                 >
                   {dict.common.all}
                 </Link>
-                {categories.slice(0, 8).map((cat) => (
+                {categories.map((cat) => (
                   <Link
                     key={cat}
                     href={buildFilterUrl(questionsBase, sp, { category: cat! })}
@@ -220,7 +229,7 @@ export default async function QuestionsPage({
           className="ml-auto self-center text-xs px-2"
           style={{ color: "var(--muted-foreground)" }}
         >
-          {filteredQuestions.length} {dict.common.questions}
+          {totalCount ?? 0} {dict.common.questions}
         </span>
       </div>
 
@@ -299,6 +308,43 @@ export default async function QuestionsPage({
           })}
         </div>
       )}
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between pt-2">
+          <Link
+            href={page > 0 ? buildFilterUrl(questionsBase, sp, { page: String(page - 1) }) : "#"}
+            className="px-4 py-2 rounded-lg border text-sm font-medium transition-colors"
+            style={{
+              borderColor: "var(--border)",
+              background: page > 0 ? "var(--card)" : "transparent",
+              color: page > 0 ? "var(--foreground)" : "var(--muted-foreground)",
+              pointerEvents: page > 0 ? "auto" : "none",
+              opacity: page > 0 ? 1 : 0.4,
+            }}
+          >
+            {lang === "ar" ? "السابق" : "Previous"}
+          </Link>
+          <span className="text-sm" style={{ color: "var(--muted-foreground)" }}>
+            {lang === "ar"
+              ? `الصفحة ${page + 1} من ${totalPages}`
+              : `Page ${page + 1} of ${totalPages}`}
+          </span>
+          <Link
+            href={page < totalPages - 1 ? buildFilterUrl(questionsBase, sp, { page: String(page + 1) }) : "#"}
+            className="px-4 py-2 rounded-lg border text-sm font-medium transition-colors"
+            style={{
+              borderColor: "var(--border)",
+              background: page < totalPages - 1 ? "var(--card)" : "transparent",
+              color: page < totalPages - 1 ? "var(--foreground)" : "var(--muted-foreground)",
+              pointerEvents: page < totalPages - 1 ? "auto" : "none",
+              opacity: page < totalPages - 1 ? 1 : 0.4,
+            }}
+          >
+            {lang === "ar" ? "التالي" : "Next"}
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
@@ -308,7 +354,11 @@ function buildFilterUrl(
   current: Record<string, string | undefined>,
   updates: Record<string, string | undefined>
 ): string {
-  const merged = { ...current, ...updates };
+  // Reset to page 0 when any filter other than page itself changes
+  const isPageChange = "page" in updates && Object.keys(updates).length === 1;
+  const merged = isPageChange
+    ? { ...current, ...updates }
+    : { ...current, ...updates, page: undefined };
   const params = new URLSearchParams();
   for (const [k, v] of Object.entries(merged)) {
     if (v) params.set(k, v);
