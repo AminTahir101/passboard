@@ -16,6 +16,7 @@ import {
   Menu,
   X,
   Layers,
+  CalendarDays,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { localePath } from "@/lib/i18n";
@@ -30,6 +31,7 @@ interface AppSidebarProps {
     dashboard: string; practice: string; questionBank: string;
     mockExams: string; aiTutor: string; myMistakes: string;
     performance: string; profile: string; logout: string; anatomy: string;
+    studyPlan: string;
   };
   langToggleLabel: string;
 }
@@ -41,6 +43,7 @@ export default function AppSidebar({ userName, userEmail, lang, nav, langToggleL
 
   const navItems = [
     { label: nav.dashboard, icon: LayoutDashboard, href: localePath(lang, "/dashboard") },
+    { label: nav.studyPlan, icon: CalendarDays, href: localePath(lang, "/study-plan") },
     { label: nav.practice, icon: Play, href: localePath(lang, "/practice") },
     { label: nav.questionBank, icon: BookOpen, href: localePath(lang, "/questions") },
     { label: nav.mockExams, icon: ClipboardList, href: localePath(lang, "/mock-exams") },

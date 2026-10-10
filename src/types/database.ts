@@ -307,6 +307,80 @@ export interface Database {
         };
         Relationships: [];
       };
+      study_plans: {
+        Row: {
+          id: string;
+          user_id: string;
+          exam: string;
+          exam_date: string;
+          study_days: number[];
+          questions_per_day: number;
+          mock_day: number | null;
+          mock_size: number | null;
+          focus_specialties: string[];
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          exam: string;
+          exam_date: string;
+          study_days: number[];
+          questions_per_day?: number;
+          mock_day?: number | null;
+          mock_size?: number | null;
+          focus_specialties?: string[];
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          exam?: string;
+          exam_date?: string;
+          study_days?: number[];
+          questions_per_day?: number;
+          mock_day?: number | null;
+          mock_size?: number | null;
+          focus_specialties?: string[];
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      study_tasks: {
+        Row: {
+          id: string;
+          plan_id: string;
+          user_id: string;
+          scheduled_date: string;
+          task_type: "practice" | "mock_exam" | "review";
+          phase: "foundation" | "reinforcement" | "final_review";
+          specialty: string | null;
+          question_count: number;
+          completed: boolean;
+          completed_at: string | null;
+          position: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          plan_id: string;
+          user_id: string;
+          scheduled_date: string;
+          task_type: "practice" | "mock_exam" | "review";
+          phase: "foundation" | "reinforcement" | "final_review";
+          specialty?: string | null;
+          question_count: number;
+          completed?: boolean;
+          completed_at?: string | null;
+          position?: number;
+          created_at?: string;
+        };
+        Update: {
+          completed?: boolean;
+          completed_at?: string | null;
+        };
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
@@ -315,6 +389,8 @@ export interface Database {
 }
 
 // Convenience type aliases
+export type StudyPlan = Database["public"]["Tables"]["study_plans"]["Row"];
+export type StudyTask = Database["public"]["Tables"]["study_tasks"]["Row"];
 export type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 export type AccessRequest = Database["public"]["Tables"]["access_requests"]["Row"];
 export type Question = Database["public"]["Tables"]["questions"]["Row"];

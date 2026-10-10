@@ -26,6 +26,7 @@ export type Dictionary = {
     performance: string; profile: string; logout: string;
     accessRequests: string; students: string; questions: string;
     importQuestions: string; adminDashboard: string; anatomy: string;
+    studyPlan: string;
   };
   lang: { toggle: string; ar: string; en: string };
   landing: {
@@ -173,6 +174,41 @@ export type Dictionary = {
     accessStatus: string; accessExpires: string;
     editProfile: string; save: string; cancel: string;
     never: string; updateSuccess: string;
+  };
+  studyPlan: {
+    title: string;
+    editPlan: string;
+    rebuildFromToday: string;
+    daysLeft: string;
+    phase: string;
+    progress: string;
+    missed: string;
+    today: string;
+    schedule: string;
+    setupTitle: string;
+    setupSubtitle: string;
+    editTitle: string;
+    examLabel: string;
+    examDateLabel: string;
+    studyDaysLabel: string;
+    questionsPerDayLabel: string;
+    mockExamLabel: string;
+    noMock: string;
+    mock50: string;
+    mock100: string;
+    mockDayLabel: string;
+    focusSpecialtiesLabel: string;
+    focusSpecialtiesHint: string;
+    summaryTitle: string;
+    summaryWeeks: string;
+    summarySessions: string;
+    summaryQuestions: string;
+    summaryMocks: string;
+    savePlan: string;
+    saving: string;
+    todayCard: string;
+    viewPlan: string;
+    noTasksToday: string;
   };
   admin: {
     dashboard: {

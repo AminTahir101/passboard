@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { getDictionary, localePath } from "@/lib/i18n";
-import type { Profile, QuestionAttempt } from "@/types/database";
+import type { Profile, QuestionAttempt, StudyTask } from "@/types/database";
 import {
   Play,
   ClipboardList,
@@ -16,6 +16,8 @@ import {
   TrendingUp,
   TrendingDown,
   Layers,
+  CalendarDays,
+  RotateCcw,
 } from "lucide-react";
 
 function StatCard({
@@ -69,13 +71,24 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect(localePath(lang, "/login"));
 
-  const { data: profileData } = await supabase
-    .from("profiles")
-    .select("full_name, target_exam, exam_date, access_expires_at")
-    .eq("id", user.id)
-    .single();
+  const [{ data: profileData }, { data: studyPlanData }] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select("full_name, target_exam, exam_date, access_expires_at")
+      .eq("id", user.id)
+      .single(),
+    supabase
+      .from("study_plans")
+      .select("id, exam_date")
+      .eq("user_id", user.id)
+      .single(),
+  ]);
 
   const profile = profileData as Pick<Profile, "full_name" | "target_exam" | "exam_date" | "access_expires_at"> | null;
+  const studyPlan = studyPlanData as { id: string; exam_date: string } | null;
+
+  // Use plan's exam date when it exists (may differ from profile)
+  const effectiveExamDate = studyPlan?.exam_date ?? profile?.exam_date ?? null;
 
   const { data: attemptsData } = await supabase
     .from("question_attempts")
@@ -91,12 +104,27 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
   const accuracy = totalAttempted > 0 ? Math.round((correct / totalAttempted) * 100) : 0;
 
   let daysToExam: number | null = null;
-  if (profile?.exam_date) {
-    const examDate = new Date(profile.exam_date);
+  if (effectiveExamDate) {
+    const examDate = new Date(effectiveExamDate);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     daysToExam = Math.ceil((examDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
   }
+
+  // Fetch today's study tasks if a plan exists
+  const todayStr = new Date().toISOString().split("T")[0];
+  const { data: todayTasksData } = studyPlan
+    ? await supabase
+        .from("study_tasks")
+        .select("id, task_type, phase, specialty, question_count, completed")
+        .eq("plan_id", studyPlan.id)
+        .eq("scheduled_date", todayStr)
+        .order("position", { ascending: true })
+    : { data: null };
+  const todayTasks = (todayTasksData ?? []) as Pick<
+    StudyTask,
+    "id" | "task_type" | "phase" | "specialty" | "question_count" | "completed"
+  >[];
 
   const recentAttemptIds = attempts.slice(0, 5).map((a) => a.question_id);
   const { data: recentQuestionsData } = recentAttemptIds.length
@@ -140,13 +168,43 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
   const strongestTopic = topicEntries[0] ?? null;
   const weakestTopic = topicEntries[topicEntries.length - 1] ?? null;
 
-  const daysToExamValue = daysToExam === null
-    ? dict.dashboard.na
-    : daysToExam < 0
-    ? (lang === "ar" ? "ماضٍ" : "Past")
-    : daysToExam === 0
-    ? (lang === "ar" ? "اليوم!" : "Today!")
-    : `${daysToExam}d`;
+  const daysToExamValue =
+    daysToExam === null
+      ? dict.dashboard.na
+      : daysToExam < 0
+      ? lang === "ar"
+        ? "ماضٍ"
+        : "Past"
+      : daysToExam === 0
+      ? lang === "ar"
+        ? "اليوم!"
+        : "Today!"
+      : `${daysToExam}d`;
+
+  function taskLabel(t: (typeof todayTasks)[0]) {
+    if (t.task_type === "mock_exam")
+      return lang === "ar" ? "اختبار تجريبي" : "Mock Exam";
+    if (t.task_type === "review")
+      return lang === "ar" ? "مراجعة الأخطاء" : "Mistake Review";
+    return t.specialty ?? (lang === "ar" ? "أسئلة مختلطة" : "Mixed Questions");
+  }
+
+  function taskLink(t: (typeof todayTasks)[0]) {
+    if (t.task_type === "mock_exam")
+      return localePath(lang, `/mock-exams/new?count=${t.question_count}`);
+    if (t.task_type === "review")
+      return localePath(
+        lang,
+        `/practice/session?mode=incorrect&count=${t.question_count}&plan_task_id=${t.id}`
+      );
+    const p = new URLSearchParams({
+      mode: t.specialty ? "category" : "random",
+      count: String(t.question_count),
+      plan_task_id: t.id,
+    });
+    if (t.specialty) p.set("category", t.specialty);
+    return localePath(lang, `/practice/session?${p}`);
+  }
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
@@ -168,7 +226,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
           value={daysToExamValue}
           icon={Calendar}
           color="var(--warning)"
-          sub={profile?.exam_date ? new Date(profile.exam_date).toLocaleDateString() : undefined}
+          sub={effectiveExamDate ? new Date(effectiveExamDate).toLocaleDateString() : undefined}
         />
         <StatCard label={dict.dashboard.totalAnswered} value={totalAttempted.toLocaleString()} icon={BookOpen} color="var(--brand)" />
         <StatCard
@@ -206,6 +264,89 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
                 <p className="text-sm" style={{ color: "var(--destructive)" }}>{weakestTopic.accuracy}% {dict.common.accuracy} ({weakestTopic.total} {dict.common.questions})</p>
               </div>
             </div>
+          )}
+        </div>
+      )}
+
+      {/* Today's study plan card */}
+      {studyPlan && (
+        <div
+          className="rounded-xl border"
+          style={{ background: "var(--card)", borderColor: "var(--border)" }}
+        >
+          <div
+            className="px-5 py-4 border-b flex items-center justify-between"
+            style={{ borderColor: "var(--border)" }}
+          >
+            <div className="flex items-center gap-2">
+              <CalendarDays size={15} style={{ color: "var(--brand)" }} />
+              <h2 className="font-semibold text-sm">
+                {dict.studyPlan.todayCard}
+              </h2>
+            </div>
+            <Link
+              href={localePath(lang, "/study-plan")}
+              className="text-xs font-medium"
+              style={{ color: "var(--brand)" }}
+            >
+              {dict.studyPlan.viewPlan}
+            </Link>
+          </div>
+          {todayTasks.length === 0 ? (
+            <div className="px-5 py-5 text-center">
+              <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>
+                {dict.studyPlan.noTasksToday}
+              </p>
+            </div>
+          ) : (
+            <ul className="divide-y" style={{ borderColor: "var(--border)" }}>
+              {todayTasks.map((t) => (
+                <li key={t.id} className="px-5 py-3 flex items-center gap-3">
+                  <div
+                    className="w-5 h-5 rounded-full flex items-center justify-center shrink-0"
+                    style={{
+                      background: t.completed
+                        ? "rgba(22,163,74,0.12)"
+                        : "rgba(37,99,235,0.1)",
+                    }}
+                  >
+                    {t.completed ? (
+                      <CheckCircle2 size={11} style={{ color: "var(--success)" }} />
+                    ) : t.task_type === "review" ? (
+                      <RotateCcw size={11} style={{ color: "var(--brand)" }} />
+                    ) : (
+                      <Play size={11} style={{ color: "var(--brand)" }} />
+                    )}
+                  </div>
+                  <p
+                    className="text-sm flex-1"
+                    style={{
+                      color: "var(--foreground)",
+                      textDecoration: t.completed ? "line-through" : "none",
+                      opacity: t.completed ? 0.6 : 1,
+                    }}
+                  >
+                    {taskLabel(t)}{" "}
+                    <span style={{ color: "var(--muted-foreground)" }}>
+                      · {t.question_count}{" "}
+                      {lang === "ar" ? "سؤال" : "questions"}
+                    </span>
+                  </p>
+                  {!t.completed && (
+                    <Link
+                      href={taskLink(t)}
+                      className="shrink-0 text-xs font-semibold px-2.5 py-1 rounded-lg"
+                      style={{
+                        background: "var(--brand)",
+                        color: "var(--brand-foreground)",
+                      }}
+                    >
+                      {lang === "ar" ? "ابدأ" : "Start"}
+                    </Link>
+                  )}
+                </li>
+              ))}
+            </ul>
           )}
         </div>
       )}

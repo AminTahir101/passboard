@@ -26,7 +26,11 @@ type Filter =
   | { type: "neq"; col: string; val: unknown }
   | { type: "in"; col: string; val: unknown[] }
   | { type: "not"; col: string; op: string; val: unknown }
-  | { type: "is"; col: string; val: unknown };
+  | { type: "is"; col: string; val: unknown }
+  | { type: "gte"; col: string; val: unknown }
+  | { type: "lte"; col: string; val: unknown }
+  | { type: "gt"; col: string; val: unknown }
+  | { type: "lt"; col: string; val: unknown };
 
 class MockQueryBuilder {
   private _op: "select" | "insert" | "update" | "delete" | "upsert" = "select";
@@ -74,6 +78,26 @@ class MockQueryBuilder {
 
   not(col: string, op: string, val: unknown) {
     this._filters.push({ type: "not", col, op, val });
+    return this;
+  }
+
+  gte(col: string, val: unknown) {
+    this._filters.push({ type: "gte", col, val });
+    return this;
+  }
+
+  lte(col: string, val: unknown) {
+    this._filters.push({ type: "lte", col, val });
+    return this;
+  }
+
+  gt(col: string, val: unknown) {
+    this._filters.push({ type: "gt", col, val });
+    return this;
+  }
+
+  lt(col: string, val: unknown) {
+    this._filters.push({ type: "lt", col, val });
     return this;
   }
 
@@ -210,6 +234,10 @@ class MockQueryBuilder {
         if (f.val === null && v !== null) return false;
         if (f.val !== null && v !== f.val) return false;
       }
+      if (f.type === "gte" && !(v! >= f.val!)) return false;
+      if (f.type === "lte" && !(v! <= f.val!)) return false;
+      if (f.type === "gt" && !(v! > f.val!)) return false;
+      if (f.type === "lt" && !(v! < f.val!)) return false;
       if (f.type === "not" && f.op === "in") {
         // val arrives as "(id1,id2,...)" from the practice questions route
         const ids = String(f.val)

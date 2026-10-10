@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, Suspense } from "react";
+import { useState, useEffect, useCallback, useRef, Suspense } from "react";
 import { useSearchParams, useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { localePath } from "@/lib/i18n";
@@ -71,6 +71,8 @@ function PracticeSession({ dict, lang }: PracticeSessionClientProps) {
   const count = parseInt(searchParams.get("count") ?? "20", 10);
   const category = searchParams.get("category");
   const topic = searchParams.get("topic");
+  const planTaskId = searchParams.get("plan_task_id");
+  const tickedRef = useRef(false);
 
   const [questions, setQuestions] = useState<SessionQuestion[]>([]);
   const [loading, setLoading] = useState(true);
@@ -84,6 +86,18 @@ function PracticeSession({ dict, lang }: PracticeSessionClientProps) {
 
   const [results, setResults] = useState<{ correct: boolean }[]>([]);
   const [finished, setFinished] = useState(false);
+
+  // Auto-tick the study plan task when the session finishes
+  useEffect(() => {
+    if (finished && planTaskId && !tickedRef.current) {
+      tickedRef.current = true;
+      fetch(`/api/study-plan/tasks/${planTaskId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ completed: true }),
+      }).catch(() => {});
+    }
+  }, [finished, planTaskId]);
 
   const fetchQuestions = useCallback(async () => {
     setLoading(true);
@@ -255,31 +269,40 @@ function PracticeSession({ dict, lang }: PracticeSessionClientProps) {
             </span>
           </div>
         </div>
-        <div className="flex gap-3">
-          <Link
-            href={localePath(lang, "/practice")}
-            className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium border"
-            style={{ borderColor: "var(--border)", color: "var(--foreground)" }}
-          >
-            <ArrowLeft size={16} />
-            {lang === "ar" ? "رجوع" : "Back"}
-          </Link>
-          <button
-            onClick={() => {
-              setCurrentIndex(0);
-              setSelectedAnswer(null);
-              setSubmitted(false);
-              setIsCorrect(null);
-              setResults([]);
-              setFinished(false);
-              fetchQuestions();
-            }}
-            className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium"
-            style={{ background: "var(--brand)", color: "var(--brand-foreground)" }}
-          >
-            <RotateCcw size={16} />
-            {dict.practiceAgain}
-          </button>
+        <div className="flex flex-col gap-2">
+          <div className="flex gap-3">
+            <Link
+              href={planTaskId ? localePath(lang, "/study-plan") : localePath(lang, "/practice")}
+              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium border"
+              style={{ borderColor: "var(--border)", color: "var(--foreground)" }}
+            >
+              <ArrowLeft size={16} />
+              {planTaskId
+                ? lang === "ar"
+                  ? "العودة لخطة الدراسة"
+                  : "Back to Study Plan"
+                : lang === "ar"
+                ? "رجوع"
+                : "Back"}
+            </Link>
+            <button
+              onClick={() => {
+                setCurrentIndex(0);
+                setSelectedAnswer(null);
+                setSubmitted(false);
+                setIsCorrect(null);
+                setResults([]);
+                setFinished(false);
+                tickedRef.current = false;
+                fetchQuestions();
+              }}
+              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium"
+              style={{ background: "var(--brand)", color: "var(--brand-foreground)" }}
+            >
+              <RotateCcw size={16} />
+              {dict.practiceAgain}
+            </button>
+          </div>
         </div>
       </div>
     );

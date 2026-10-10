@@ -8,6 +8,8 @@ import type {
   MockAnswer,
   AiConversation,
   AiMessage,
+  StudyPlan,
+  StudyTask,
 } from "@/types/database";
 
 export const STUDENT_ID = "dev-student-00000000-0000-0000-0000-000000000001";
@@ -821,6 +823,91 @@ export const MOCK_AI_MESSAGES: AiMessage[] = [
   },
 ];
 
+// ── Study Plans ───────────────────────────────────────────────────────────────
+
+export const MOCK_STUDY_PLANS: StudyPlan[] = [
+  {
+    id: "mock-plan-001",
+    user_id: STUDENT_ID,
+    exam: "USMLE Step 1",
+    exam_date: "2027-06-15",
+    study_days: [0, 1, 2, 3, 4, 5, 6],
+    questions_per_day: 20,
+    mock_day: null,
+    mock_size: null,
+    focus_specialties: [],
+    created_at: "2026-09-01T10:00:00Z",
+    updated_at: "2026-09-01T10:00:00Z",
+  },
+];
+
+export const MOCK_STUDY_TASKS: StudyTask[] = [
+  // Completed past tasks
+  {
+    id: "mock-stask-001", plan_id: "mock-plan-001", user_id: STUDENT_ID,
+    scheduled_date: "2026-10-05", task_type: "practice", phase: "foundation",
+    specialty: "Cardiology", question_count: 20, completed: true,
+    completed_at: "2026-10-05T15:00:00Z", position: 0, created_at: "2026-09-01T10:00:00Z",
+  },
+  {
+    id: "mock-stask-002", plan_id: "mock-plan-001", user_id: STUDENT_ID,
+    scheduled_date: "2026-10-06", task_type: "practice", phase: "foundation",
+    specialty: "Pulmonology", question_count: 20, completed: true,
+    completed_at: "2026-10-06T14:00:00Z", position: 0, created_at: "2026-09-01T10:00:00Z",
+  },
+  {
+    id: "mock-stask-003", plan_id: "mock-plan-001", user_id: STUDENT_ID,
+    scheduled_date: "2026-10-07", task_type: "practice", phase: "foundation",
+    specialty: "Nephrology", question_count: 20, completed: true,
+    completed_at: "2026-10-07T11:00:00Z", position: 0, created_at: "2026-09-01T10:00:00Z",
+  },
+  // Missed tasks (past, incomplete)
+  {
+    id: "mock-stask-004", plan_id: "mock-plan-001", user_id: STUDENT_ID,
+    scheduled_date: "2026-10-08", task_type: "practice", phase: "foundation",
+    specialty: "Gastroenterology", question_count: 20, completed: false,
+    completed_at: null, position: 0, created_at: "2026-09-01T10:00:00Z",
+  },
+  {
+    id: "mock-stask-005", plan_id: "mock-plan-001", user_id: STUDENT_ID,
+    scheduled_date: "2026-10-09", task_type: "review", phase: "foundation",
+    specialty: null, question_count: 10, completed: false,
+    completed_at: null, position: 1, created_at: "2026-09-01T10:00:00Z",
+  },
+  // Today (2026-10-10)
+  {
+    id: "mock-stask-006", plan_id: "mock-plan-001", user_id: STUDENT_ID,
+    scheduled_date: "2026-10-10", task_type: "practice", phase: "foundation",
+    specialty: "Internal Medicine", question_count: 20, completed: false,
+    completed_at: null, position: 0, created_at: "2026-09-01T10:00:00Z",
+  },
+  // Future tasks
+  {
+    id: "mock-stask-007", plan_id: "mock-plan-001", user_id: STUDENT_ID,
+    scheduled_date: "2026-10-11", task_type: "practice", phase: "foundation",
+    specialty: "Neurology", question_count: 20, completed: false,
+    completed_at: null, position: 0, created_at: "2026-09-01T10:00:00Z",
+  },
+  {
+    id: "mock-stask-008", plan_id: "mock-plan-001", user_id: STUDENT_ID,
+    scheduled_date: "2026-10-12", task_type: "practice", phase: "foundation",
+    specialty: "Endocrinology", question_count: 20, completed: false,
+    completed_at: null, position: 0, created_at: "2026-09-01T10:00:00Z",
+  },
+  {
+    id: "mock-stask-009", plan_id: "mock-plan-001", user_id: STUDENT_ID,
+    scheduled_date: "2026-10-13", task_type: "practice", phase: "reinforcement",
+    specialty: "Cardiology", question_count: 20, completed: false,
+    completed_at: null, position: 0, created_at: "2026-09-01T10:00:00Z",
+  },
+  {
+    id: "mock-stask-010", plan_id: "mock-plan-001", user_id: STUDENT_ID,
+    scheduled_date: "2026-10-14", task_type: "mock_exam", phase: "reinforcement",
+    specialty: null, question_count: 50, completed: false,
+    completed_at: null, position: 0, created_at: "2026-09-01T10:00:00Z",
+  },
+];
+
 // ── Store object ──────────────────────────────────────────────────────────────
 
 export interface MockStore {
@@ -833,6 +920,8 @@ export interface MockStore {
   mock_answers: MockAnswer[];
   ai_conversations: AiConversation[];
   ai_messages: AiMessage[];
+  study_plans: StudyPlan[];
+  study_tasks: StudyTask[];
 }
 
 export function getMockStore(): MockStore {
@@ -846,5 +935,7 @@ export function getMockStore(): MockStore {
     mock_answers: MOCK_ANSWERS,
     ai_conversations: MOCK_AI_CONVERSATIONS,
     ai_messages: MOCK_AI_MESSAGES,
+    study_plans: MOCK_STUDY_PLANS,
+    study_tasks: MOCK_STUDY_TASKS,
   };
 }
