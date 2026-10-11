@@ -7,29 +7,32 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		005CA9777026CF0D858090C2 /* MockExamService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E18783B95073BD9B1002ABA /* MockExamService.swift */; };
 		017DB7B67DB25B8042C2AD30 /* DashboardViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542B5A5503A5BAD4EEE65E10 /* DashboardViewModelTests.swift */; };
-		E810EDB4DB874363BBC3BD94 /* QuestionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A62B40378C6F414FA9F70B85 /* QuestionService.swift */; };
-		9FF54EEEC2934E1084E8AE4D /* PracticeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5FD83E7912C405C868B9CD9 /* PracticeViewModel.swift */; };
-		16AF5E89B2EB42949622FF36 /* PracticeViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2DFBB7064947BBA11DAF70 /* PracticeViewModelTests.swift */; };
-		AA11BB22CC33DD44EE55FF66 /* PracticeSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB22CC33DD44EE55FF6600AA /* PracticeSessionView.swift */; };
-		CC33DD44EE55FF6600AABB11 /* PracticeResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD44EE55FF6600AABB11CC22 /* PracticeResultsView.swift */; };
 		095CB707F4B44D54DAB3E5D6 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7741520B764A8BA5BD1FA05 /* CardView.swift */; };
 		0D74789BADF54D7B0A6ECF9E /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 00A78F6FF53BEEFC76D40320 /* Supabase */; };
+		12DB9821C10A8EEF3DC72704 /* StudyPlanService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531EF410AF4C72FCFC107A5C /* StudyPlanService.swift */; };
 		155486831C502C168383C24F /* ProfileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF41D27DB6656EC9D57E0FA /* ProfileService.swift */; };
 		244CA35C645DEF4BC59F2A04 /* PassboardiOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00CCA4315A28BF510D1DEA28 /* PassboardiOSTests.swift */; };
 		2D8294105AA74F35AF077AD1 /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DCC57BE84A52EA4A93FD9C /* Question.swift */; };
 		2E278E1D742F27A92D10A322 /* AppTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E21AC92FD54EF37B24E19AA /* AppTab.swift */; };
+		3B1988C2DC88F820F36CCB70 /* StudyPlanSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB54579DA4FF0FAFE4BEC1AD /* StudyPlanSetupView.swift */; };
 		3E5A159B8CA3C412F0B5D8F2 /* DashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F27E474CD56AED0FE6871A /* DashboardViewModel.swift */; };
 		41D538E5EDCD7253FA987651 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE4CF843B15E816444CC5F6 /* DashboardView.swift */; };
 		45251E41AAB3DB79031E1EBA /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8CB00DDA005D3B36DC6047 /* SidebarView.swift */; };
 		48379A5E1C0493249A54D8CD /* PracticeSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A639B1F92813AD27B83BFFF4 /* PracticeSetupView.swift */; };
+		489D24E39812471F437EB991 /* PracticeSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C1EA873B659201849A9462 /* PracticeSessionView.swift */; };
+		52F107F405C8E4C9FFB233E8 /* MockExamViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4034E260FFB829CCF98071B1 /* MockExamViewModel.swift */; };
 		597B7FB2D2CCA4E3F6245B87 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 728B682FBCC556113B7B1E56 /* AuthService.swift */; };
 		5A61AF9352B77CACA292E887 /* AccessRequestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987D2090595989486EA7B748 /* AccessRequestView.swift */; };
 		63F8512654C659734878DAEE /* StudyPlanModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97707384FC830AB0DB599055 /* StudyPlanModels.swift */; };
 		7665F368673988957DD1EE1D /* ServiceProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2E3BFC6270C7407744692C /* ServiceProtocols.swift */; };
 		8487023BE7CC6CB177178523 /* ProgressRing.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA95F0E53314F2F607967F6E /* ProgressRing.swift */; };
+		8908B634DD71B3CD7DF6F09C /* MockExamResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBAB6C85DC67FF8C1795C893 /* MockExamResultsView.swift */; };
+		8DC9B50957E04FD2C79FBFD3 /* PracticeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46087C632D7CECA648615C3 /* PracticeViewModel.swift */; };
 		974CA010509D965F4B2CD13A /* PassboardiOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFB40088BD37D4C5D35B9652 /* PassboardiOSApp.swift */; };
 		9A9833217F822C3811CFF7F0 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58CC04D1DD41924E7EE830FC /* AppState.swift */; };
+		9DE25DE1B60D884477ED5F3A /* PracticeResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176342F12CECB7CC7F543F8C /* PracticeResultsView.swift */; };
 		A25B770EDF3CE21AB80EBE8A /* PassboardiOSUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8DFB53D726D90902785E6C /* PassboardiOSUITests.swift */; };
 		AFBC49508FD2CA510132495D /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 083A02D1FF1DC73B10FB8D45 /* LoginView.swift */; };
 		AFE1D815A9E6B41C80516FF1 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE256AE30C5C004E60827B9 /* ProfileView.swift */; };
@@ -38,17 +41,17 @@
 		BAD7CC092533DB9AC635E880 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2C1CD0F03E3839A7E833650 /* LoginViewModel.swift */; };
 		BBD64950B5A9C410D31048B2 /* QuestionAttempt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 081425789C957CA7C98B911C /* QuestionAttempt.swift */; };
 		C5EE293812237C7D71612739 /* StudyPlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 064F1B0CCCC3EAE12375181A /* StudyPlanView.swift */; };
+		C773D4F34998049E00954396 /* MockExamSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B6243F5D754F92368446F0 /* MockExamSessionView.swift */; };
+		C8D94A26D008D9E210E59BA2 /* StudyPlanViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA6C7891984419C67D27DA16 /* StudyPlanViewModel.swift */; };
 		CAEC9A218CF04B52576637C7 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A852E4F50B71FA9CF445284 /* RootView.swift */; };
 		CBD691F3109B7D17E8E4E36A /* MockExamModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23288FF4B353263663978925 /* MockExamModels.swift */; };
 		CEFB03DC160AB012B66B4354 /* QuestionOptionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40813DA1D871E60DD304547E /* QuestionOptionRow.swift */; };
 		D9812F1A40CC4138725346F6 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1711A033E31FC1B5B40B93FA /* Profile.swift */; };
 		E1F84ADA6D874465DAEDEBEF /* LoadingOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB212D6E8BB9592794F27C95 /* LoadingOverlay.swift */; };
 		E5DBF1F643DE693DFCF04779 /* AuthServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C929DB306B27F1B58B6BA13 /* AuthServiceTests.swift */; };
+		EAA9DEF862090517B526E618 /* PracticeViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F96B09E1E414531752872C /* PracticeViewModelTests.swift */; };
+		ED30BEE3411C84AC029D62F1 /* QuestionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535FBF1FEE4551250076518A /* QuestionService.swift */; };
 		F1381EB6955C412D62CFB74A /* MockExamSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F15ED0094307A4F30B43C2F /* MockExamSetupView.swift */; };
-		A1B2C3D4E5F60001AABB0001 /* MockExamService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002AABB0001 /* MockExamService.swift */; };
-		A1B2C3D4E5F60001AABB0002 /* MockExamViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002AABB0002 /* MockExamViewModel.swift */; };
-		A1B2C3D4E5F60001AABB0003 /* MockExamSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002AABB0003 /* MockExamSessionView.swift */; };
-		A1B2C3D4E5F60001AABB0004 /* MockExamResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002AABB0004 /* MockExamResultsView.swift */; };
 		F3D7F93F60A817B34D06FAFA /* StatCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDF4F2612D459E49F8D50BC7 /* StatCard.swift */; };
 /* End PBXBuildFile section */
 
@@ -75,6 +78,7 @@
 		081425789C957CA7C98B911C /* QuestionAttempt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionAttempt.swift; sourceTree = "<group>"; };
 		083A02D1FF1DC73B10FB8D45 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		1711A033E31FC1B5B40B93FA /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
+		176342F12CECB7CC7F543F8C /* PracticeResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeResultsView.swift; sourceTree = "<group>"; };
 		23288FF4B353263663978925 /* MockExamModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockExamModels.swift; sourceTree = "<group>"; };
 		2DE4CF843B15E816444CC5F6 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
 		2E21AC92FD54EF37B24E19AA /* AppTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTab.swift; sourceTree = "<group>"; };
@@ -82,11 +86,16 @@
 		34F27E474CD56AED0FE6871A /* DashboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewModel.swift; sourceTree = "<group>"; };
 		38A59F19FAC0627A37485D4E /* PassboardiOSUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = PassboardiOSUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A8DFB53D726D90902785E6C /* PassboardiOSUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassboardiOSUITests.swift; sourceTree = "<group>"; };
+		3E18783B95073BD9B1002ABA /* MockExamService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockExamService.swift; sourceTree = "<group>"; };
+		4034E260FFB829CCF98071B1 /* MockExamViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockExamViewModel.swift; sourceTree = "<group>"; };
 		40813DA1D871E60DD304547E /* QuestionOptionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionOptionRow.swift; sourceTree = "<group>"; };
 		4C8CB00DDA005D3B36DC6047 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
 		51150FDD358B3EDFA38AB700 /* PassboardiOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = PassboardiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		531EF410AF4C72FCFC107A5C /* StudyPlanService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyPlanService.swift; sourceTree = "<group>"; };
+		535FBF1FEE4551250076518A /* QuestionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionService.swift; sourceTree = "<group>"; };
 		542B5A5503A5BAD4EEE65E10 /* DashboardViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewModelTests.swift; sourceTree = "<group>"; };
 		58CC04D1DD41924E7EE830FC /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		60F96B09E1E414531752872C /* PracticeViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeViewModelTests.swift; sourceTree = "<group>"; };
 		6EE256AE30C5C004E60827B9 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		728B682FBCC556113B7B1E56 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		7A852E4F50B71FA9CF445284 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
@@ -98,26 +107,23 @@
 		9992E5B59B1F8910DC8B0737 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		9C929DB306B27F1B58B6BA13 /* AuthServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthServiceTests.swift; sourceTree = "<group>"; };
 		9F15ED0094307A4F30B43C2F /* MockExamSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockExamSetupView.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60002AABB0001 /* MockExamService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockExamService.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60002AABB0002 /* MockExamViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockExamViewModel.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60002AABB0003 /* MockExamSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockExamSessionView.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60002AABB0004 /* MockExamResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockExamResultsView.swift; sourceTree = "<group>"; };
 		A639B1F92813AD27B83BFFF4 /* PracticeSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeSetupView.swift; sourceTree = "<group>"; };
+		AB54579DA4FF0FAFE4BEC1AD /* StudyPlanSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyPlanSetupView.swift; sourceTree = "<group>"; };
+		B1B6243F5D754F92368446F0 /* MockExamSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockExamSessionView.swift; sourceTree = "<group>"; };
 		BDF4F2612D459E49F8D50BC7 /* StatCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatCard.swift; sourceTree = "<group>"; };
 		C2C1CD0F03E3839A7E833650 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		CA6C7891984419C67D27DA16 /* StudyPlanViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyPlanViewModel.swift; sourceTree = "<group>"; };
 		DA95F0E53314F2F607967F6E /* ProgressRing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressRing.swift; sourceTree = "<group>"; };
+		E6C1EA873B659201849A9462 /* PracticeSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeSessionView.swift; sourceTree = "<group>"; };
 		E7741520B764A8BA5BD1FA05 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
+		EBAB6C85DC67FF8C1795C893 /* MockExamResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockExamResultsView.swift; sourceTree = "<group>"; };
 		ED2E3BFC6270C7407744692C /* ServiceProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceProtocols.swift; sourceTree = "<group>"; };
 		EE3241333BA8D6860C450F0E /* SupabaseClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseClient.swift; sourceTree = "<group>"; };
 		EE64FA106BE7297E2A1004B5 /* PassboardiOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PassboardiOS.entitlements; sourceTree = "<group>"; };
+		F46087C632D7CECA648615C3 /* PracticeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeViewModel.swift; sourceTree = "<group>"; };
 		FB212D6E8BB9592794F27C95 /* LoadingOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingOverlay.swift; sourceTree = "<group>"; };
-		A62B40378C6F414FA9F70B85 /* QuestionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionService.swift; sourceTree = "<group>"; };
-		E5FD83E7912C405C868B9CD9 /* PracticeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeViewModel.swift; sourceTree = "<group>"; };
-		9C2DFBB7064947BBA11DAF70 /* PracticeViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeViewModelTests.swift; sourceTree = "<group>"; };
-		BB22CC33DD44EE55FF6600AA /* PracticeSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeSessionView.swift; sourceTree = "<group>"; };
-		DD44EE55FF6600AABB11CC22 /* PracticeResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeResultsView.swift; sourceTree = "<group>"; };
 		FFB40088BD37D4C5D35B9652 /* PassboardiOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassboardiOSApp.swift; sourceTree = "<group>"; };
-		"TEMP_3AAF7F9F-A202-4E98-B627-5ED627D948D0" /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		"TEMP_4F8A49F0-6F61-4C08-93CE-820BA0CCF3B0" /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,7 +144,7 @@
 				9C929DB306B27F1B58B6BA13 /* AuthServiceTests.swift */,
 				542B5A5503A5BAD4EEE65E10 /* DashboardViewModelTests.swift */,
 				00CCA4315A28BF510D1DEA28 /* PassboardiOSTests.swift */,
-				9C2DFBB7064947BBA11DAF70 /* PracticeViewModelTests.swift */,
+				60F96B09E1E414531752872C /* PracticeViewModelTests.swift */,
 			);
 			path = PassboardiOSTests;
 			sourceTree = "<group>";
@@ -167,10 +173,10 @@
 		24F44DC8702AE62E04F4B057 /* MockExam */ = {
 			isa = PBXGroup;
 			children = (
+				EBAB6C85DC67FF8C1795C893 /* MockExamResultsView.swift */,
+				B1B6243F5D754F92368446F0 /* MockExamSessionView.swift */,
 				9F15ED0094307A4F30B43C2F /* MockExamSetupView.swift */,
-				A1B2C3D4E5F60002AABB0002 /* MockExamViewModel.swift */,
-				A1B2C3D4E5F60002AABB0003 /* MockExamSessionView.swift */,
-				A1B2C3D4E5F60002AABB0004 /* MockExamResultsView.swift */,
+				4034E260FFB829CCF98071B1 /* MockExamViewModel.swift */,
 			);
 			path = MockExam;
 			sourceTree = "<group>";
@@ -220,7 +226,9 @@
 		654C057CCCF43605952B21C9 /* StudyPlan */ = {
 			isa = PBXGroup;
 			children = (
+				AB54579DA4FF0FAFE4BEC1AD /* StudyPlanSetupView.swift */,
 				064F1B0CCCC3EAE12375181A /* StudyPlanView.swift */,
+				CA6C7891984419C67D27DA16 /* StudyPlanViewModel.swift */,
 			);
 			path = StudyPlan;
 			sourceTree = "<group>";
@@ -248,10 +256,11 @@
 			isa = PBXGroup;
 			children = (
 				728B682FBCC556113B7B1E56 /* AuthService.swift */,
+				3E18783B95073BD9B1002ABA /* MockExamService.swift */,
 				8BF41D27DB6656EC9D57E0FA /* ProfileService.swift */,
+				535FBF1FEE4551250076518A /* QuestionService.swift */,
 				ED2E3BFC6270C7407744692C /* ServiceProtocols.swift */,
-				A62B40378C6F414FA9F70B85 /* QuestionService.swift */,
-				A1B2C3D4E5F60002AABB0001 /* MockExamService.swift */,
+				531EF410AF4C72FCFC107A5C /* StudyPlanService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -259,10 +268,10 @@
 		99C2DED8F44E52022CA1B8A3 /* Practice */ = {
 			isa = PBXGroup;
 			children = (
+				176342F12CECB7CC7F543F8C /* PracticeResultsView.swift */,
+				E6C1EA873B659201849A9462 /* PracticeSessionView.swift */,
 				A639B1F92813AD27B83BFFF4 /* PracticeSetupView.swift */,
-				BB22CC33DD44EE55FF6600AA /* PracticeSessionView.swift */,
-				DD44EE55FF6600AABB11CC22 /* PracticeResultsView.swift */,
-				E5FD83E7912C405C868B9CD9 /* PracticeViewModel.swift */,
+				F46087C632D7CECA648615C3 /* PracticeViewModel.swift */,
 			);
 			path = Practice;
 			sourceTree = "<group>";
@@ -329,10 +338,10 @@
 			path = Auth;
 			sourceTree = "<group>";
 		};
-		"TEMP_CB424D5C-170E-46C9-8382-C2E83B368961" /* PassboardiOS */ = {
+		"TEMP_392E9642-3E8F-44A9-9DA8-D6A52D4DBF09" /* PassboardiOS */ = {
 			isa = PBXGroup;
 			children = (
-				"TEMP_3AAF7F9F-A202-4E98-B627-5ED627D948D0" /* Config.xcconfig */,
+				"TEMP_4F8A49F0-6F61-4C08-93CE-820BA0CCF3B0" /* Config.xcconfig */,
 			);
 			path = PassboardiOS;
 			sourceTree = "<group>";
@@ -450,17 +459,16 @@
 				AFBC49508FD2CA510132495D /* LoginView.swift in Sources */,
 				BAD7CC092533DB9AC635E880 /* LoginViewModel.swift in Sources */,
 				CBD691F3109B7D17E8E4E36A /* MockExamModels.swift in Sources */,
+				8908B634DD71B3CD7DF6F09C /* MockExamResultsView.swift in Sources */,
+				005CA9777026CF0D858090C2 /* MockExamService.swift in Sources */,
+				C773D4F34998049E00954396 /* MockExamSessionView.swift in Sources */,
 				F1381EB6955C412D62CFB74A /* MockExamSetupView.swift in Sources */,
-				A1B2C3D4E5F60001AABB0001 /* MockExamService.swift in Sources */,
-				A1B2C3D4E5F60001AABB0002 /* MockExamViewModel.swift in Sources */,
-				A1B2C3D4E5F60001AABB0003 /* MockExamSessionView.swift in Sources */,
-				A1B2C3D4E5F60001AABB0004 /* MockExamResultsView.swift in Sources */,
+				52F107F405C8E4C9FFB233E8 /* MockExamViewModel.swift in Sources */,
 				974CA010509D965F4B2CD13A /* PassboardiOSApp.swift in Sources */,
+				9DE25DE1B60D884477ED5F3A /* PracticeResultsView.swift in Sources */,
+				489D24E39812471F437EB991 /* PracticeSessionView.swift in Sources */,
 				48379A5E1C0493249A54D8CD /* PracticeSetupView.swift in Sources */,
-				AA11BB22CC33DD44EE55FF66 /* PracticeSessionView.swift in Sources */,
-				CC33DD44EE55FF6600AABB11 /* PracticeResultsView.swift in Sources */,
-				E810EDB4DB874363BBC3BD94 /* QuestionService.swift in Sources */,
-				9FF54EEEC2934E1084E8AE4D /* PracticeViewModel.swift in Sources */,
+				8DC9B50957E04FD2C79FBFD3 /* PracticeViewModel.swift in Sources */,
 				D9812F1A40CC4138725346F6 /* Profile.swift in Sources */,
 				155486831C502C168383C24F /* ProfileService.swift in Sources */,
 				AFE1D815A9E6B41C80516FF1 /* ProfileView.swift in Sources */,
@@ -468,12 +476,16 @@
 				2D8294105AA74F35AF077AD1 /* Question.swift in Sources */,
 				BBD64950B5A9C410D31048B2 /* QuestionAttempt.swift in Sources */,
 				CEFB03DC160AB012B66B4354 /* QuestionOptionRow.swift in Sources */,
+				ED30BEE3411C84AC029D62F1 /* QuestionService.swift in Sources */,
 				CAEC9A218CF04B52576637C7 /* RootView.swift in Sources */,
 				7665F368673988957DD1EE1D /* ServiceProtocols.swift in Sources */,
 				45251E41AAB3DB79031E1EBA /* SidebarView.swift in Sources */,
 				F3D7F93F60A817B34D06FAFA /* StatCard.swift in Sources */,
 				63F8512654C659734878DAEE /* StudyPlanModels.swift in Sources */,
+				12DB9821C10A8EEF3DC72704 /* StudyPlanService.swift in Sources */,
+				3B1988C2DC88F820F36CCB70 /* StudyPlanSetupView.swift in Sources */,
 				C5EE293812237C7D71612739 /* StudyPlanView.swift in Sources */,
+				C8D94A26D008D9E210E59BA2 /* StudyPlanViewModel.swift in Sources */,
 				B56AD3B338C4DAC76AB25D3F /* SupabaseClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -485,7 +497,7 @@
 				E5DBF1F643DE693DFCF04779 /* AuthServiceTests.swift in Sources */,
 				017DB7B67DB25B8042C2AD30 /* DashboardViewModelTests.swift in Sources */,
 				244CA35C645DEF4BC59F2A04 /* PassboardiOSTests.swift in Sources */,
-				16AF5E89B2EB42949622FF36 /* PracticeViewModelTests.swift in Sources */,
+				EAA9DEF862090517B526E618 /* PracticeViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -515,7 +527,7 @@
 /* Begin XCBuildConfiguration section */
 		05F5ECDDA2469FC01AE2E2F1 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_3AAF7F9F-A202-4E98-B627-5ED627D948D0" /* Config.xcconfig */;
+			baseConfigurationReference = "TEMP_4F8A49F0-6F61-4C08-93CE-820BA0CCF3B0" /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = PassboardiOS/PassboardiOS.entitlements;
@@ -533,7 +545,7 @@
 		};
 		10B8B757C914AFCB97AAAA7B /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_3AAF7F9F-A202-4E98-B627-5ED627D948D0" /* Config.xcconfig */;
+			baseConfigurationReference = "TEMP_4F8A49F0-6F61-4C08-93CE-820BA0CCF3B0" /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = PassboardiOS/PassboardiOS.entitlements;

@@ -28,14 +28,11 @@ final class StudyPlanService: StudyPlanServiceProtocol {
             "focusSpecialties": input.focusSpecialties
         ]
         let data = try JSONSerialization.data(withJSONObject: body)
-        let response = try await supabase.functions.invoke(
+        struct Response: Decodable { let plan: StudyPlan }
+        let result: Response = try await supabase.functions.invoke(
             "study-plan",
             options: FunctionInvokeOptions(body: data)
         )
-        struct Response: Decodable { let plan: StudyPlan }
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let result = try decoder.decode(Response.self, from: response)
         return result.plan
     }
 
