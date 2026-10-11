@@ -47,7 +47,9 @@ struct PracticeViewModelTests {
         )
         await vm.submitAnswer(.A)
         vm.nextQuestion()
-        await Task.yield()
+        // Give the unstructured Task spawned in nextQuestion() time to run
+        // to completion (start → async suspension → completeStudyTask).
+        try await Task.sleep(nanoseconds: 100_000_000)
         #expect(service.taskCompleted == "task-99")
     }
 }
