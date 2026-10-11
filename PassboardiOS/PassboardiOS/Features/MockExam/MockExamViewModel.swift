@@ -12,10 +12,11 @@ final class MockExamViewModel {
     var answers: [String: CorrectAnswer] = [:]  // questionId -> answer
     var flagged: Set<String> = []
     var currentIndex: Int = 0
-    var startTime: Date = Date()
+    var elapsedSeconds: Int = 0
     var error: String? = nil
 
     private let mockExamService: MockExamServiceProtocol
+    private var timerTask: Task<Void, Never>?
     var userId: String = ""
 
     init(mockExamService: MockExamServiceProtocol = MockExamService()) {
@@ -27,7 +28,7 @@ final class MockExamViewModel {
     var answeredCount: Int { answers.count }
     var score: Int { answers.filter { id, ans in questions.first(where: { $0.id == id })?.correctAnswer == ans } .count }
     var percentage: Double { questions.isEmpty ? 0 : Double(score) / Double(questions.count) }
-    var durationSeconds: Int { Int(Date().timeIntervalSince(startTime)) }
+    var durationSeconds: Int { elapsedSeconds }
 
     func startExam() async {
         state = .loading
@@ -35,11 +36,23 @@ final class MockExamViewModel {
             let (exam, qs) = try await mockExamService.createExam(userId: userId, questionCount: questionCount)
             self.exam = exam
             self.questions = qs
-            self.startTime = Date()
+            self.elapsedSeconds = 0
             state = .session
+            startTimer()
         } catch {
             self.error = error.localizedDescription
             state = .setup
+        }
+    }
+
+    private func startTimer() {
+        timerTask?.cancel()
+        timerTask = Task {
+            while !Task.isCancelled {
+                try? await Task.sleep(nanoseconds: 1_000_000_000)
+                guard !Task.isCancelled else { break }
+                elapsedSeconds += 1
+            }
         }
     }
 
@@ -61,9 +74,24 @@ final class MockExamViewModel {
     }
 
     func finishExam() async {
+        timerTask?.cancel()
+        timerTask = nil
         guard let exam else { return }
         try? await mockExamService.completeExam(
-            id: exam.id, score: score, percentage: percentage, durationSeconds: durationSeconds)
+            id: exam.id, score: score, percentage: percentage, durationSeconds: elapsedSeconds)
         state = .results
+    }
+
+    func resetExam() {
+        timerTask?.cancel()
+        timerTask = nil
+        state = .setup
+        exam = nil
+        questions = []
+        answers = [:]
+        flagged = []
+        currentIndex = 0
+        elapsedSeconds = 0
+        error = nil
     }
 }

@@ -16,6 +16,11 @@ struct MockExamSessionView: View {
         .navigationBarBackButtonHidden()
         .navigationTitle(LocalizedStringKey("mockExam.question \(viewModel.currentIndex + 1) / \(viewModel.questions.count)"))
         .toolbar {
+            if sizeClass == .regular {
+                ToolbarItem(placement: .topBarLeading) { timerLabel }
+            } else {
+                ToolbarItem(placement: .bottomBar) { timerLabel }
+            }
             ToolbarItem(placement: .primaryAction) {
                 Button(action: { showNavigator.toggle() }) {
                     Image(systemName: "square.grid.3x3")
@@ -29,6 +34,16 @@ struct MockExamSessionView: View {
         .sheet(isPresented: $showNavigator) {
             NavigatorSheet(viewModel: viewModel)
         }
+    }
+
+    private var timerLabel: some View {
+        Text(timerString(viewModel.elapsedSeconds))
+            .font(.system(.body, design: .monospaced))
+            .monospacedDigit()
+    }
+
+    private func timerString(_ seconds: Int) -> String {
+        String(format: "%02d:%02d", seconds / 60, seconds % 60)
     }
 
     private var iPadLayout: some View {

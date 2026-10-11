@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct MockExamResultsView: View {
-    let viewModel: MockExamViewModel
+    var viewModel: MockExamViewModel
 
     var body: some View {
         ScrollView {
@@ -48,8 +48,7 @@ struct MockExamResultsView: View {
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button(LocalizedStringKey("mockExam.newExam")) {
-                    // Pop to root is handled by the parent state machine
-                    // viewModel.state = .setup in parent
+                    viewModel.resetExam()
                 }
             }
         }
