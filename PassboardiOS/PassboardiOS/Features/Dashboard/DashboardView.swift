@@ -64,11 +64,11 @@ struct DashboardView: View {
                         .font(.headline)
                         .padding(.horizontal)
                     LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-                        QuickActionCard(titleKey: "nav.practice", icon: "doc.text", color: .blue)
-                        QuickActionCard(titleKey: "nav.mockExam", icon: "clock", color: .purple)
-                        QuickActionCard(titleKey: "nav.studyPlan", icon: "calendar", color: .green)
+                        QuickActionCard(titleKey: "nav.practice", icon: "doc.text.fill")
+                        QuickActionCard(titleKey: "nav.mockExam", icon: "clock.fill")
+                        QuickActionCard(titleKey: "nav.studyPlan", icon: "calendar")
                         NavigationLink { AIChatListView() } label: {
-                            QuickActionCard(titleKey: "nav.aiChat", icon: "bubble.left.and.bubble.right", color: .orange)
+                            QuickActionCard(titleKey: "nav.aiChat", icon: "bubble.left.and.bubble.right.fill")
                         }
                         .buttonStyle(.plain)
                     }
@@ -119,14 +119,22 @@ private struct TodayTaskRow: View {
 private struct QuickActionCard: View {
     let titleKey: LocalizedStringKey
     let icon: String
-    let color: Color
     var body: some View {
         CardView {
-            VStack(spacing: 8) {
-                Image(systemName: icon).font(.title).foregroundStyle(color)
-                Text(titleKey).font(.callout.bold())
+            VStack(alignment: .leading, spacing: 10) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                        .fill(Color.brand.opacity(0.15))
+                        .frame(width: 36, height: 36)
+                    Image(systemName: icon)
+                        .foregroundStyle(Color.brand)
+                        .font(.system(size: 15, weight: .medium))
+                }
+                Text(titleKey)
+                    .font(.callout)
+                    .fontWeight(.semibold)
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .frame(maxWidth: .infinity)
         }
     }
 }

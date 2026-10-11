@@ -6,11 +6,14 @@ struct LoadingOverlay: View {
     var body: some View {
         if isLoading {
             ZStack {
-                Color.black.opacity(0.3).ignoresSafeArea()
-                ProgressView()
-                    .padding(24)
-                    .background(.regularMaterial)
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                Color.black.opacity(0.18).ignoresSafeArea()
+                ZStack {
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        .fill(.regularMaterial)
+                        .frame(width: 80, height: 80)
+                    ProgressView()
+                        .tint(Color.brand)
+                }
             }
         }
     }

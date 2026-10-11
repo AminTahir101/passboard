@@ -12,33 +12,39 @@ struct LoginView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 32) {
-                    // Logo / Brand
-                    VStack(spacing: 8) {
-                        Image(systemName: "checkmark.seal.fill")
-                            .font(.system(size: 60))
-                            .foregroundStyle(Color.accentColor)
+                    // Brand mark
+                    VStack(spacing: 12) {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 22, style: .continuous)
+                                .fill(Color(red: 0.051, green: 0.106, blue: 0.180))
+                                .frame(width: 80, height: 80)
+                            Image(systemName: "checkmark")
+                                .font(.system(size: 32, weight: .bold))
+                                .foregroundStyle(Color.brand)
+                        }
                         Text("Passboard")
-                            .font(.largeTitle.bold())
+                            .font(.system(.largeTitle, design: .rounded, weight: .bold))
                         Text(LocalizedStringKey("login.subtitle"))
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center)
                     }
-                    .padding(.top, 48)
+                    .padding(.top, 52)
 
                     // Form
-                    VStack(spacing: 16) {
+                    VStack(spacing: 14) {
                         TextField(LocalizedStringKey("login.email"), text: $viewModel.email)
                             .keyboardType(.emailAddress)
                             .autocapitalization(.none)
                             .textContentType(.emailAddress)
                             .padding()
-                            .background(.regularMaterial)
+                            .background(Color(.secondarySystemGroupedBackground))
                             .clipShape(RoundedRectangle(cornerRadius: 12))
 
                         SecureField(LocalizedStringKey("login.password"), text: $viewModel.password)
                             .textContentType(.password)
                             .padding()
-                            .background(.regularMaterial)
+                            .background(Color(.secondarySystemGroupedBackground))
                             .clipShape(RoundedRectangle(cornerRadius: 12))
 
                         if let error = viewModel.error {
@@ -51,28 +57,22 @@ struct LoginView: View {
                         Button {
                             Task { await viewModel.login() }
                         } label: {
-                            Group {
-                                if viewModel.isLoading {
-                                    ProgressView()
-                                        .tint(.white)
-                                } else {
-                                    Text(LocalizedStringKey("login.signIn"))
-                                        .fontWeight(.semibold)
-                                }
+                            if viewModel.isLoading {
+                                ProgressView().tint(.black)
+                            } else {
+                                Text(LocalizedStringKey("login.signIn"))
                             }
-                            .frame(maxWidth: .infinity)
-                            .padding()
                         }
-                        .buttonStyle(.borderedProminent)
+                        .buttonStyle(BrandButtonStyle())
                         .disabled(viewModel.isLoading)
 
                         // Divider
                         HStack {
-                            Rectangle().frame(height: 1).foregroundStyle(.secondary.opacity(0.3))
+                            Rectangle().frame(height: 1).foregroundStyle(.secondary.opacity(0.25))
                             Text(LocalizedStringKey("login.or"))
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
-                            Rectangle().frame(height: 1).foregroundStyle(.secondary.opacity(0.3))
+                            Rectangle().frame(height: 1).foregroundStyle(.secondary.opacity(0.25))
                         }
 
                         SignInWithAppleButton(.signIn) { request in
@@ -84,8 +84,8 @@ struct LoginView: View {
                             handleAppleSignIn(result)
                         }
                         .signInWithAppleButtonStyle(.black)
-                        .frame(height: 50)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .frame(height: 52)
+                        .clipShape(RoundedRectangle(cornerRadius: 14))
                     }
                     .padding(.horizontal, 24)
 
@@ -93,6 +93,7 @@ struct LoginView: View {
                         viewModel.showAccessRequest = true
                     }
                     .font(.footnote)
+                    .padding(.bottom, 24)
                 }
             }
             .frame(maxWidth: 480)

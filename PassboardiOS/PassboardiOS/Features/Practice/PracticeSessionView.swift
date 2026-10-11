@@ -97,14 +97,14 @@ struct PracticeSessionView: View {
         VStack(alignment: .leading, spacing: 8) {
             Label(LocalizedStringKey("practice.justification"), systemImage: "lightbulb.fill")
                 .font(.headline)
-                .foregroundStyle(.yellow)
+                .foregroundStyle(Color.brand)
             if let justification = viewModel.current.justification {
                 Text(justification).font(.body)
             }
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.yellow.opacity(0.1))
+        .background(Color.brand.opacity(0.08))
         .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
