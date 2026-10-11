@@ -45,6 +45,10 @@
 		E1F84ADA6D874465DAEDEBEF /* LoadingOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB212D6E8BB9592794F27C95 /* LoadingOverlay.swift */; };
 		E5DBF1F643DE693DFCF04779 /* AuthServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C929DB306B27F1B58B6BA13 /* AuthServiceTests.swift */; };
 		F1381EB6955C412D62CFB74A /* MockExamSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F15ED0094307A4F30B43C2F /* MockExamSetupView.swift */; };
+		A1B2C3D4E5F60001AABB0001 /* MockExamService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002AABB0001 /* MockExamService.swift */; };
+		A1B2C3D4E5F60001AABB0002 /* MockExamViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002AABB0002 /* MockExamViewModel.swift */; };
+		A1B2C3D4E5F60001AABB0003 /* MockExamSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002AABB0003 /* MockExamSessionView.swift */; };
+		A1B2C3D4E5F60001AABB0004 /* MockExamResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002AABB0004 /* MockExamResultsView.swift */; };
 		F3D7F93F60A817B34D06FAFA /* StatCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDF4F2612D459E49F8D50BC7 /* StatCard.swift */; };
 /* End PBXBuildFile section */
 
@@ -94,6 +98,10 @@
 		9992E5B59B1F8910DC8B0737 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		9C929DB306B27F1B58B6BA13 /* AuthServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthServiceTests.swift; sourceTree = "<group>"; };
 		9F15ED0094307A4F30B43C2F /* MockExamSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockExamSetupView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F60002AABB0001 /* MockExamService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockExamService.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F60002AABB0002 /* MockExamViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockExamViewModel.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F60002AABB0003 /* MockExamSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockExamSessionView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F60002AABB0004 /* MockExamResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockExamResultsView.swift; sourceTree = "<group>"; };
 		A639B1F92813AD27B83BFFF4 /* PracticeSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeSetupView.swift; sourceTree = "<group>"; };
 		BDF4F2612D459E49F8D50BC7 /* StatCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatCard.swift; sourceTree = "<group>"; };
 		C2C1CD0F03E3839A7E833650 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
@@ -160,6 +168,9 @@
 			isa = PBXGroup;
 			children = (
 				9F15ED0094307A4F30B43C2F /* MockExamSetupView.swift */,
+				A1B2C3D4E5F60002AABB0002 /* MockExamViewModel.swift */,
+				A1B2C3D4E5F60002AABB0003 /* MockExamSessionView.swift */,
+				A1B2C3D4E5F60002AABB0004 /* MockExamResultsView.swift */,
 			);
 			path = MockExam;
 			sourceTree = "<group>";
@@ -240,6 +251,7 @@
 				8BF41D27DB6656EC9D57E0FA /* ProfileService.swift */,
 				ED2E3BFC6270C7407744692C /* ServiceProtocols.swift */,
 				A62B40378C6F414FA9F70B85 /* QuestionService.swift */,
+				A1B2C3D4E5F60002AABB0001 /* MockExamService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -439,6 +451,10 @@
 				BAD7CC092533DB9AC635E880 /* LoginViewModel.swift in Sources */,
 				CBD691F3109B7D17E8E4E36A /* MockExamModels.swift in Sources */,
 				F1381EB6955C412D62CFB74A /* MockExamSetupView.swift in Sources */,
+				A1B2C3D4E5F60001AABB0001 /* MockExamService.swift in Sources */,
+				A1B2C3D4E5F60001AABB0002 /* MockExamViewModel.swift in Sources */,
+				A1B2C3D4E5F60001AABB0003 /* MockExamSessionView.swift in Sources */,
+				A1B2C3D4E5F60001AABB0004 /* MockExamResultsView.swift in Sources */,
 				974CA010509D965F4B2CD13A /* PassboardiOSApp.swift in Sources */,
 				48379A5E1C0493249A54D8CD /* PracticeSetupView.swift in Sources */,
 				AA11BB22CC33DD44EE55FF66 /* PracticeSessionView.swift in Sources */,
