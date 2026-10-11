@@ -33,7 +33,7 @@ export const en: Dictionary = {
   landing: {
     badge: "Private Access Platform",
     tagline: "AI-powered preparation for your professional medical licensing exam.",
-    description: "Practice real-world questions, understand every answer, and prepare with an intelligent AI tutor.",
+    description: "Practice 25,000+ hand-curated questions, understand every answer, and prepare with an intelligent AI tutor.",
     requestAccess: "Request Access", login: "Login",
     featuresTitle: "Everything you need to prepare",
     featuresSubtitle: "A focused, distraction-free environment built for exam success.",
@@ -57,7 +57,7 @@ export const en: Dictionary = {
       sub: "Practice real-world questions, understand every answer, and prepare with an AI tutor that teaches you to think clinically.",
       cta: "Request access",
       pills: [
-        { n: "10,000+", t: "hand-curated questions" },
+        { n: "25,000+", t: "hand-curated questions" },
         { n: "20+", t: "medical disciplines, one AI tutor" },
       ],
       examsPill: { n: "5", t: "licensing exams covered" },
@@ -67,7 +67,7 @@ export const en: Dictionary = {
       explore: { text: "See how the AI tutor explains every option — correct and incorrect.", cta: "Explore platform" },
     },
     stats: [
-      { n: "10,000+", t: "hand-curated questions" },
+      { n: "25,000+", t: "hand-curated questions" },
       { n: "20+", t: "medical disciplines" },
       { n: "5", t: "licensing exams covered" },
       { n: "AI", t: "tutor included with every question" },
@@ -110,7 +110,7 @@ export const en: Dictionary = {
         {
           n: "01",
           title: "Filter to what matters",
-          desc: "Practice by specialty, topic, or exam type. Set the question count and start a focused session — not a random draw from 800+ questions.",
+          desc: "Practice by specialty, topic, or exam type. Set the question count and start a focused session — not a random draw from 25,000+ questions.",
         },
         {
           n: "02",
