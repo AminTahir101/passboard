@@ -64,6 +64,9 @@ targets:
     platform: iOS
     sources:
       - PassboardiOSTests
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
     dependencies:
       - target: PassboardiOS
 
@@ -72,5 +75,8 @@ targets:
     platform: iOS
     sources:
       - PassboardiOSUITests
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
     dependencies:
       - target: PassboardiOS

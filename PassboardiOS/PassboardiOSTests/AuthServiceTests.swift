@@ -34,3 +34,26 @@ struct AuthServiceTests {
         }
     }
 }
+
+@MainActor
+struct LoginViewModelTests {
+    @Test func loginSetsNoError() async throws {
+        let service = MockAuthService()
+        let vm = LoginViewModel(authService: service)
+        vm.email = "test@example.com"
+        vm.password = "password123"
+        await vm.login()
+        #expect(vm.error == nil)
+        #expect(service.signInCalled)
+    }
+
+    @Test func loginSetsErrorOnFailure() async throws {
+        let service = MockAuthService()
+        service.shouldThrow = true
+        let vm = LoginViewModel(authService: service)
+        vm.email = "bad@example.com"
+        vm.password = "wrong"
+        await vm.login()
+        #expect(vm.error != nil)
+    }
+}
