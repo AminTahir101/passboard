@@ -49,10 +49,30 @@ export default function TutorChat({
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const autoMessageSentRef = useRef(false);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  useEffect(() => {
+    if (!initialQuestion || autoMessageSentRef.current) return;
+    autoMessageSentRef.current = true;
+    const optionMap: Record<string, string> = {
+      A: initialQuestion.option_a,
+      B: initialQuestion.option_b,
+      C: initialQuestion.option_c,
+      D: initialQuestion.option_d,
+    };
+    const correctLabel = initialQuestion.correct_answer;
+    const correctText = optionMap[correctLabel] ?? "";
+    const isAr = lang === "ar";
+    const autoMessage = isAr
+      ? `من فضلك اشرح لي هذا السؤال وسبب صحة الإجابة الصحيحة:\n\n**السؤال:** ${initialQuestion.question_text}\n\nA) ${initialQuestion.option_a}\nB) ${initialQuestion.option_b}\nC) ${initialQuestion.option_c}\nD) ${initialQuestion.option_d}\n\n**الإجابة الصحيحة:** ${correctLabel}) ${correctText}`
+      : `Please explain this question and why the correct answer is correct:\n\n**Question:** ${initialQuestion.question_text}\n\nA) ${initialQuestion.option_a}\nB) ${initialQuestion.option_b}\nC) ${initialQuestion.option_c}\nD) ${initialQuestion.option_d}\n\n**Correct Answer:** ${correctLabel}) ${correctText}`;
+    sendMessage(autoMessage);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialQuestion]);
 
   const loadConversation = useCallback(async (convId: string) => {
     setLoadingMessages(true);
