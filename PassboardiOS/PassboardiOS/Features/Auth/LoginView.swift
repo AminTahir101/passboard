@@ -6,6 +6,10 @@ struct LoginView: View {
     @Environment(AppState.self) private var appState
     @State private var viewModel = LoginViewModel()
     @State private var currentNonce: String = ""
+    @State private var showPassword = false
+    @FocusState private var focusedField: Field?
+
+    enum Field { case email, password }
 
     var body: some View {
         NavigationStack {
@@ -13,48 +17,103 @@ struct LoginView: View {
                 Color.appBackground.ignoresSafeArea()
 
                 ScrollView {
-                    VStack(spacing: 36) {
+                    VStack(spacing: 32) {
                         // Brand mark
                         VStack(spacing: 14) {
                             PassboardBrandMark()
                             VStack(spacing: 6) {
                                 Text("Passboard")
-                                    .font(.system(size: 32, weight: .bold, design: .rounded))
+                                    .font(.system(size: 32, weight: .bold))
                                     .foregroundStyle(.white)
                                 Text(LocalizedStringKey("login.subtitle"))
                                     .font(.subheadline)
-                                    .foregroundStyle(.white.opacity(0.55))
+                                    .foregroundStyle(Color.mutedForeground)
                                     .multilineTextAlignment(.center)
                             }
                         }
-                        .padding(.top, 60)
+                        .padding(.top, 64)
 
                         // Form
-                        VStack(spacing: 12) {
-                            TextField(LocalizedStringKey("login.email"), text: $viewModel.email)
-                                .keyboardType(.emailAddress)
-                                .autocapitalization(.none)
-                                .textContentType(.emailAddress)
-                                .padding()
-                                .background(Color.white.opacity(0.08))
-                                .clipShape(RoundedRectangle(cornerRadius: 12))
-                                .foregroundStyle(.white)
+                        VStack(spacing: 14) {
+                            // Email
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text(LocalizedStringKey("login.email"))
+                                    .font(.subheadline)
+                                    .fontWeight(.medium)
+                                    .foregroundStyle(Color.mutedForeground)
+                                TextField(LocalizedStringKey("login.email"), text: $viewModel.email)
+                                    .keyboardType(.emailAddress)
+                                    .autocapitalization(.none)
+                                    .textContentType(.emailAddress)
+                                    .focused($focusedField, equals: .email)
+                                    .padding(14)
+                                    .background(Color.cardSurface)
+                                    .foregroundStyle(.white)
+                                    .clipShape(RoundedRectangle(cornerRadius: 14))
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 14)
+                                            .strokeBorder(
+                                                focusedField == .email ? Color.brand : Color.cardBorder,
+                                                lineWidth: focusedField == .email ? 1.5 : 1
+                                            )
+                                    )
+                                    .animation(.easeOut(duration: 0.15), value: focusedField)
+                            }
 
-                            SecureField(LocalizedStringKey("login.password"), text: $viewModel.password)
-                                .textContentType(.password)
-                                .padding()
-                                .background(Color.white.opacity(0.08))
-                                .clipShape(RoundedRectangle(cornerRadius: 12))
-                                .foregroundStyle(.white)
+                            // Password
+                            VStack(alignment: .leading, spacing: 6) {
+                                HStack {
+                                    Text(LocalizedStringKey("login.password"))
+                                        .font(.subheadline)
+                                        .fontWeight(.medium)
+                                        .foregroundStyle(Color.mutedForeground)
+                                    Spacer()
+                                    Text(LocalizedStringKey("login.forgot"))
+                                        .font(.subheadline)
+                                        .fontWeight(.medium)
+                                        .foregroundStyle(Color.brand)
+                                }
+                                HStack {
+                                    Group {
+                                        if showPassword {
+                                            TextField(LocalizedStringKey("login.password"), text: $viewModel.password)
+                                                .textContentType(.password)
+                                        } else {
+                                            SecureField(LocalizedStringKey("login.password"), text: $viewModel.password)
+                                                .textContentType(.password)
+                                        }
+                                    }
+                                    .focused($focusedField, equals: .password)
+                                    .foregroundStyle(.white)
+
+                                    Button {
+                                        showPassword.toggle()
+                                    } label: {
+                                        Image(systemName: showPassword ? "eye.slash" : "eye")
+                                            .foregroundStyle(Color.mutedForeground)
+                                    }
+                                }
+                                .padding(14)
+                                .background(Color.cardSurface)
+                                .clipShape(RoundedRectangle(cornerRadius: 14))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 14)
+                                        .strokeBorder(
+                                            focusedField == .password ? Color.brand : Color.cardBorder,
+                                            lineWidth: focusedField == .password ? 1.5 : 1
+                                        )
+                                )
+                                .animation(.easeOut(duration: 0.15), value: focusedField)
+                            }
 
                             if let error = viewModel.error {
                                 Text(error)
                                     .font(.caption)
                                     .foregroundStyle(.red)
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                    .padding(.horizontal, 4)
                             }
 
+                            // Sign In CTA
                             Button {
                                 Task { await viewModel.login() }
                             } label: {
@@ -66,17 +125,18 @@ struct LoginView: View {
                             }
                             .buttonStyle(BrandButtonStyle())
                             .disabled(viewModel.isLoading)
+                            .padding(.top, 4)
 
-                            HStack {
-                                Rectangle().frame(height: 1)
-                                    .foregroundStyle(Color.white.opacity(0.15))
+                            // Divider
+                            HStack(spacing: 12) {
+                                Rectangle().frame(height: 1).foregroundStyle(Color.white.opacity(0.12))
                                 Text(LocalizedStringKey("login.or"))
                                     .font(.caption)
-                                    .foregroundStyle(.white.opacity(0.4))
-                                Rectangle().frame(height: 1)
-                                    .foregroundStyle(Color.white.opacity(0.15))
+                                    .foregroundStyle(Color.mutedForeground)
+                                Rectangle().frame(height: 1).foregroundStyle(Color.white.opacity(0.12))
                             }
 
+                            // Apple Sign In
                             SignInWithAppleButton(.signIn) { request in
                                 let nonce = randomNonceString()
                                 currentNonce = nonce
@@ -91,12 +151,19 @@ struct LoginView: View {
                         }
                         .padding(.horizontal, 24)
 
-                        Button(LocalizedStringKey("login.requestAccess")) {
+                        // Request access link
+                        Button {
                             viewModel.showAccessRequest = true
+                        } label: {
+                            HStack(spacing: 4) {
+                                Text(LocalizedStringKey("login.noAccess"))
+                                    .foregroundStyle(Color.mutedForeground)
+                                Text(LocalizedStringKey("login.requestAccess"))
+                                    .foregroundStyle(Color.brand)
+                            }
+                            .font(.footnote)
                         }
-                        .font(.footnote)
-                        .foregroundStyle(.white.opacity(0.5))
-                        .padding(.bottom, 32)
+                        .padding(.bottom, 40)
                     }
                 }
                 .frame(maxWidth: 480)
@@ -152,10 +219,10 @@ private struct PassboardBrandMark: View {
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 24, style: .continuous)
-                .fill(Color.white.opacity(0.1))
+                .fill(Color.cardSurface)
                 .frame(width: 88, height: 88)
             RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .strokeBorder(Color.brand.opacity(0.4), lineWidth: 1.5)
+                .strokeBorder(Color.brand.opacity(0.5), lineWidth: 1.5)
                 .frame(width: 88, height: 88)
             ECGCheckmarkShape()
                 .stroke(Color.brand,
@@ -165,26 +232,20 @@ private struct PassboardBrandMark: View {
     }
 }
 
-/// ECG spike that transitions into a checkmark — the Passboard brand mark.
 private struct ECGCheckmarkShape: Shape {
     func path(in rect: CGRect) -> Path {
         let w = rect.width
         let h = rect.height
         let mid = h / 2
         var p = Path()
-
-        // Flat lead-in
         p.move(to: CGPoint(x: 0, y: mid))
         p.addLine(to: CGPoint(x: w * 0.26, y: mid))
-        // ECG peak
         p.addLine(to: CGPoint(x: w * 0.34, y: mid - h * 0.42))
         p.addLine(to: CGPoint(x: w * 0.41, y: mid + h * 0.48))
         p.addLine(to: CGPoint(x: w * 0.47, y: mid - h * 0.20))
         p.addLine(to: CGPoint(x: w * 0.53, y: mid))
-        // Checkmark
         p.addLine(to: CGPoint(x: w * 0.66, y: mid + h * 0.28))
         p.addLine(to: CGPoint(x: w * 1.00, y: mid - h * 0.36))
-
         return p
     }
 }

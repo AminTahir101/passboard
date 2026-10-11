@@ -13,34 +13,52 @@ struct PracticeSetupView: View {
             Color.appBackground.ignoresSafeArea()
 
             ScrollView {
-                VStack(spacing: 20) {
+                VStack(alignment: .leading, spacing: 24) {
+                    // Title
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(LocalizedStringKey("nav.practice"))
+                            .font(.system(size: 28, weight: .bold))
+                            .foregroundStyle(.white)
+                        Text(LocalizedStringKey("practice.subtitle"))
+                            .font(.subheadline)
+                            .foregroundStyle(Color.mutedForeground)
+                    }
+                    .padding(.top, 8)
+
                     // Mode selector
-                    FormSection(label: NSLocalizedString("practice.mode", comment: "")) {
-                        HStack(spacing: 8) {
-                            ForEach(PracticeSetupViewModel.Mode.allCases, id: \.self) { mode in
-                                Button {
-                                    viewModel.mode = mode
-                                } label: {
-                                    Text(mode.displayName)
-                                        .font(.subheadline.weight(.medium))
-                                        .frame(maxWidth: .infinity)
-                                        .padding(.vertical, 11)
-                                        .background(viewModel.mode == mode
-                                                    ? Color.brand
-                                                    : Color.white.opacity(0.08))
-                                        .foregroundStyle(viewModel.mode == mode
-                                                         ? Color.black
-                                                         : Color.white.opacity(0.7))
-                                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                                }
-                                .animation(.easeOut(duration: 0.15), value: viewModel.mode)
-                            }
+                    VStack(alignment: .leading, spacing: 8) {
+                        SectionLabel("practice.mode")
+                        VStack(spacing: 8) {
+                            ModeRow(
+                                mode: .category,
+                                icon: "square.grid.2x2.fill",
+                                titleKey: "practice.mode.category",
+                                descKey: "practice.mode.category.desc",
+                                isSelected: viewModel.mode == .category
+                            ) { viewModel.mode = .category }
+
+                            ModeRow(
+                                mode: .topic,
+                                icon: "list.bullet",
+                                titleKey: "practice.mode.topic",
+                                descKey: "practice.mode.topic.desc",
+                                isSelected: viewModel.mode == .topic
+                            ) { viewModel.mode = .topic }
+
+                            ModeRow(
+                                mode: .incorrect,
+                                icon: "arrow.counterclockwise",
+                                titleKey: "practice.mode.incorrect",
+                                descKey: "practice.mode.incorrect.desc",
+                                isSelected: viewModel.mode == .incorrect
+                            ) { viewModel.mode = .incorrect }
                         }
                     }
 
                     // Category picker
                     if viewModel.mode == .category || viewModel.mode == .topic {
-                        FormSection(label: NSLocalizedString("practice.category", comment: "")) {
+                        VStack(alignment: .leading, spacing: 8) {
+                            SectionLabel("practice.category")
                             Picker("", selection: $viewModel.selectedCategory) {
                                 Text(NSLocalizedString("common.all", comment: "")).tag(String?.none)
                                 ForEach(viewModel.categories, id: \.self) { cat in
@@ -49,7 +67,11 @@ struct PracticeSetupView: View {
                             }
                             .pickerStyle(.menu)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .tint(.white)
+                            .tint(Color.brand)
+                            .padding(14)
+                            .background(Color.cardSurface)
+                            .clipShape(RoundedRectangle(cornerRadius: 14))
+                            .overlay(RoundedRectangle(cornerRadius: 14).strokeBorder(Color.cardBorder, lineWidth: 1))
                             .onChange(of: viewModel.selectedCategory) { _, newVal in
                                 Task { await viewModel.loadTopics(category: newVal) }
                             }
@@ -58,7 +80,8 @@ struct PracticeSetupView: View {
 
                     // Topic picker
                     if viewModel.mode == .topic {
-                        FormSection(label: NSLocalizedString("practice.topic", comment: "")) {
+                        VStack(alignment: .leading, spacing: 8) {
+                            SectionLabel("practice.topic")
                             Picker("", selection: $viewModel.selectedTopic) {
                                 Text(NSLocalizedString("common.all", comment: "")).tag(String?.none)
                                 ForEach(viewModel.topics, id: \.self) { t in
@@ -67,49 +90,51 @@ struct PracticeSetupView: View {
                             }
                             .pickerStyle(.menu)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .tint(.white)
+                            .tint(Color.brand)
+                            .padding(14)
+                            .background(Color.cardSurface)
+                            .clipShape(RoundedRectangle(cornerRadius: 14))
+                            .overlay(RoundedRectangle(cornerRadius: 14).strokeBorder(Color.cardBorder, lineWidth: 1))
                         }
                     }
 
                     // Question count
-                    FormSection(label: NSLocalizedString("practice.questionCount", comment: "")) {
-                        HStack {
-                            Text("\(viewModel.count) \(NSLocalizedString("common.questions", comment: ""))")
-                                .font(.body)
-                            Spacer()
-                            HStack(spacing: 0) {
-                                Button {
-                                    if viewModel.count > 5 { viewModel.count -= 5 }
-                                } label: {
-                                    Image(systemName: "minus")
-                                        .frame(width: 44, height: 44)
-                                        .foregroundStyle(viewModel.count > 5 ? Color.brand : Color.white.opacity(0.3))
-                                }
-                                Rectangle()
-                                    .fill(Color.white.opacity(0.15))
-                                    .frame(width: 1, height: 24)
-                                Button {
-                                    if viewModel.count < 100 { viewModel.count += 5 }
-                                } label: {
-                                    Image(systemName: "plus")
-                                        .frame(width: 44, height: 44)
-                                        .foregroundStyle(viewModel.count < 100 ? Color.brand : Color.white.opacity(0.3))
-                                }
+                    VStack(alignment: .leading, spacing: 8) {
+                        SectionLabel("practice.questionCount")
+                        HStack(spacing: 0) {
+                            Button {
+                                if viewModel.count > 5 { viewModel.count -= 5 }
+                            } label: {
+                                Image(systemName: "minus")
+                                    .frame(width: 52, height: 52)
+                                    .foregroundStyle(viewModel.count > 5 ? .white : Color.mutedForeground)
+                                    .background(Color.cardSurface)
                             }
-                            .background(Color.white.opacity(0.08))
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+
+                            Spacer()
+                            Text("\(viewModel.count)")
+                                .font(.system(size: 28, weight: .bold))
+                                .foregroundStyle(.white)
+                            Spacer()
+
+                            Button {
+                                if viewModel.count < 100 { viewModel.count += 5 }
+                            } label: {
+                                Image(systemName: "plus")
+                                    .frame(width: 52, height: 52)
+                                    .foregroundStyle(viewModel.count < 100 ? .white : Color.mutedForeground)
+                                    .background(Color.cardSurface)
+                            }
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
                         }
+                        .padding(.horizontal, 4)
                     }
 
                     if let err = viewModel.error {
-                        Text(err)
-                            .font(.caption)
-                            .foregroundStyle(.red)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.horizontal, 4)
+                        Text(err).font(.caption).foregroundStyle(.red)
                     }
 
-                    // Bottom padding so content doesn't hide behind CTA
                     Spacer().frame(height: 80)
                 }
                 .padding(.horizontal, 20)
@@ -118,7 +143,6 @@ struct PracticeSetupView: View {
 
             // Sticky CTA
             VStack(spacing: 0) {
-                Divider().opacity(0.2)
                 Button {
                     Task {
                         guard let userId = appState.session?.user.id.uuidString else { return }
@@ -128,17 +152,18 @@ struct PracticeSetupView: View {
                     if viewModel.isLoading {
                         ProgressView().tint(.black)
                     } else {
-                        Text(LocalizedStringKey("practice.start"))
+                        Text("Start \(viewModel.count) questions")
                     }
                 }
                 .buttonStyle(BrandButtonStyle())
                 .disabled(viewModel.isLoading)
                 .padding(.horizontal, 20)
                 .padding(.vertical, 16)
+                .padding(.bottom, 4)
             }
             .background(Color.appBackground)
         }
-        .navigationTitle(LocalizedStringKey("nav.practice"))
+        .navigationBarHidden(true)
         .overlay { LoadingOverlay(isLoading: viewModel.isLoading) }
         .task {
             if let cat = presetCategory { viewModel.selectedCategory = cat }
@@ -159,29 +184,63 @@ struct PracticeSetupView: View {
     }
 }
 
-// MARK: - Reusable form section with label above
-private struct FormSection<Content: View>: View {
-    let label: String
-    let content: () -> Content
-
-    init(label: String, @ViewBuilder content: @escaping () -> Content) {
-        self.label = label
-        self.content = content
+// MARK: - Section Label
+private struct SectionLabel: View {
+    let key: LocalizedStringKey
+    init(_ key: String) { self.key = LocalizedStringKey(key) }
+    var body: some View {
+        Text(key)
+            .font(.caption)
+            .fontWeight(.semibold)
+            .foregroundStyle(Color.mutedForeground)
+            .textCase(.uppercase)
+            .tracking(0.8)
     }
+}
+
+// MARK: - Mode Row
+private struct ModeRow: View {
+    let mode: PracticeSetupViewModel.Mode
+    let icon: String
+    let titleKey: String
+    let descKey: String
+    let isSelected: Bool
+    let action: () -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(label)
-                .font(.caption)
-                .fontWeight(.semibold)
-                .foregroundStyle(.white.opacity(0.5))
-                .textCase(.uppercase)
-                .tracking(0.5)
-            content()
-                .padding(14)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color.white.opacity(0.08))
-                .clipShape(RoundedRectangle(cornerRadius: 14))
+        Button(action: action) {
+            HStack(spacing: 14) {
+                IconBox(systemName: icon)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(LocalizedStringKey(titleKey))
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.white)
+                    Text(LocalizedStringKey(descKey))
+                        .font(.caption)
+                        .foregroundStyle(Color.mutedForeground)
+                }
+                Spacer()
+                ZStack {
+                    Circle()
+                        .strokeBorder(isSelected ? Color.brand : Color.mutedForeground, lineWidth: 1.5)
+                        .frame(width: 22, height: 22)
+                    if isSelected {
+                        Circle()
+                            .fill(Color.brand)
+                            .frame(width: 12, height: 12)
+                    }
+                }
+            }
+            .padding(14)
+            .background(Color.cardSurface)
+            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .strokeBorder(isSelected ? Color.brand : Color.cardBorder, lineWidth: isSelected ? 1.5 : 1)
+            )
         }
+        .buttonStyle(PressButtonStyle())
+        .animation(.easeOut(duration: 0.15), value: isSelected)
     }
 }

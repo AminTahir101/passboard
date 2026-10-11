@@ -139,7 +139,7 @@
 		F46087C632D7CECA648615C3 /* PracticeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeViewModel.swift; sourceTree = "<group>"; };
 		FB212D6E8BB9592794F27C95 /* LoadingOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingOverlay.swift; sourceTree = "<group>"; };
 		FFB40088BD37D4C5D35B9652 /* PassboardiOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassboardiOSApp.swift; sourceTree = "<group>"; };
-		"TEMP_CF626058-536D-418B-9F5D-597059E1A004" /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		"TEMP_EDA3A22E-0A2A-49AA-9AE9-82DD3F9329FE" /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -362,10 +362,10 @@
 			path = Auth;
 			sourceTree = "<group>";
 		};
-		"TEMP_40789D59-AF5D-4C7F-BB4D-5E4B8708482B" /* PassboardiOS */ = {
+		"TEMP_A5396CCA-C861-4646-8A11-214745D8001A" /* PassboardiOS */ = {
 			isa = PBXGroup;
 			children = (
-				"TEMP_CF626058-536D-418B-9F5D-597059E1A004" /* Config.xcconfig */,
+				"TEMP_EDA3A22E-0A2A-49AA-9AE9-82DD3F9329FE" /* Config.xcconfig */,
 			);
 			path = PassboardiOS;
 			sourceTree = "<group>";
@@ -579,7 +579,7 @@
 /* Begin XCBuildConfiguration section */
 		05F5ECDDA2469FC01AE2E2F1 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_CF626058-536D-418B-9F5D-597059E1A004" /* Config.xcconfig */;
+			baseConfigurationReference = "TEMP_EDA3A22E-0A2A-49AA-9AE9-82DD3F9329FE" /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = PassboardiOS/PassboardiOS.entitlements;
@@ -599,7 +599,7 @@
 		};
 		10B8B757C914AFCB97AAAA7B /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_CF626058-536D-418B-9F5D-597059E1A004" /* Config.xcconfig */;
+			baseConfigurationReference = "TEMP_EDA3A22E-0A2A-49AA-9AE9-82DD3F9329FE" /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = PassboardiOS/PassboardiOS.entitlements;
@@ -702,7 +702,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 5;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 9972L3XW55;
 				ENABLE_PREVIEWS = YES;
@@ -771,7 +771,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 5;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 9972L3XW55;
 				ENABLE_NS_ASSERTIONS = NO;

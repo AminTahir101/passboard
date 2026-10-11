@@ -36,10 +36,10 @@ private struct iPadRootView: View {
     }
 }
 
-// MARK: - iPhone: TabView (aiChat excluded — accessed from Dashboard)
+// MARK: - iPhone: TabView with 5 tabs matching new design
 private struct iPhoneRootView: View {
     @State private var selectedTab: AppTab = .dashboard
-    private let phoneTabs: [AppTab] = [.dashboard, .practice, .mockExam, .studyPlan, .profile]
+    private let phoneTabs: [AppTab] = [.dashboard, .practice, .mockExam, .aiChat, .studyPlan]
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -53,6 +53,7 @@ private struct iPhoneRootView: View {
                 .tag(tab)
             }
         }
+        .tint(Color.brand)
     }
 }
 
