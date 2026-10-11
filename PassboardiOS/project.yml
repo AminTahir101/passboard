@@ -29,6 +29,8 @@ targets:
     platform: iOS
     sources:
       - path: PassboardiOS
+    resources:
+      - path: PassboardiOS/Assets.xcassets
     settings:
       base:
         INFOPLIST_FILE: PassboardiOS/Info.plist
@@ -36,6 +38,7 @@ targets:
         CODE_SIGN_ENTITLEMENTS: PassboardiOS/PassboardiOS.entitlements
         CODE_SIGN_STYLE: Automatic
         DEVELOPMENT_TEAM: 9972L3XW55
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
     configFiles:
       Debug: Config.xcconfig
       Release: Config.xcconfig

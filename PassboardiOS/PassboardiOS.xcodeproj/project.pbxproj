@@ -34,6 +34,7 @@
 		8487023BE7CC6CB177178523 /* ProgressRing.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA95F0E53314F2F607967F6E /* ProgressRing.swift */; };
 		8908B634DD71B3CD7DF6F09C /* MockExamResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBAB6C85DC67FF8C1795C893 /* MockExamResultsView.swift */; };
 		8DC9B50957E04FD2C79FBFD3 /* PracticeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46087C632D7CECA648615C3 /* PracticeViewModel.swift */; };
+		915620F7A2AD4641377BD9F9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 42309ABCCF28BC960BEBA04A /* Assets.xcassets */; };
 		974CA010509D965F4B2CD13A /* PassboardiOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFB40088BD37D4C5D35B9652 /* PassboardiOSApp.swift */; };
 		9A9833217F822C3811CFF7F0 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58CC04D1DD41924E7EE830FC /* AppState.swift */; };
 		9DE25DE1B60D884477ED5F3A /* PracticeResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176342F12CECB7CC7F543F8C /* PracticeResultsView.swift */; };
@@ -96,6 +97,7 @@
 		3E18783B95073BD9B1002ABA /* MockExamService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockExamService.swift; sourceTree = "<group>"; };
 		4034E260FFB829CCF98071B1 /* MockExamViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockExamViewModel.swift; sourceTree = "<group>"; };
 		40813DA1D871E60DD304547E /* QuestionOptionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionOptionRow.swift; sourceTree = "<group>"; };
+		42309ABCCF28BC960BEBA04A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4C8CB00DDA005D3B36DC6047 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
 		51150FDD358B3EDFA38AB700 /* PassboardiOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = PassboardiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		531EF410AF4C72FCFC107A5C /* StudyPlanService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyPlanService.swift; sourceTree = "<group>"; };
@@ -135,7 +137,7 @@
 		F46087C632D7CECA648615C3 /* PracticeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeViewModel.swift; sourceTree = "<group>"; };
 		FB212D6E8BB9592794F27C95 /* LoadingOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingOverlay.swift; sourceTree = "<group>"; };
 		FFB40088BD37D4C5D35B9652 /* PassboardiOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassboardiOSApp.swift; sourceTree = "<group>"; };
-		"TEMP_F788A0B1-7225-4952-A463-71E6CCD1874A" /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		"TEMP_E59A4252-E993-4F30-BD61-6FFD7ACC0251" /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -250,6 +252,7 @@
 			isa = PBXGroup;
 			children = (
 				58CC04D1DD41924E7EE830FC /* AppState.swift */,
+				42309ABCCF28BC960BEBA04A /* Assets.xcassets */,
 				9992E5B59B1F8910DC8B0737 /* Info.plist */,
 				EE64FA106BE7297E2A1004B5 /* PassboardiOS.entitlements */,
 				FFB40088BD37D4C5D35B9652 /* PassboardiOSApp.swift */,
@@ -356,10 +359,10 @@
 			path = Auth;
 			sourceTree = "<group>";
 		};
-		"TEMP_A7B5AF89-2FAC-4314-97F0-B942823720C7" /* PassboardiOS */ = {
+		"TEMP_23505500-5F13-49D8-8274-5B79995FEC48" /* PassboardiOS */ = {
 			isa = PBXGroup;
 			children = (
-				"TEMP_F788A0B1-7225-4952-A463-71E6CCD1874A" /* Config.xcconfig */,
+				"TEMP_E59A4252-E993-4F30-BD61-6FFD7ACC0251" /* Config.xcconfig */,
 			);
 			path = PassboardiOS;
 			sourceTree = "<group>";
@@ -475,6 +478,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				915620F7A2AD4641377BD9F9 /* Assets.xcassets in Resources */,
 				481A0D5F4B4D31801D187A5E /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -571,7 +575,7 @@
 /* Begin XCBuildConfiguration section */
 		05F5ECDDA2469FC01AE2E2F1 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_F788A0B1-7225-4952-A463-71E6CCD1874A" /* Config.xcconfig */;
+			baseConfigurationReference = "TEMP_E59A4252-E993-4F30-BD61-6FFD7ACC0251" /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = PassboardiOS/PassboardiOS.entitlements;
@@ -591,7 +595,7 @@
 		};
 		10B8B757C914AFCB97AAAA7B /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_F788A0B1-7225-4952-A463-71E6CCD1874A" /* Config.xcconfig */;
+			baseConfigurationReference = "TEMP_E59A4252-E993-4F30-BD61-6FFD7ACC0251" /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = PassboardiOS/PassboardiOS.entitlements;
