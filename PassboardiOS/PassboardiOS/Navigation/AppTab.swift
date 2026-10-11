@@ -1,7 +1,7 @@
 import SwiftUI
 
 enum AppTab: String, CaseIterable, Identifiable {
-    case dashboard, practice, mockExam, studyPlan, profile
+    case dashboard, practice, mockExam, studyPlan, aiChat, profile
 
     var id: String { rawValue }
 
@@ -11,6 +11,7 @@ enum AppTab: String, CaseIterable, Identifiable {
         case .practice: return "nav.practice"
         case .mockExam: return "nav.mockExam"
         case .studyPlan: return "nav.studyPlan"
+        case .aiChat: return "nav.aiChat"
         case .profile: return "nav.profile"
         }
     }
@@ -21,6 +22,7 @@ enum AppTab: String, CaseIterable, Identifiable {
         case .practice: return "doc.text"
         case .mockExam: return "clock"
         case .studyPlan: return "calendar"
+        case .aiChat: return "bubble.left.and.bubble.right"
         case .profile: return "person.circle"
         }
     }

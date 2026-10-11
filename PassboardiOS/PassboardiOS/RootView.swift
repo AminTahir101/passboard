@@ -36,13 +36,14 @@ private struct iPadRootView: View {
     }
 }
 
-// MARK: - iPhone: TabView
+// MARK: - iPhone: TabView (aiChat excluded — accessed from Dashboard)
 private struct iPhoneRootView: View {
     @State private var selectedTab: AppTab = .dashboard
+    private let phoneTabs: [AppTab] = [.dashboard, .practice, .mockExam, .studyPlan, .profile]
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            ForEach(AppTab.allCases) { tab in
+            ForEach(phoneTabs) { tab in
                 NavigationStack {
                     tabContent(for: tab)
                 }
@@ -63,6 +64,7 @@ private func tabContent(for tab: AppTab) -> some View {
     case .practice: PracticeSetupView()
     case .mockExam: MockExamSetupView()
     case .studyPlan: StudyPlanView()
+    case .aiChat: AIChatListView()
     case .profile: ProfileView()
     }
 }

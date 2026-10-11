@@ -67,7 +67,10 @@ struct DashboardView: View {
                         QuickActionCard(titleKey: "nav.practice", icon: "doc.text", color: .blue)
                         QuickActionCard(titleKey: "nav.mockExam", icon: "clock", color: .purple)
                         QuickActionCard(titleKey: "nav.studyPlan", icon: "calendar", color: .green)
-                        QuickActionCard(titleKey: "nav.aiChat", icon: "bubble.left.and.bubble.right", color: .orange)
+                        NavigationLink { AIChatListView() } label: {
+                            QuickActionCard(titleKey: "nav.aiChat", icon: "bubble.left.and.bubble.right", color: .orange)
+                        }
+                        .buttonStyle(.plain)
                     }
                     .padding(.horizontal)
                 }
