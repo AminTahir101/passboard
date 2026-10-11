@@ -84,9 +84,3 @@ struct PracticeSetupView: View {
         }
     }
 }
-
-// PracticeSessionView is created in Task 11
-struct PracticeSessionView: View {
-    var viewModel: PracticeSessionViewModel
-    var body: some View { Text("Loading...") }
-}

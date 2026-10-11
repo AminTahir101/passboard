@@ -1,0 +1,794 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		017DB7B67DB25B8042C2AD30 /* DashboardViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542B5A5503A5BAD4EEE65E10 /* DashboardViewModelTests.swift */; };
+		E810EDB4DB874363BBC3BD94 /* QuestionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A62B40378C6F414FA9F70B85 /* QuestionService.swift */; };
+		9FF54EEEC2934E1084E8AE4D /* PracticeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5FD83E7912C405C868B9CD9 /* PracticeViewModel.swift */; };
+		16AF5E89B2EB42949622FF36 /* PracticeViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2DFBB7064947BBA11DAF70 /* PracticeViewModelTests.swift */; };
+		AA11BB22CC33DD44EE55FF66 /* PracticeSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB22CC33DD44EE55FF6600AA /* PracticeSessionView.swift */; };
+		CC33DD44EE55FF6600AABB11 /* PracticeResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD44EE55FF6600AABB11CC22 /* PracticeResultsView.swift */; };
+		095CB707F4B44D54DAB3E5D6 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7741520B764A8BA5BD1FA05 /* CardView.swift */; };
+		0D74789BADF54D7B0A6ECF9E /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 00A78F6FF53BEEFC76D40320 /* Supabase */; };
+		155486831C502C168383C24F /* ProfileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF41D27DB6656EC9D57E0FA /* ProfileService.swift */; };
+		244CA35C645DEF4BC59F2A04 /* PassboardiOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00CCA4315A28BF510D1DEA28 /* PassboardiOSTests.swift */; };
+		2D8294105AA74F35AF077AD1 /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DCC57BE84A52EA4A93FD9C /* Question.swift */; };
+		2E278E1D742F27A92D10A322 /* AppTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E21AC92FD54EF37B24E19AA /* AppTab.swift */; };
+		3E5A159B8CA3C412F0B5D8F2 /* DashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F27E474CD56AED0FE6871A /* DashboardViewModel.swift */; };
+		41D538E5EDCD7253FA987651 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE4CF843B15E816444CC5F6 /* DashboardView.swift */; };
+		45251E41AAB3DB79031E1EBA /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8CB00DDA005D3B36DC6047 /* SidebarView.swift */; };
+		48379A5E1C0493249A54D8CD /* PracticeSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A639B1F92813AD27B83BFFF4 /* PracticeSetupView.swift */; };
+		597B7FB2D2CCA4E3F6245B87 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 728B682FBCC556113B7B1E56 /* AuthService.swift */; };
+		5A61AF9352B77CACA292E887 /* AccessRequestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987D2090595989486EA7B748 /* AccessRequestView.swift */; };
+		63F8512654C659734878DAEE /* StudyPlanModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97707384FC830AB0DB599055 /* StudyPlanModels.swift */; };
+		7665F368673988957DD1EE1D /* ServiceProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2E3BFC6270C7407744692C /* ServiceProtocols.swift */; };
+		8487023BE7CC6CB177178523 /* ProgressRing.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA95F0E53314F2F607967F6E /* ProgressRing.swift */; };
+		974CA010509D965F4B2CD13A /* PassboardiOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFB40088BD37D4C5D35B9652 /* PassboardiOSApp.swift */; };
+		9A9833217F822C3811CFF7F0 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58CC04D1DD41924E7EE830FC /* AppState.swift */; };
+		A25B770EDF3CE21AB80EBE8A /* PassboardiOSUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8DFB53D726D90902785E6C /* PassboardiOSUITests.swift */; };
+		AFBC49508FD2CA510132495D /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 083A02D1FF1DC73B10FB8D45 /* LoginView.swift */; };
+		AFE1D815A9E6B41C80516FF1 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE256AE30C5C004E60827B9 /* ProfileView.swift */; };
+		B2F3C116F8A4F7653A63A373 /* AIChatModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 991CA1106B1A7146CF02AC09 /* AIChatModels.swift */; };
+		B56AD3B338C4DAC76AB25D3F /* SupabaseClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE3241333BA8D6860C450F0E /* SupabaseClient.swift */; };
+		BAD7CC092533DB9AC635E880 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2C1CD0F03E3839A7E833650 /* LoginViewModel.swift */; };
+		BBD64950B5A9C410D31048B2 /* QuestionAttempt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 081425789C957CA7C98B911C /* QuestionAttempt.swift */; };
+		C5EE293812237C7D71612739 /* StudyPlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 064F1B0CCCC3EAE12375181A /* StudyPlanView.swift */; };
+		CAEC9A218CF04B52576637C7 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A852E4F50B71FA9CF445284 /* RootView.swift */; };
+		CBD691F3109B7D17E8E4E36A /* MockExamModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23288FF4B353263663978925 /* MockExamModels.swift */; };
+		CEFB03DC160AB012B66B4354 /* QuestionOptionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40813DA1D871E60DD304547E /* QuestionOptionRow.swift */; };
+		D9812F1A40CC4138725346F6 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1711A033E31FC1B5B40B93FA /* Profile.swift */; };
+		E1F84ADA6D874465DAEDEBEF /* LoadingOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB212D6E8BB9592794F27C95 /* LoadingOverlay.swift */; };
+		E5DBF1F643DE693DFCF04779 /* AuthServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C929DB306B27F1B58B6BA13 /* AuthServiceTests.swift */; };
+		F1381EB6955C412D62CFB74A /* MockExamSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F15ED0094307A4F30B43C2F /* MockExamSetupView.swift */; };
+		F3D7F93F60A817B34D06FAFA /* StatCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDF4F2612D459E49F8D50BC7 /* StatCard.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1C5FE4C898180B144A966E78 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 17489CFE11B226D44C706275 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 00B9E02DD7CF1D894F16BB67;
+			remoteInfo = PassboardiOS;
+		};
+		75C368D18C9C9CFB9BFB341F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 17489CFE11B226D44C706275 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 00B9E02DD7CF1D894F16BB67;
+			remoteInfo = PassboardiOS;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		00CCA4315A28BF510D1DEA28 /* PassboardiOSTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassboardiOSTests.swift; sourceTree = "<group>"; };
+		064F1B0CCCC3EAE12375181A /* StudyPlanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyPlanView.swift; sourceTree = "<group>"; };
+		081425789C957CA7C98B911C /* QuestionAttempt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionAttempt.swift; sourceTree = "<group>"; };
+		083A02D1FF1DC73B10FB8D45 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		1711A033E31FC1B5B40B93FA /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
+		23288FF4B353263663978925 /* MockExamModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockExamModels.swift; sourceTree = "<group>"; };
+		2DE4CF843B15E816444CC5F6 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		2E21AC92FD54EF37B24E19AA /* AppTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTab.swift; sourceTree = "<group>"; };
+		2EBAAC22196CE8C3D098FC28 /* PassboardiOSTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = PassboardiOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		34F27E474CD56AED0FE6871A /* DashboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewModel.swift; sourceTree = "<group>"; };
+		38A59F19FAC0627A37485D4E /* PassboardiOSUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = PassboardiOSUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A8DFB53D726D90902785E6C /* PassboardiOSUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassboardiOSUITests.swift; sourceTree = "<group>"; };
+		40813DA1D871E60DD304547E /* QuestionOptionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionOptionRow.swift; sourceTree = "<group>"; };
+		4C8CB00DDA005D3B36DC6047 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
+		51150FDD358B3EDFA38AB700 /* PassboardiOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = PassboardiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		542B5A5503A5BAD4EEE65E10 /* DashboardViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewModelTests.swift; sourceTree = "<group>"; };
+		58CC04D1DD41924E7EE830FC /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		6EE256AE30C5C004E60827B9 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		728B682FBCC556113B7B1E56 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		7A852E4F50B71FA9CF445284 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		82DCC57BE84A52EA4A93FD9C /* Question.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question.swift; sourceTree = "<group>"; };
+		8BF41D27DB6656EC9D57E0FA /* ProfileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileService.swift; sourceTree = "<group>"; };
+		97707384FC830AB0DB599055 /* StudyPlanModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyPlanModels.swift; sourceTree = "<group>"; };
+		987D2090595989486EA7B748 /* AccessRequestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessRequestView.swift; sourceTree = "<group>"; };
+		991CA1106B1A7146CF02AC09 /* AIChatModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIChatModels.swift; sourceTree = "<group>"; };
+		9992E5B59B1F8910DC8B0737 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		9C929DB306B27F1B58B6BA13 /* AuthServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthServiceTests.swift; sourceTree = "<group>"; };
+		9F15ED0094307A4F30B43C2F /* MockExamSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockExamSetupView.swift; sourceTree = "<group>"; };
+		A639B1F92813AD27B83BFFF4 /* PracticeSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeSetupView.swift; sourceTree = "<group>"; };
+		BDF4F2612D459E49F8D50BC7 /* StatCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatCard.swift; sourceTree = "<group>"; };
+		C2C1CD0F03E3839A7E833650 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		DA95F0E53314F2F607967F6E /* ProgressRing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressRing.swift; sourceTree = "<group>"; };
+		E7741520B764A8BA5BD1FA05 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
+		ED2E3BFC6270C7407744692C /* ServiceProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceProtocols.swift; sourceTree = "<group>"; };
+		EE3241333BA8D6860C450F0E /* SupabaseClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseClient.swift; sourceTree = "<group>"; };
+		EE64FA106BE7297E2A1004B5 /* PassboardiOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PassboardiOS.entitlements; sourceTree = "<group>"; };
+		FB212D6E8BB9592794F27C95 /* LoadingOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingOverlay.swift; sourceTree = "<group>"; };
+		A62B40378C6F414FA9F70B85 /* QuestionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionService.swift; sourceTree = "<group>"; };
+		E5FD83E7912C405C868B9CD9 /* PracticeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeViewModel.swift; sourceTree = "<group>"; };
+		9C2DFBB7064947BBA11DAF70 /* PracticeViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeViewModelTests.swift; sourceTree = "<group>"; };
+		BB22CC33DD44EE55FF6600AA /* PracticeSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeSessionView.swift; sourceTree = "<group>"; };
+		DD44EE55FF6600AABB11CC22 /* PracticeResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeResultsView.swift; sourceTree = "<group>"; };
+		FFB40088BD37D4C5D35B9652 /* PassboardiOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassboardiOSApp.swift; sourceTree = "<group>"; };
+		"TEMP_3AAF7F9F-A202-4E98-B627-5ED627D948D0" /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5550E42BAC1F4640B8D2F01F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0D74789BADF54D7B0A6ECF9E /* Supabase in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		14F3941A627032C11EBBB801 /* PassboardiOSTests */ = {
+			isa = PBXGroup;
+			children = (
+				9C929DB306B27F1B58B6BA13 /* AuthServiceTests.swift */,
+				542B5A5503A5BAD4EEE65E10 /* DashboardViewModelTests.swift */,
+				00CCA4315A28BF510D1DEA28 /* PassboardiOSTests.swift */,
+				9C2DFBB7064947BBA11DAF70 /* PracticeViewModelTests.swift */,
+			);
+			path = PassboardiOSTests;
+			sourceTree = "<group>";
+		};
+		158E30E3257A0B328A5C7ECB /* Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				2E21AC92FD54EF37B24E19AA /* AppTab.swift */,
+				4C8CB00DDA005D3B36DC6047 /* SidebarView.swift */,
+			);
+			path = Navigation;
+			sourceTree = "<group>";
+		};
+		21894EC493A6064BB1F9C6F6 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				E7741520B764A8BA5BD1FA05 /* CardView.swift */,
+				FB212D6E8BB9592794F27C95 /* LoadingOverlay.swift */,
+				DA95F0E53314F2F607967F6E /* ProgressRing.swift */,
+				40813DA1D871E60DD304547E /* QuestionOptionRow.swift */,
+				BDF4F2612D459E49F8D50BC7 /* StatCard.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		24F44DC8702AE62E04F4B057 /* MockExam */ = {
+			isa = PBXGroup;
+			children = (
+				9F15ED0094307A4F30B43C2F /* MockExamSetupView.swift */,
+			);
+			path = MockExam;
+			sourceTree = "<group>";
+		};
+		274E249BB569FF85331B1D13 /* Dashboard */ = {
+			isa = PBXGroup;
+			children = (
+				2DE4CF843B15E816444CC5F6 /* DashboardView.swift */,
+				34F27E474CD56AED0FE6871A /* DashboardViewModel.swift */,
+			);
+			path = Dashboard;
+			sourceTree = "<group>";
+		};
+		2CE5BEA3A70B36DB84F3E21B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				51150FDD358B3EDFA38AB700 /* PassboardiOS.app */,
+				2EBAAC22196CE8C3D098FC28 /* PassboardiOSTests.xctest */,
+				38A59F19FAC0627A37485D4E /* PassboardiOSUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		429679BEB670EA874D4B04B6 /* Localization */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Localization;
+			sourceTree = "<group>";
+		};
+		42ACE5B4223D97FCCF5D8DE1 /* PassboardiOSUITests */ = {
+			isa = PBXGroup;
+			children = (
+				3A8DFB53D726D90902785E6C /* PassboardiOSUITests.swift */,
+			);
+			path = PassboardiOSUITests;
+			sourceTree = "<group>";
+		};
+		61861EAF8631EDBCF3C757C8 /* Supabase */ = {
+			isa = PBXGroup;
+			children = (
+				EE3241333BA8D6860C450F0E /* SupabaseClient.swift */,
+			);
+			path = Supabase;
+			sourceTree = "<group>";
+		};
+		654C057CCCF43605952B21C9 /* StudyPlan */ = {
+			isa = PBXGroup;
+			children = (
+				064F1B0CCCC3EAE12375181A /* StudyPlanView.swift */,
+			);
+			path = StudyPlan;
+			sourceTree = "<group>";
+		};
+		7E6C8BF094FC571C756D4FDD /* PassboardiOS */ = {
+			isa = PBXGroup;
+			children = (
+				58CC04D1DD41924E7EE830FC /* AppState.swift */,
+				9992E5B59B1F8910DC8B0737 /* Info.plist */,
+				EE64FA106BE7297E2A1004B5 /* PassboardiOS.entitlements */,
+				FFB40088BD37D4C5D35B9652 /* PassboardiOSApp.swift */,
+				7A852E4F50B71FA9CF445284 /* RootView.swift */,
+				21894EC493A6064BB1F9C6F6 /* Components */,
+				A0E9681D7133A05CCED3C4ED /* Features */,
+				429679BEB670EA874D4B04B6 /* Localization */,
+				B2299F85B8B43400D6E2E56A /* Models */,
+				158E30E3257A0B328A5C7ECB /* Navigation */,
+				93833F01A63CC7EBE2F0930E /* Services */,
+				61861EAF8631EDBCF3C757C8 /* Supabase */,
+			);
+			path = PassboardiOS;
+			sourceTree = "<group>";
+		};
+		93833F01A63CC7EBE2F0930E /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				728B682FBCC556113B7B1E56 /* AuthService.swift */,
+				8BF41D27DB6656EC9D57E0FA /* ProfileService.swift */,
+				ED2E3BFC6270C7407744692C /* ServiceProtocols.swift */,
+				A62B40378C6F414FA9F70B85 /* QuestionService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		99C2DED8F44E52022CA1B8A3 /* Practice */ = {
+			isa = PBXGroup;
+			children = (
+				A639B1F92813AD27B83BFFF4 /* PracticeSetupView.swift */,
+				BB22CC33DD44EE55FF6600AA /* PracticeSessionView.swift */,
+				DD44EE55FF6600AABB11CC22 /* PracticeResultsView.swift */,
+				E5FD83E7912C405C868B9CD9 /* PracticeViewModel.swift */,
+			);
+			path = Practice;
+			sourceTree = "<group>";
+		};
+		A0E9681D7133A05CCED3C4ED /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				D8F14D934DC3AEC739CF3BB7 /* AIChat */,
+				F46888896CCA403CA6F83A91 /* Auth */,
+				274E249BB569FF85331B1D13 /* Dashboard */,
+				24F44DC8702AE62E04F4B057 /* MockExam */,
+				99C2DED8F44E52022CA1B8A3 /* Practice */,
+				CFF5292E6F6DEF1DF2824F75 /* Profile */,
+				654C057CCCF43605952B21C9 /* StudyPlan */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		B2299F85B8B43400D6E2E56A /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				991CA1106B1A7146CF02AC09 /* AIChatModels.swift */,
+				23288FF4B353263663978925 /* MockExamModels.swift */,
+				1711A033E31FC1B5B40B93FA /* Profile.swift */,
+				82DCC57BE84A52EA4A93FD9C /* Question.swift */,
+				081425789C957CA7C98B911C /* QuestionAttempt.swift */,
+				97707384FC830AB0DB599055 /* StudyPlanModels.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		B40FEF109251EC405D51649C = {
+			isa = PBXGroup;
+			children = (
+				7E6C8BF094FC571C756D4FDD /* PassboardiOS */,
+				14F3941A627032C11EBBB801 /* PassboardiOSTests */,
+				42ACE5B4223D97FCCF5D8DE1 /* PassboardiOSUITests */,
+				2CE5BEA3A70B36DB84F3E21B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		CFF5292E6F6DEF1DF2824F75 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				6EE256AE30C5C004E60827B9 /* ProfileView.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		D8F14D934DC3AEC739CF3BB7 /* AIChat */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = AIChat;
+			sourceTree = "<group>";
+		};
+		F46888896CCA403CA6F83A91 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				987D2090595989486EA7B748 /* AccessRequestView.swift */,
+				083A02D1FF1DC73B10FB8D45 /* LoginView.swift */,
+				C2C1CD0F03E3839A7E833650 /* LoginViewModel.swift */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		"TEMP_CB424D5C-170E-46C9-8382-C2E83B368961" /* PassboardiOS */ = {
+			isa = PBXGroup;
+			children = (
+				"TEMP_3AAF7F9F-A202-4E98-B627-5ED627D948D0" /* Config.xcconfig */,
+			);
+			path = PassboardiOS;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		00B9E02DD7CF1D894F16BB67 /* PassboardiOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D78BDD5A6FAC24370526857 /* Build configuration list for PBXNativeTarget "PassboardiOS" */;
+			buildPhases = (
+				2607D958CD34756A81554DE2 /* Sources */,
+				5550E42BAC1F4640B8D2F01F /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PassboardiOS;
+			packageProductDependencies = (
+				00A78F6FF53BEEFC76D40320 /* Supabase */,
+			);
+			productName = PassboardiOS;
+			productReference = 51150FDD358B3EDFA38AB700 /* PassboardiOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+		2857D09CF8664C6917D5EC37 /* PassboardiOSTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A2B85E50A72E87A40A31F8EF /* Build configuration list for PBXNativeTarget "PassboardiOSTests" */;
+			buildPhases = (
+				C500D17D952E96F09D7FF3A0 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				84239AD15828F079F13EB9A0 /* PBXTargetDependency */,
+			);
+			name = PassboardiOSTests;
+			packageProductDependencies = (
+			);
+			productName = PassboardiOSTests;
+			productReference = 2EBAAC22196CE8C3D098FC28 /* PassboardiOSTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		39B334CABB03CDA80E7A406A /* PassboardiOSUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2402EE0CF8D7CA8682DC3ED3 /* Build configuration list for PBXNativeTarget "PassboardiOSUITests" */;
+			buildPhases = (
+				E9594B55BBAA6A8ACBEAFF1F /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DF2E9A0A6D94792B4AE0B585 /* PBXTargetDependency */,
+			);
+			name = PassboardiOSUITests;
+			packageProductDependencies = (
+			);
+			productName = PassboardiOSUITests;
+			productReference = 38A59F19FAC0627A37485D4E /* PassboardiOSUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		17489CFE11B226D44C706275 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					39B334CABB03CDA80E7A406A = {
+						TestTargetID = 00B9E02DD7CF1D894F16BB67;
+					};
+				};
+			};
+			buildConfigurationList = 1F0F1559FD99775FC4BAACB8 /* Build configuration list for PBXProject "PassboardiOS" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = B40FEF109251EC405D51649C;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				C572BA3C631C380BAC958AB8 /* XCRemoteSwiftPackageReference "supabase-swift" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 2CE5BEA3A70B36DB84F3E21B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				00B9E02DD7CF1D894F16BB67 /* PassboardiOS */,
+				2857D09CF8664C6917D5EC37 /* PassboardiOSTests */,
+				39B334CABB03CDA80E7A406A /* PassboardiOSUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2607D958CD34756A81554DE2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B2F3C116F8A4F7653A63A373 /* AIChatModels.swift in Sources */,
+				5A61AF9352B77CACA292E887 /* AccessRequestView.swift in Sources */,
+				9A9833217F822C3811CFF7F0 /* AppState.swift in Sources */,
+				2E278E1D742F27A92D10A322 /* AppTab.swift in Sources */,
+				597B7FB2D2CCA4E3F6245B87 /* AuthService.swift in Sources */,
+				095CB707F4B44D54DAB3E5D6 /* CardView.swift in Sources */,
+				41D538E5EDCD7253FA987651 /* DashboardView.swift in Sources */,
+				3E5A159B8CA3C412F0B5D8F2 /* DashboardViewModel.swift in Sources */,
+				E1F84ADA6D874465DAEDEBEF /* LoadingOverlay.swift in Sources */,
+				AFBC49508FD2CA510132495D /* LoginView.swift in Sources */,
+				BAD7CC092533DB9AC635E880 /* LoginViewModel.swift in Sources */,
+				CBD691F3109B7D17E8E4E36A /* MockExamModels.swift in Sources */,
+				F1381EB6955C412D62CFB74A /* MockExamSetupView.swift in Sources */,
+				974CA010509D965F4B2CD13A /* PassboardiOSApp.swift in Sources */,
+				48379A5E1C0493249A54D8CD /* PracticeSetupView.swift in Sources */,
+				AA11BB22CC33DD44EE55FF66 /* PracticeSessionView.swift in Sources */,
+				CC33DD44EE55FF6600AABB11 /* PracticeResultsView.swift in Sources */,
+				E810EDB4DB874363BBC3BD94 /* QuestionService.swift in Sources */,
+				9FF54EEEC2934E1084E8AE4D /* PracticeViewModel.swift in Sources */,
+				D9812F1A40CC4138725346F6 /* Profile.swift in Sources */,
+				155486831C502C168383C24F /* ProfileService.swift in Sources */,
+				AFE1D815A9E6B41C80516FF1 /* ProfileView.swift in Sources */,
+				8487023BE7CC6CB177178523 /* ProgressRing.swift in Sources */,
+				2D8294105AA74F35AF077AD1 /* Question.swift in Sources */,
+				BBD64950B5A9C410D31048B2 /* QuestionAttempt.swift in Sources */,
+				CEFB03DC160AB012B66B4354 /* QuestionOptionRow.swift in Sources */,
+				CAEC9A218CF04B52576637C7 /* RootView.swift in Sources */,
+				7665F368673988957DD1EE1D /* ServiceProtocols.swift in Sources */,
+				45251E41AAB3DB79031E1EBA /* SidebarView.swift in Sources */,
+				F3D7F93F60A817B34D06FAFA /* StatCard.swift in Sources */,
+				63F8512654C659734878DAEE /* StudyPlanModels.swift in Sources */,
+				C5EE293812237C7D71612739 /* StudyPlanView.swift in Sources */,
+				B56AD3B338C4DAC76AB25D3F /* SupabaseClient.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C500D17D952E96F09D7FF3A0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E5DBF1F643DE693DFCF04779 /* AuthServiceTests.swift in Sources */,
+				017DB7B67DB25B8042C2AD30 /* DashboardViewModelTests.swift in Sources */,
+				244CA35C645DEF4BC59F2A04 /* PassboardiOSTests.swift in Sources */,
+				16AF5E89B2EB42949622FF36 /* PracticeViewModelTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E9594B55BBAA6A8ACBEAFF1F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A25B770EDF3CE21AB80EBE8A /* PassboardiOSUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		84239AD15828F079F13EB9A0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 00B9E02DD7CF1D894F16BB67 /* PassboardiOS */;
+			targetProxy = 75C368D18C9C9CFB9BFB341F /* PBXContainerItemProxy */;
+		};
+		DF2E9A0A6D94792B4AE0B585 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 00B9E02DD7CF1D894F16BB67 /* PassboardiOS */;
+			targetProxy = 1C5FE4C898180B144A966E78 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		05F5ECDDA2469FC01AE2E2F1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = "TEMP_3AAF7F9F-A202-4E98-B627-5ED627D948D0" /* Config.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = PassboardiOS/PassboardiOS.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = PassboardiOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.passboard.ios;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		10B8B757C914AFCB97AAAA7B /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = "TEMP_3AAF7F9F-A202-4E98-B627-5ED627D948D0" /* Config.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = PassboardiOS/PassboardiOS.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = PassboardiOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.passboard.ios;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		31FD02287DBA6253DAB737AE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.passboard.PassboardiOSUITests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = PassboardiOS;
+			};
+			name = Release;
+		};
+		3CBBD28254B544BCC1368295 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.passboard.PassboardiOSTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PassboardiOS.app/PassboardiOS";
+			};
+			name = Release;
+		};
+		706F2E4C6C4E0C1B9327C819 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.passboard.PassboardiOSTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PassboardiOS.app/PassboardiOS";
+			};
+			name = Debug;
+		};
+		7879894B8594370126E9954D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTS_MAC_DESIGNED_FOR_IPAD = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CD266CF2E85453C135056412 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTS_MAC_DESIGNED_FOR_IPAD = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		EF3706DC1EF8979AA6C4AF74 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.passboard.PassboardiOSUITests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = PassboardiOS;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1F0F1559FD99775FC4BAACB8 /* Build configuration list for PBXProject "PassboardiOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7879894B8594370126E9954D /* Debug */,
+				CD266CF2E85453C135056412 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		2402EE0CF8D7CA8682DC3ED3 /* Build configuration list for PBXNativeTarget "PassboardiOSUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EF3706DC1EF8979AA6C4AF74 /* Debug */,
+				31FD02287DBA6253DAB737AE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		5D78BDD5A6FAC24370526857 /* Build configuration list for PBXNativeTarget "PassboardiOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05F5ECDDA2469FC01AE2E2F1 /* Debug */,
+				10B8B757C914AFCB97AAAA7B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		A2B85E50A72E87A40A31F8EF /* Build configuration list for PBXNativeTarget "PassboardiOSTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				706F2E4C6C4E0C1B9327C819 /* Debug */,
+				3CBBD28254B544BCC1368295 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		C572BA3C631C380BAC958AB8 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase/supabase-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		00A78F6FF53BEEFC76D40320 /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C572BA3C631C380BAC958AB8 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 17489CFE11B226D44C706275 /* Project object */;
+}
