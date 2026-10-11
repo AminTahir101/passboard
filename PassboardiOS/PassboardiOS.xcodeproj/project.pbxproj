@@ -19,6 +19,7 @@
 		2E278E1D742F27A92D10A322 /* AppTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E21AC92FD54EF37B24E19AA /* AppTab.swift */; };
 		35FC141EFB2C6B317B782D86 /* AIChatService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D4A261540CE6BD90C821965 /* AIChatService.swift */; };
 		3B1988C2DC88F820F36CCB70 /* StudyPlanSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB54579DA4FF0FAFE4BEC1AD /* StudyPlanSetupView.swift */; };
+		3D067EDA9814F19F247FCBDF /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5229D2FD7167870B427788A3 /* DesignSystem.swift */; };
 		3E5A159B8CA3C412F0B5D8F2 /* DashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F27E474CD56AED0FE6871A /* DashboardViewModel.swift */; };
 		41D538E5EDCD7253FA987651 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE4CF843B15E816444CC5F6 /* DashboardView.swift */; };
 		45251E41AAB3DB79031E1EBA /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8CB00DDA005D3B36DC6047 /* SidebarView.swift */; };
@@ -100,6 +101,7 @@
 		42309ABCCF28BC960BEBA04A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4C8CB00DDA005D3B36DC6047 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
 		51150FDD358B3EDFA38AB700 /* PassboardiOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = PassboardiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5229D2FD7167870B427788A3 /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
 		531EF410AF4C72FCFC107A5C /* StudyPlanService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyPlanService.swift; sourceTree = "<group>"; };
 		535FBF1FEE4551250076518A /* QuestionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionService.swift; sourceTree = "<group>"; };
 		542B5A5503A5BAD4EEE65E10 /* DashboardViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewModelTests.swift; sourceTree = "<group>"; };
@@ -137,7 +139,7 @@
 		F46087C632D7CECA648615C3 /* PracticeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeViewModel.swift; sourceTree = "<group>"; };
 		FB212D6E8BB9592794F27C95 /* LoadingOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingOverlay.swift; sourceTree = "<group>"; };
 		FFB40088BD37D4C5D35B9652 /* PassboardiOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassboardiOSApp.swift; sourceTree = "<group>"; };
-		"TEMP_E59A4252-E993-4F30-BD61-6FFD7ACC0251" /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		"TEMP_CF626058-536D-418B-9F5D-597059E1A004" /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -253,6 +255,7 @@
 			children = (
 				58CC04D1DD41924E7EE830FC /* AppState.swift */,
 				42309ABCCF28BC960BEBA04A /* Assets.xcassets */,
+				5229D2FD7167870B427788A3 /* DesignSystem.swift */,
 				9992E5B59B1F8910DC8B0737 /* Info.plist */,
 				EE64FA106BE7297E2A1004B5 /* PassboardiOS.entitlements */,
 				FFB40088BD37D4C5D35B9652 /* PassboardiOSApp.swift */,
@@ -359,10 +362,10 @@
 			path = Auth;
 			sourceTree = "<group>";
 		};
-		"TEMP_23505500-5F13-49D8-8274-5B79995FEC48" /* PassboardiOS */ = {
+		"TEMP_40789D59-AF5D-4C7F-BB4D-5E4B8708482B" /* PassboardiOS */ = {
 			isa = PBXGroup;
 			children = (
-				"TEMP_E59A4252-E993-4F30-BD61-6FFD7ACC0251" /* Config.xcconfig */,
+				"TEMP_CF626058-536D-418B-9F5D-597059E1A004" /* Config.xcconfig */,
 			);
 			path = PassboardiOS;
 			sourceTree = "<group>";
@@ -502,6 +505,7 @@
 				095CB707F4B44D54DAB3E5D6 /* CardView.swift in Sources */,
 				41D538E5EDCD7253FA987651 /* DashboardView.swift in Sources */,
 				3E5A159B8CA3C412F0B5D8F2 /* DashboardViewModel.swift in Sources */,
+				3D067EDA9814F19F247FCBDF /* DesignSystem.swift in Sources */,
 				E1F84ADA6D874465DAEDEBEF /* LoadingOverlay.swift in Sources */,
 				AFBC49508FD2CA510132495D /* LoginView.swift in Sources */,
 				BAD7CC092533DB9AC635E880 /* LoginViewModel.swift in Sources */,
@@ -575,7 +579,7 @@
 /* Begin XCBuildConfiguration section */
 		05F5ECDDA2469FC01AE2E2F1 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_E59A4252-E993-4F30-BD61-6FFD7ACC0251" /* Config.xcconfig */;
+			baseConfigurationReference = "TEMP_CF626058-536D-418B-9F5D-597059E1A004" /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = PassboardiOS/PassboardiOS.entitlements;
@@ -595,7 +599,7 @@
 		};
 		10B8B757C914AFCB97AAAA7B /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_E59A4252-E993-4F30-BD61-6FFD7ACC0251" /* Config.xcconfig */;
+			baseConfigurationReference = "TEMP_CF626058-536D-418B-9F5D-597059E1A004" /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = PassboardiOS/PassboardiOS.entitlements;
@@ -698,7 +702,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 9972L3XW55;
 				ENABLE_PREVIEWS = YES;
@@ -767,7 +771,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 9972L3XW55;
 				ENABLE_NS_ASSERTIONS = NO;

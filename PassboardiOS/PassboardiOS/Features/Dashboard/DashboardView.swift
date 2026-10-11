@@ -14,33 +14,37 @@ struct DashboardView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
+            VStack(alignment: .leading, spacing: 24) {
                 // Greeting
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: 2) {
                     Text(LocalizedStringKey("dashboard.greeting"))
-                        .font(.title2.bold())
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
                     if let name = appState.profile?.fullName {
-                        Text(name).font(.title.bold())
+                        Text(name)
+                            .font(.system(size: 28, weight: .bold, design: .rounded))
                     }
                 }
                 .padding(.horizontal)
 
-                // Stats Grid
+                // Stats Grid — all brand amber for consistency
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
                     if let days = daysToExam {
                         StatCard(title: "dashboard.daysToExam", value: "\(days)",
                                  subtitle: appState.profile?.targetExam,
-                                 icon: "calendar.badge.clock", color: .orange)
+                                 icon: "calendar.badge.clock")
                     }
                     if let stats = viewModel.stats {
-                        StatCard(title: "dashboard.accuracy", value: "\(Int(stats.accuracy * 100))%",
-                                 icon: "target", color: .green)
+                        StatCard(title: "dashboard.accuracy",
+                                 value: "\(Int(stats.accuracy * 100))%",
+                                 icon: "target")
                         StatCard(title: "dashboard.questionsAttempted",
                                  value: "\(stats.totalAttempts)",
-                                 icon: "doc.text.fill", color: .blue)
-                        StatCard(title: "dashboard.streak", value: "\(stats.streak)",
+                                 icon: "doc.text.fill")
+                        StatCard(title: "dashboard.streak",
+                                 value: "\(stats.streak)",
                                  subtitle: LocalizedString("dashboard.days"),
-                                 icon: "flame.fill", color: .red)
+                                 icon: "flame.fill")
                     }
                 }
                 .padding(.horizontal)
@@ -77,6 +81,7 @@ struct DashboardView: View {
             }
             .padding(.vertical)
         }
+        .background(Color.appBackground.ignoresSafeArea())
         .navigationTitle(LocalizedStringKey("nav.dashboard"))
         .overlay { LoadingOverlay(isLoading: viewModel.isLoading) }
         .task {

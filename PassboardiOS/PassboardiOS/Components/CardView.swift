@@ -10,7 +10,7 @@ struct CardView<Content: View>: View {
     var body: some View {
         content()
             .padding()
-            .background(Color(.secondarySystemGroupedBackground))
+            .background(Color.cardSurface)
             .clipShape(RoundedRectangle(cornerRadius: 16))
     }
 }

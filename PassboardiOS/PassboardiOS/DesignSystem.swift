@@ -5,6 +5,10 @@ import SwiftUI
 extension Color {
     /// Amber #F2B632 — the single Passboard accent color.
     static let brand = Color("AccentColor")
+    /// Dark navy #0D1B2E — app background.
+    static let appBackground = Color(red: 0.051, green: 0.106, blue: 0.180)
+    /// Elevated card surface on navy background.
+    static let cardSurface = Color.white.opacity(0.08)
 }
 
 // MARK: - Brand Primary Button

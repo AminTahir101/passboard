@@ -4,7 +4,13 @@ import SwiftUI
 @Observable
 @MainActor
 final class PracticeSetupViewModel {
-    enum Mode: String, CaseIterable { case category, topic, incorrect }
+    enum Mode: String, CaseIterable {
+        case category, topic, incorrect
+        /// Localized display name — interpolated LocalizedStringKey doesn't do key lookup.
+        var displayName: String {
+            NSLocalizedString("practice.mode.\(rawValue)", comment: "")
+        }
+    }
     var mode: Mode = .category
     var selectedExam: String? = nil
     var selectedCategory: String? = nil
