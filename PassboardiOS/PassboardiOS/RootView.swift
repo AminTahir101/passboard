@@ -82,7 +82,7 @@ private struct AccessDeniedView: View {
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
             Button(LocalizedStringKey("auth.signOut")) {
-                Task { try? await AuthService().signOut() }
+                Task { await appState.signOut() }
             }
             .buttonStyle(.bordered)
         }

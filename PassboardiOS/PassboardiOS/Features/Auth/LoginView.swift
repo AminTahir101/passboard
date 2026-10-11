@@ -1,9 +1,11 @@
 import SwiftUI
 import AuthenticationServices
+import CryptoKit
 
 struct LoginView: View {
     @Environment(AppState.self) private var appState
     @State private var viewModel = LoginViewModel()
+    @State private var currentNonce: String = ""
     @Environment(\.layoutDirection) private var layoutDirection
 
     var body: some View {
@@ -74,7 +76,10 @@ struct LoginView: View {
                         }
 
                         SignInWithAppleButton(.signIn) { request in
+                            let nonce = randomNonceString()
+                            currentNonce = nonce
                             request.requestedScopes = [.fullName, .email]
+                            request.nonce = sha256(nonce)
                         } onCompletion: { result in
                             handleAppleSignIn(result)
                         }
@@ -100,6 +105,18 @@ struct LoginView: View {
         .environment(\.layoutDirection, appState.isRTL ? .rightToLeft : .leftToRight)
     }
 
+    private func randomNonceString(length: Int = 32) -> String {
+        var randomBytes = [UInt8](repeating: 0, count: length)
+        _ = SecRandomCopyBytes(kSecRandomDefault, randomBytes.count, &randomBytes)
+        return randomBytes.map { String(format: "%02x", $0) }.joined()
+    }
+
+    private func sha256(_ input: String) -> String {
+        let inputData = Data(input.utf8)
+        let hashed = SHA256.hash(data: inputData)
+        return hashed.compactMap { String(format: "%02x", $0) }.joined()
+    }
+
     private func handleAppleSignIn(_ result: Result<ASAuthorization, Error>) {
         switch result {
         case .success(let auth):
@@ -108,7 +125,7 @@ struct LoginView: View {
                 let tokenData = credential.identityToken,
                 let idToken = String(data: tokenData, encoding: .utf8)
             else { return }
-            let nonce = "" // In production, generate a cryptographic nonce
+            let nonce = currentNonce
             Task {
                 viewModel.isLoading = true
                 do {

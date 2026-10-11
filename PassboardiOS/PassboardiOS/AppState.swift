@@ -22,6 +22,11 @@ final class AppState {
         UserDefaults.standard.set(lang, forKey: "app_language")
     }
 
+    func signOut() async {
+        try? await supabase.auth.signOut()
+        // authStateChanges listener will clear session and profile
+    }
+
     @MainActor
     func loadProfile(userId: String) async {
         do {
