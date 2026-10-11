@@ -34,7 +34,7 @@ final class AIChatService: AIChatServiceProtocol {
 
     func streamResponse(conversationId: String, userMessage: String) -> AsyncThrowingStream<String, Error> {
         AsyncThrowingStream { continuation in
-            Task {
+            let task = Task {
                 do {
                     guard let session = try? await supabase.auth.session else {
                         continuation.finish(throwing: AppError.unauthorized)
@@ -70,6 +70,7 @@ final class AIChatService: AIChatServiceProtocol {
                     continuation.finish(throwing: error)
                 }
             }
+            continuation.onTermination = { _ in task.cancel() }
         }
     }
 }

@@ -75,8 +75,9 @@ struct MockExamSessionView: View {
                                 label: option.rawValue,
                                 text: q.option(for: option),
                                 state: {
-                                    if answered == nil { return answered == option ? .selected : .unanswered }
-                                    return answered == option ? .selected : .unanswered
+                                    guard let answered else { return .unanswered }
+                                    if option == q.correctAnswer { return .correct }
+                                    return answered == option ? .incorrect : .unanswered
                                 }()
                             ) { Task { await viewModel.selectAnswer(option) } }
                         }

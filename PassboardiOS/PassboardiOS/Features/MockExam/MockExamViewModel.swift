@@ -57,11 +57,11 @@ final class MockExamViewModel {
     }
 
     func selectAnswer(_ answer: CorrectAnswer) async {
-        guard let q = current, answers[q.id] == nil else { return }
+        guard let q = current, let exam, answers[q.id] == nil else { return }
         answers[q.id] = answer
         let isCorrect = answer == q.correctAnswer
         try? await mockExamService.saveAnswer(
-            mockExamId: exam!.id, questionId: q.id, answer: answer, isCorrect: isCorrect)
+            mockExamId: exam.id, questionId: q.id, answer: answer, isCorrect: isCorrect)
     }
 
     func toggleFlag() {

@@ -2,6 +2,7 @@ import SwiftUI
 import Supabase
 
 @Observable
+@MainActor
 final class AppState {
     var session: Session? = nil
     var profile: Profile? = nil
