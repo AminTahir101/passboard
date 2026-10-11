@@ -21,6 +21,7 @@ settings:
     TARGETED_DEVICE_FAMILY: "1,2"
     SUPPORTS_MAC_DESIGNED_FOR_IPAD: NO
     ENABLE_PREVIEWS: YES
+    DEVELOPMENT_TEAM: 9972L3XW55
 
 targets:
   PassboardiOS:
@@ -33,6 +34,8 @@ targets:
         INFOPLIST_FILE: PassboardiOS/Info.plist
         PRODUCT_BUNDLE_IDENTIFIER: com.passboard.ios
         CODE_SIGN_ENTITLEMENTS: PassboardiOS/PassboardiOS.entitlements
+        CODE_SIGN_STYLE: Automatic
+        DEVELOPMENT_TEAM: 9972L3XW55
     configFiles:
       Debug: Config.xcconfig
       Release: Config.xcconfig
