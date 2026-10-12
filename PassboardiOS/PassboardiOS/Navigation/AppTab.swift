@@ -18,12 +18,12 @@ enum AppTab: String, CaseIterable, Identifiable {
 
     var icon: String {
         switch self {
-        case .dashboard: return "square.grid.2x2"
-        case .practice:  return "doc.text"
-        case .mockExam:  return "clock"
-        case .aiChat:    return "bubble.left.and.bubble.right"
+        case .dashboard: return "square.grid.2x2.fill"
+        case .practice:  return "doc.text.fill"
+        case .mockExam:  return "clock.fill"
+        case .aiChat:    return "bubble.left.and.bubble.right.fill"
         case .studyPlan: return "calendar"
-        case .profile:   return "person.circle"
+        case .profile:   return "person.circle.fill"
         }
     }
 }

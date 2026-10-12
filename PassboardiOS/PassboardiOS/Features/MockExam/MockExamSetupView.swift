@@ -29,7 +29,7 @@ struct MockExamSetupView: View {
                     // Title
                     VStack(alignment: .leading, spacing: 4) {
                         Text(LocalizedStringKey("nav.mockExam"))
-                            .font(.system(size: 28, weight: .bold))
+                            .font(.title.bold())
                             .foregroundStyle(.white)
                         Text(LocalizedStringKey("mockExam.subtitle"))
                             .font(.subheadline)
@@ -48,13 +48,13 @@ struct MockExamSetupView: View {
 
                         HStack(spacing: 12) {
                             ExamLengthCard(
-                                badge: "FULL",
+                                badge: NSLocalizedString("mockExam.full", comment: ""),
                                 count: 100,
                                 isSelected: viewModel.questionCount == 100
                             ) { viewModel.questionCount = 100 }
 
                             ExamLengthCard(
-                                badge: "HALF",
+                                badge: NSLocalizedString("mockExam.half", comment: ""),
                                 count: 50,
                                 isSelected: viewModel.questionCount == 50
                             ) { viewModel.questionCount = 50 }
@@ -91,7 +91,7 @@ struct MockExamSetupView: View {
                     if viewModel.state == .loading {
                         ProgressView().tint(.black)
                     } else {
-                        Text("Begin \(viewModel.questionCount)-question exam")
+                        Text(LocalizedStringKey("mockExam.begin"))
                     }
                 }
                 .buttonStyle(BrandButtonStyle())
@@ -139,7 +139,7 @@ private struct ExamLengthCard: View {
                 Text("\(count)")
                     .font(.system(size: 36, weight: .bold))
                     .foregroundStyle(.white)
-                Text("questions")
+                Text(LocalizedStringKey("common.questions"))
                     .font(.caption)
                     .foregroundStyle(Color.mutedForeground)
             }

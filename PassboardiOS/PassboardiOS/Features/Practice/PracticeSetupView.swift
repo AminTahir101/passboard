@@ -17,7 +17,7 @@ struct PracticeSetupView: View {
                     // Title
                     VStack(alignment: .leading, spacing: 4) {
                         Text(LocalizedStringKey("nav.practice"))
-                            .font(.system(size: 28, weight: .bold))
+                            .font(.title.bold())
                             .foregroundStyle(.white)
                         Text(LocalizedStringKey("practice.subtitle"))
                             .font(.subheadline)
@@ -111,6 +111,7 @@ struct PracticeSetupView: View {
                                     .background(Color.cardSurface)
                             }
                             .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .accessibilityLabel(Text("Decrease question count"))
 
                             Spacer()
                             Text("\(viewModel.count)")
@@ -127,6 +128,7 @@ struct PracticeSetupView: View {
                                     .background(Color.cardSurface)
                             }
                             .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .accessibilityLabel(Text("Increase question count"))
                         }
                         .padding(.horizontal, 4)
                     }
@@ -152,7 +154,7 @@ struct PracticeSetupView: View {
                     if viewModel.isLoading {
                         ProgressView().tint(.black)
                     } else {
-                        Text("Start \(viewModel.count) questions")
+                        Text("\(NSLocalizedString("practice.start", comment: "")) \(viewModel.count) \(NSLocalizedString("common.questions", comment: ""))")
                     }
                 }
                 .buttonStyle(BrandButtonStyle())
@@ -181,20 +183,6 @@ struct PracticeSetupView: View {
                 )
             }
         }
-    }
-}
-
-// MARK: - Section Label
-private struct SectionLabel: View {
-    let key: LocalizedStringKey
-    init(_ key: String) { self.key = LocalizedStringKey(key) }
-    var body: some View {
-        Text(key)
-            .font(.caption)
-            .fontWeight(.semibold)
-            .foregroundStyle(Color.mutedForeground)
-            .textCase(.uppercase)
-            .tracking(0.8)
     }
 }
 

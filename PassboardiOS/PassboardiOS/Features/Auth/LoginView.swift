@@ -92,6 +92,7 @@ struct LoginView: View {
                                         Image(systemName: showPassword ? "eye.slash" : "eye")
                                             .foregroundStyle(Color.mutedForeground)
                                     }
+                                    .accessibilityLabel(showPassword ? Text("Hide password") : Text("Show password"))
                                 }
                                 .padding(14)
                                 .background(Color.cardSurface)

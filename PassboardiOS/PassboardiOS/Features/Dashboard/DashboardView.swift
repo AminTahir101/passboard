@@ -16,7 +16,7 @@ struct DashboardView: View {
                             .foregroundStyle(Color.mutedForeground)
                         if let name = appState.profile?.fullName {
                             Text(name)
-                                .font(.system(size: 26, weight: .bold))
+                                .font(.title.bold())
                                 .foregroundStyle(.white)
                         }
                     }
@@ -25,6 +25,7 @@ struct DashboardView: View {
                         AvatarCircle(name: appState.profile?.fullName)
                     }
                     .buttonStyle(PressButtonStyle())
+                    .accessibilityLabel(Text("Profile"))
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 8)
@@ -59,10 +60,22 @@ struct DashboardView: View {
                         .padding(.horizontal, 20)
 
                     LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-                        QuickActionCard(titleKey: "nav.mockExam",   subtitleKey: "dashboard.qa.mockExamDesc",  icon: "clock.fill")
-                        QuickActionCard(titleKey: "nav.practice",   subtitleKey: "dashboard.qa.practiceDesc",  icon: "doc.text.fill")
-                        QuickActionCard(titleKey: "nav.aiChat",     subtitleKey: "dashboard.qa.aiChatDesc",    icon: "bubble.left.and.bubble.right.fill")
-                        QuickActionCard(titleKey: "nav.studyPlan",  subtitleKey: "dashboard.qa.studyPlanDesc", icon: "calendar")
+                        NavigationLink(destination: MockExamSetupView()) {
+                            QuickActionCard(titleKey: "nav.mockExam",   subtitleKey: "dashboard.qa.mockExamDesc",  icon: "clock.fill")
+                        }
+                        .buttonStyle(PressButtonStyle())
+                        NavigationLink(destination: PracticeSetupView()) {
+                            QuickActionCard(titleKey: "nav.practice",   subtitleKey: "dashboard.qa.practiceDesc",  icon: "doc.text.fill")
+                        }
+                        .buttonStyle(PressButtonStyle())
+                        NavigationLink(destination: AIChatListView()) {
+                            QuickActionCard(titleKey: "nav.aiChat",     subtitleKey: "dashboard.qa.aiChatDesc",    icon: "bubble.left.and.bubble.right.fill")
+                        }
+                        .buttonStyle(PressButtonStyle())
+                        NavigationLink(destination: StudyPlanView()) {
+                            QuickActionCard(titleKey: "nav.studyPlan",  subtitleKey: "dashboard.qa.studyPlanDesc", icon: "calendar")
+                        }
+                        .buttonStyle(PressButtonStyle())
                     }
                     .padding(.horizontal, 20)
                 }
@@ -148,7 +161,7 @@ private struct AccuracyCard: View {
                         .textCase(.uppercase)
                         .tracking(0.5)
                     Text("\(stats.correctAttempts) of \(stats.totalAttempts) correct")
-                        .font(.system(size: 17, weight: .bold))
+                        .font(.headline)
                         .foregroundStyle(.white)
                     Text(LocalizedStringKey("dashboard.accuracyHint"))
                         .font(.caption)
@@ -248,7 +261,7 @@ private struct TodayTaskRow: View {
                 Text(task.taskType.rawValue.capitalized)
                     .font(.subheadline.bold())
                     .foregroundStyle(.white)
-                Text(task.specialty ?? "General")
+                Text(task.specialty ?? NSLocalizedString("common.general", comment: "General specialty"))
                     .font(.caption)
                     .foregroundStyle(Color.mutedForeground)
                 Text("\(task.questionCount) questions")

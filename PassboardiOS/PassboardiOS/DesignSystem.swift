@@ -12,7 +12,7 @@ extension Color {
     /// Subtle card border.
     static let cardBorder = Color.white.opacity(0.08)
     /// Muted secondary text.
-    static let mutedForeground = Color.white.opacity(0.45)
+    static let mutedForeground = Color.white.opacity(0.55)
 }
 
 // MARK: - Brand Primary Button
@@ -28,6 +28,12 @@ struct BrandButtonStyle: ButtonStyle {
             .clipShape(RoundedRectangle(cornerRadius: 14))
             .scaleEffect(configuration.isPressed ? 0.98 : 1.0)
             .animation(.easeOut(duration: 0.1), value: configuration.isPressed)
+            .onChange(of: configuration.isPressed) { _, isPressed in
+                if isPressed {
+                    let generator = UIImpactFeedbackGenerator(style: .medium)
+                    generator.impactOccurred()
+                }
+            }
     }
 }
 
@@ -56,5 +62,20 @@ struct IconBox: View {
                 .font(.system(size: size * 0.42, weight: .medium))
                 .foregroundStyle(Color.brand)
         }
+    }
+}
+
+// MARK: - Section Label (shared)
+/// Uppercase muted caption used as a section header throughout the app.
+struct SectionLabel: View {
+    let key: LocalizedStringKey
+    init(_ key: String) { self.key = LocalizedStringKey(key) }
+    var body: some View {
+        Text(key)
+            .font(.caption)
+            .fontWeight(.semibold)
+            .foregroundStyle(Color.mutedForeground)
+            .textCase(.uppercase)
+            .tracking(0.8)
     }
 }

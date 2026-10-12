@@ -31,6 +31,7 @@ struct ProfileView: View {
                                     .foregroundStyle(.white)
                             }
                         }
+                        .accessibilityLabel(Text("Back"))
                         Spacer()
                         Text(LocalizedStringKey("nav.profile"))
                             .font(.headline)
@@ -162,20 +163,6 @@ struct ProfileView: View {
         }
         .navigationBarHidden(true)
         .environment(\.layoutDirection, appState.isRTL ? .rightToLeft : .leftToRight)
-    }
-}
-
-// MARK: - Section Label
-private struct SectionLabel: View {
-    let key: LocalizedStringKey
-    init(_ key: String) { self.key = LocalizedStringKey(key) }
-    var body: some View {
-        Text(key)
-            .font(.caption)
-            .fontWeight(.semibold)
-            .foregroundStyle(Color.mutedForeground)
-            .textCase(.uppercase)
-            .tracking(0.8)
     }
 }
 
