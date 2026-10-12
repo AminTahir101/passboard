@@ -30,9 +30,12 @@ private struct iPadRootView: View {
     var body: some View {
         NavigationSplitView {
             SidebarView(selection: $selectedTab)
+                .navigationBarHidden(true)
         } detail: {
             tabContent(for: selectedTab)
         }
+        .navigationSplitViewStyle(.balanced)
+        .tint(Color.brand)
     }
 }
 
