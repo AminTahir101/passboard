@@ -48,6 +48,37 @@
   --brand-muted-border: color-mix(in srgb, var(--brand) 20%, var(--border));
 }
 
+/* ── Night mode — deep navy / amber palette ─────────────────────────────── */
+[data-theme="dark"] {
+  --background:             #0d1520;
+  --foreground:             #f0efec;
+  --card:                   #192430;
+  --card-foreground:        #f0efec;
+  --popover:                #192430;
+  --popover-foreground:     #f0efec;
+  --primary:                #f2b632;
+  --primary-foreground:     #1b1a17;
+  --secondary:              #1e2d3f;
+  --secondary-foreground:   #c8d4e0;
+  --muted:                  #1e2d3f;
+  --muted-foreground:       #7a8fa6;
+  --accent:                 #2b2010;
+  --accent-foreground:      #f2b632;
+  --destructive:            #e05a30;
+  --destructive-foreground: #ffffff;
+  --border:                 #243447;
+  --input:                  #1e2d3f;
+  --ring:                   #f2b632;
+  --brand:                  #f2b632;
+  --brand-foreground:       #1b1a17;
+  --success:                #22c55e;
+  --success-foreground:     #ffffff;
+  --warning:                #d4940a;
+  --warning-foreground:     #ffffff;
+  --highlight:              #f2b632;
+  --highlight-foreground:   #1b1a17;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

@@ -17,7 +17,10 @@ import {
   X,
   Layers,
   CalendarDays,
+  Moon,
+  Sun,
 } from "lucide-react";
+import { useTheme } from "@/hooks/useTheme";
 import { createClient } from "@/lib/supabase/client";
 import { localePath } from "@/lib/i18n";
 import LanguageToggle from "@/components/LanguageToggle";
@@ -40,6 +43,7 @@ export default function AppSidebar({ userName, userEmail, lang, nav, langToggleL
   const pathname = usePathname();
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   const navItems = [
     { label: nav.dashboard, icon: LayoutDashboard, href: localePath(lang, "/dashboard") },
@@ -135,6 +139,22 @@ export default function AppSidebar({ userName, userEmail, lang, nav, langToggleL
         <div className="mb-1 px-1">
           <LanguageToggle lang={lang} label={langToggleLabel} />
         </div>
+        <button
+          onClick={toggleTheme}
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors mb-0.5"
+          style={{ color: "var(--muted-foreground)" }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = "var(--muted)";
+            e.currentTarget.style.color = "var(--foreground)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "transparent";
+            e.currentTarget.style.color = "var(--muted-foreground)";
+          }}
+        >
+          {theme === "dark" ? <Sun size={17} /> : <Moon size={17} />}
+          {theme === "dark" ? "Light mode" : "Night mode"}
+        </button>
         <button
           onClick={handleLogout}
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors"
