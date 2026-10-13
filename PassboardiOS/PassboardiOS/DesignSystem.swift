@@ -79,3 +79,44 @@ struct SectionLabel: View {
             .tracking(0.8)
     }
 }
+
+// MARK: - Passboard Logo Mark (shared)
+/// Rounded-square amber ECG logo — matches the web SVG exactly.
+struct PassboardLogoMark: View {
+    var size: CGFloat = 88
+
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: size * 0.227, style: .continuous)
+                .fill(Color.cardSurface)
+                .frame(width: size, height: size)
+            RoundedRectangle(cornerRadius: size * 0.227, style: .continuous)
+                .strokeBorder(Color.brand.opacity(0.45), lineWidth: 1.5)
+                .frame(width: size, height: size)
+            ECGLogoShape()
+                .stroke(Color.brand,
+                        style: StrokeStyle(lineWidth: size * 0.034, lineCap: .round, lineJoin: .round))
+                .frame(width: size * 0.72, height: size * 0.72)
+        }
+    }
+}
+
+/// Translated from web SVG viewBox="0 0 36 36"
+/// points="3,18 7,18 9,9 12,27 15,18 18,18 20.5,23.5 29,11"
+struct ECGLogoShape: Shape {
+    func path(in rect: CGRect) -> Path {
+        let w = rect.width, h = rect.height, s: CGFloat = 36
+        func px(_ v: CGFloat) -> CGFloat { v / s * w }
+        func py(_ v: CGFloat) -> CGFloat { v / s * h }
+        var p = Path()
+        p.move(to:    CGPoint(x: px(3),    y: py(18)))
+        p.addLine(to: CGPoint(x: px(7),    y: py(18)))
+        p.addLine(to: CGPoint(x: px(9),    y: py(9)))
+        p.addLine(to: CGPoint(x: px(12),   y: py(27)))
+        p.addLine(to: CGPoint(x: px(15),   y: py(18)))
+        p.addLine(to: CGPoint(x: px(18),   y: py(18)))
+        p.addLine(to: CGPoint(x: px(20.5), y: py(23.5)))
+        p.addLine(to: CGPoint(x: px(29),   y: py(11)))
+        return p
+    }
+}

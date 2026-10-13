@@ -1,11 +1,8 @@
 import SwiftUI
-import AuthenticationServices
-import CryptoKit
 
 struct LoginView: View {
     @Environment(AppState.self) private var appState
     @State private var viewModel = LoginViewModel()
-    @State private var currentNonce: String = ""
     @State private var showPassword = false
     @FocusState private var focusedField: Field?
 
@@ -18,11 +15,12 @@ struct LoginView: View {
 
                 ScrollView {
                     VStack(spacing: 32) {
-                        // Brand mark
-                        VStack(spacing: 14) {
-                            PassboardBrandMark()
+
+                        // Logo + wordmark
+                        VStack(spacing: 16) {
+                            PassboardLogoMark()
                             VStack(spacing: 6) {
-                                Text("Passboard")
+                                Text("Passboard.ai")
                                     .font(.system(size: 32, weight: .bold))
                                     .foregroundStyle(.white)
                                 Text(LocalizedStringKey("login.subtitle"))
@@ -35,43 +33,29 @@ struct LoginView: View {
 
                         // Form
                         VStack(spacing: 14) {
+
                             // Email
-                            VStack(alignment: .leading, spacing: 6) {
-                                Text(LocalizedStringKey("login.email"))
-                                    .font(.subheadline)
-                                    .fontWeight(.medium)
-                                    .foregroundStyle(Color.mutedForeground)
-                                TextField(LocalizedStringKey("login.email"), text: $viewModel.email)
-                                    .keyboardType(.emailAddress)
-                                    .autocapitalization(.none)
-                                    .textContentType(.emailAddress)
-                                    .focused($focusedField, equals: .email)
-                                    .padding(14)
-                                    .background(Color.cardSurface)
-                                    .foregroundStyle(.white)
-                                    .clipShape(RoundedRectangle(cornerRadius: 14))
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 14)
-                                            .strokeBorder(
-                                                focusedField == .email ? Color.brand : Color.cardBorder,
-                                                lineWidth: focusedField == .email ? 1.5 : 1
-                                            )
-                                    )
-                                    .animation(.easeOut(duration: 0.15), value: focusedField)
-                            }
+                            AuthField(
+                                label: LocalizedStringKey("login.email"),
+                                placeholder: LocalizedStringKey("login.email"),
+                                text: $viewModel.email,
+                                isFocused: focusedField == .email,
+                                keyboard: .emailAddress
+                            )
+                            .focused($focusedField, equals: .email)
 
                             // Password
                             VStack(alignment: .leading, spacing: 6) {
                                 HStack {
                                     Text(LocalizedStringKey("login.password"))
-                                        .font(.subheadline)
-                                        .fontWeight(.medium)
+                                        .font(.subheadline).fontWeight(.medium)
                                         .foregroundStyle(Color.mutedForeground)
                                     Spacer()
-                                    Text(LocalizedStringKey("login.forgot"))
-                                        .font(.subheadline)
-                                        .fontWeight(.medium)
-                                        .foregroundStyle(Color.brand)
+                                    Button {} label: {
+                                        Text(LocalizedStringKey("login.forgot"))
+                                            .font(.subheadline).fontWeight(.medium)
+                                            .foregroundStyle(Color.brand)
+                                    }
                                 }
                                 HStack {
                                     Group {
@@ -137,34 +121,31 @@ struct LoginView: View {
                                 Rectangle().frame(height: 1).foregroundStyle(Color.white.opacity(0.12))
                             }
 
-                            // Apple Sign In
-                            SignInWithAppleButton(.signIn) { request in
-                                let nonce = randomNonceString()
-                                currentNonce = nonce
-                                request.requestedScopes = [.fullName, .email]
-                                request.nonce = sha256(nonce)
-                            } onCompletion: { result in
-                                handleAppleSignIn(result)
+                            // Request Access button
+                            Button {
+                                viewModel.showAccessRequest = true
+                            } label: {
+                                HStack(spacing: 8) {
+                                    Image(systemName: "person.badge.plus")
+                                        .font(.system(size: 16, weight: .semibold))
+                                    Text(LocalizedStringKey("login.requestAccess"))
+                                        .font(.system(size: 16, weight: .semibold))
+                                }
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 52)
+                                .foregroundStyle(Color.brand)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 16)
+                                        .fill(Color.brand.opacity(0.12))
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 16)
+                                                .strokeBorder(Color.brand.opacity(0.45), lineWidth: 1.5)
+                                        )
+                                )
                             }
-                            .signInWithAppleButtonStyle(.white)
-                            .frame(height: 52)
-                            .clipShape(RoundedRectangle(cornerRadius: 14))
                         }
                         .padding(.horizontal, 24)
-
-                        // Request access link
-                        Button {
-                            viewModel.showAccessRequest = true
-                        } label: {
-                            HStack(spacing: 4) {
-                                Text(LocalizedStringKey("login.noAccess"))
-                                    .foregroundStyle(Color.mutedForeground)
-                                Text(LocalizedStringKey("login.requestAccess"))
-                                    .foregroundStyle(Color.brand)
-                            }
-                            .font(.footnote)
-                        }
-                        .padding(.bottom, 40)
+                        .padding(.bottom, 48)
                     }
                 }
                 .frame(maxWidth: 480)
@@ -177,76 +158,38 @@ struct LoginView: View {
         }
         .environment(\.layoutDirection, appState.isRTL ? .rightToLeft : .leftToRight)
     }
-
-    private func randomNonceString(length: Int = 32) -> String {
-        var randomBytes = [UInt8](repeating: 0, count: length)
-        _ = SecRandomCopyBytes(kSecRandomDefault, randomBytes.count, &randomBytes)
-        return randomBytes.map { String(format: "%02x", $0) }.joined()
-    }
-
-    private func sha256(_ input: String) -> String {
-        let inputData = Data(input.utf8)
-        let hashed = SHA256.hash(data: inputData)
-        return hashed.compactMap { String(format: "%02x", $0) }.joined()
-    }
-
-    private func handleAppleSignIn(_ result: Result<ASAuthorization, Error>) {
-        switch result {
-        case .success(let auth):
-            guard
-                let credential = auth.credential as? ASAuthorizationAppleIDCredential,
-                let tokenData = credential.identityToken,
-                let idToken = String(data: tokenData, encoding: .utf8)
-            else { return }
-            let nonce = currentNonce
-            Task {
-                viewModel.isLoading = true
-                do {
-                    try await AuthService().signInWithApple(idToken: idToken, nonce: nonce)
-                } catch {
-                    viewModel.error = error.localizedDescription
-                }
-                viewModel.isLoading = false
-            }
-        case .failure(let error):
-            viewModel.error = error.localizedDescription
-        }
-    }
 }
 
-// MARK: - Brand Mark (ECG waveform + checkmark)
+// MARK: - Reusable auth text field
 
-private struct PassboardBrandMark: View {
+private struct AuthField: View {
+    let label: LocalizedStringKey
+    let placeholder: LocalizedStringKey
+    @Binding var text: String
+    let isFocused: Bool
+    var keyboard: UIKeyboardType = .default
+
     var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 24, style: .continuous)
-                .fill(Color.cardSurface)
-                .frame(width: 88, height: 88)
-            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .strokeBorder(Color.brand.opacity(0.5), lineWidth: 1.5)
-                .frame(width: 88, height: 88)
-            ECGCheckmarkShape()
-                .stroke(Color.brand,
-                        style: StrokeStyle(lineWidth: 2.8, lineCap: .round, lineJoin: .round))
-                .frame(width: 54, height: 30)
+        VStack(alignment: .leading, spacing: 6) {
+            Text(label)
+                .font(.subheadline).fontWeight(.medium)
+                .foregroundStyle(Color.mutedForeground)
+            TextField(placeholder, text: $text)
+                .keyboardType(keyboard)
+                .autocapitalization(.none)
+                .textContentType(keyboard == .emailAddress ? .emailAddress : .name)
+                .padding(14)
+                .background(Color.cardSurface)
+                .foregroundStyle(.white)
+                .clipShape(RoundedRectangle(cornerRadius: 14))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 14)
+                        .strokeBorder(
+                            isFocused ? Color.brand : Color.cardBorder,
+                            lineWidth: isFocused ? 1.5 : 1
+                        )
+                )
+                .animation(.easeOut(duration: 0.15), value: isFocused)
         }
-    }
-}
-
-private struct ECGCheckmarkShape: Shape {
-    func path(in rect: CGRect) -> Path {
-        let w = rect.width
-        let h = rect.height
-        let mid = h / 2
-        var p = Path()
-        p.move(to: CGPoint(x: 0, y: mid))
-        p.addLine(to: CGPoint(x: w * 0.26, y: mid))
-        p.addLine(to: CGPoint(x: w * 0.34, y: mid - h * 0.42))
-        p.addLine(to: CGPoint(x: w * 0.41, y: mid + h * 0.48))
-        p.addLine(to: CGPoint(x: w * 0.47, y: mid - h * 0.20))
-        p.addLine(to: CGPoint(x: w * 0.53, y: mid))
-        p.addLine(to: CGPoint(x: w * 0.66, y: mid + h * 0.28))
-        p.addLine(to: CGPoint(x: w * 1.00, y: mid - h * 0.36))
-        return p
     }
 }
