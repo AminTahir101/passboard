@@ -2,6 +2,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import AppSidebar from "@/components/layout/AppSidebar";
+import NavigationLoader from "@/components/NavigationLoader";
 import type { Profile } from "@/types/database";
 import { getDictionary, localePath } from "@/lib/i18n";
 import { getDevProfile } from "@/lib/dev-user";
@@ -40,6 +41,7 @@ export default async function AppLayout({
 
   return (
     <>
+      <NavigationLoader />
       <AppSidebar
         userName={profile.full_name}
         userEmail={profile.email}
