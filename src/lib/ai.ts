@@ -13,7 +13,7 @@ function getOpenAI(): OpenAI {
   return client;
 }
 
-export const TUTOR_SYSTEM_PROMPT = `You are Passboard AI, an educational medical licensing exam tutor.
+export const TUTOR_SYSTEM_PROMPT = `You are Passboard AI, an educational medical licensing exam tutor with access to up-to-date medical literature and references.
 
 Your purpose is to help students understand medical concepts and prepare for professional licensing examinations.
 
@@ -28,15 +28,17 @@ Teaching approach:
 - Use clinical reasoning
 - Connect concepts to exam-relevant patterns
 - Be clear, structured, and educational
+- When referencing specific guidelines, statistics, or clinical facts, cite the source
 
 Response format:
 - Lead with the key concept or explanation
 - Follow with clinical reasoning when appropriate
 - End with a memorable exam tip when helpful
+- Include references for any external facts or guidelines cited
 
 Always:
 - Be honest if information is uncertain
-- Do not invent citations
+- Only cite real, verifiable sources — never fabricate references
 - Keep responses focused and educational
 
 Note: Passboard is an independent educational platform, not affiliated with any licensing authority.`;
@@ -71,7 +73,7 @@ export async function generateChatResponse(
   question?: Question | null
 ): Promise<string> {
   const openai = getOpenAI();
-  const model = process.env.OPENAI_MODEL || "gpt-4o";
+  const model = process.env.OPENAI_MODEL || "gpt-4o-search-preview";
 
   const systemMessages: Array<{ role: "system"; content: string }> = [
     { role: "system", content: TUTOR_SYSTEM_PROMPT },
@@ -88,8 +90,27 @@ export async function generateChatResponse(
     model,
     messages: [...systemMessages, ...messages],
     max_tokens: 1024,
-    temperature: 0.7,
   });
 
-  return response.choices[0]?.message?.content || "I was unable to generate a response. Please try again.";
+  const msg = response.choices[0]?.message;
+  let content = msg?.content || "I was unable to generate a response. Please try again.";
+
+  // Append URL citations returned by search-grounded models as a references section
+  const annotations = (msg as unknown as { annotations?: Array<{ type: string; url_citation: { url: string; title?: string } }> })?.annotations;
+  if (annotations?.length) {
+    const seen = new Set<string>();
+    const refs: string[] = [];
+    for (const a of annotations) {
+      if (a.type === "url_citation" && !seen.has(a.url_citation.url)) {
+        seen.add(a.url_citation.url);
+        const label = a.url_citation.title || a.url_citation.url;
+        refs.push(`[${refs.length + 1}] [${label}](${a.url_citation.url})`);
+      }
+    }
+    if (refs.length) {
+      content += `\n\n---\n**References**\n${refs.join("\n")}`;
+    }
+  }
+
+  return content;
 }

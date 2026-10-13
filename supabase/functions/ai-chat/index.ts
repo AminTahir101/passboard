@@ -5,7 +5,7 @@ const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY") ?? "";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 
-const SYSTEM_PROMPT = `You are an expert medical exam tutor helping students prepare for medical licensing exams (USMLE, Saudi medical boards, and similar).
+const SYSTEM_PROMPT = `You are an expert medical exam tutor with access to up-to-date medical literature, helping students prepare for medical licensing exams (USMLE, Saudi medical boards, and similar).
 
 Your role:
 - Explain medical concepts clearly and accurately
@@ -13,12 +13,14 @@ Your role:
 - Use clinical reasoning to reinforce learning
 - Be concise but thorough — exam candidates are short on time
 - When a question is provided as context, focus your explanation on that specific question
+- When referencing specific guidelines, statistics, or clinical facts, cite the source
 
 Guidelines:
 - Use standard medical terminology
 - If asked about a practice question, explain the key teaching point, not just the answer
 - Encourage pattern recognition for exam success
-- Respond in the same language the student uses (English or Arabic)`;
+- Respond in the same language the student uses (English or Arabic)
+- Only cite real, verifiable sources — never fabricate references`;
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -150,10 +152,9 @@ ${question.justification ? `\nExplanation: ${question.justification}` : ""}`;
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      model: "gpt-4o",
+      model: "gpt-4o-search-preview",
       messages,
       max_tokens: 1000,
-      temperature: 0.6,
       stream: true,
     }),
   });
@@ -167,6 +168,10 @@ ${question.justification ? `\nExplanation: ${question.justification}` : ""}`;
   // Stream SSE back to the iOS client and collect full response
   const encoder = new TextEncoder();
   let fullContent = "";
+
+  type UrlCitation = { url: string; title?: string };
+  const citations: UrlCitation[] = [];
+  const seenUrls = new Set<string>();
 
   const stream = new ReadableStream({
     async start(controller) {
@@ -188,15 +193,37 @@ ${question.justification ? `\nExplanation: ${question.justification}` : ""}`;
             if (!trimmed.startsWith("data: ")) continue;
             const data = trimmed.slice(6);
             if (data === "[DONE]") {
+              // Emit references block before closing if any citations were collected
+              if (citations.length > 0) {
+                const refs = citations
+                  .map((c, i) => `[${i + 1}] ${c.title ? `${c.title} — ` : ""}${c.url}`)
+                  .join("\n");
+                const refsBlock = `\n\n---\n**References**\n${refs}`;
+                fullContent += refsBlock;
+                controller.enqueue(
+                  encoder.encode(`data: ${JSON.stringify({ content: refsBlock })}\n\n`)
+                );
+              }
               controller.enqueue(encoder.encode("data: [DONE]\n\n"));
               continue;
             }
             try {
               const parsed = JSON.parse(data);
-              const token = parsed.choices?.[0]?.delta?.content ?? "";
+              const delta = parsed.choices?.[0]?.delta ?? {};
+
+              // Collect citation annotations emitted as delta events
+              if (Array.isArray(delta.annotations)) {
+                for (const a of delta.annotations) {
+                  if (a.type === "url_citation" && !seenUrls.has(a.url_citation?.url)) {
+                    seenUrls.add(a.url_citation.url);
+                    citations.push({ url: a.url_citation.url, title: a.url_citation.title });
+                  }
+                }
+              }
+
+              const token = delta.content ?? "";
               if (token) {
                 fullContent += token;
-                // Emit in the format the iOS client expects
                 controller.enqueue(
                   encoder.encode(`data: ${JSON.stringify({ content: token })}\n\n`)
                 );
