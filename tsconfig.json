@@ -30,5 +30,5 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules", "moraje3-landing", "scripts"]
+  "exclude": ["node_modules", "moraje3-landing", "scripts", "supabase"]
 }
