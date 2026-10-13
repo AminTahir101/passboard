@@ -7,6 +7,8 @@ struct PracticeSetupView: View {
 
     @Environment(AppState.self) private var appState
     @State private var viewModel = PracticeSetupViewModel()
+    @State private var savedSession: SavedPracticeSession? = nil
+    @State private var navigateToResume = false
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -24,6 +26,17 @@ struct PracticeSetupView: View {
                             .foregroundStyle(Color.mutedForeground)
                     }
                     .padding(.top, 8)
+
+                    // Resume banner
+                    if let saved = savedSession {
+                        ResumeBanner(session: saved) {
+                            navigateToResume = true
+                        } onDiscard: {
+                            guard let uid = appState.session?.user.id.uuidString else { return }
+                            SessionPersistence.clear(userId: uid)
+                            savedSession = nil
+                        }
+                    }
 
                     // Mode selector
                     VStack(alignment: .leading, spacing: 8) {
@@ -168,21 +181,109 @@ struct PracticeSetupView: View {
         .navigationBarHidden(true)
         .overlay { LoadingOverlay(isLoading: viewModel.isLoading) }
         .task {
+            if let uid = appState.session?.user.id.uuidString {
+                savedSession = SessionPersistence.load(userId: uid)
+            }
             if let cat = presetCategory { viewModel.selectedCategory = cat }
             if let cnt = presetCount { viewModel.count = cnt }
             await viewModel.loadCategories(exam: nil)
         }
+        // New session navigation
         .navigationDestination(isPresented: $viewModel.navigateToSession) {
             if let userId = appState.session?.user.id.uuidString {
+                PracticeSessionView(viewModel: viewModel.buildSessionViewModel(userId: userId))
+            }
+        }
+        // Resume saved session navigation
+        .navigationDestination(isPresented: $navigateToResume) {
+            if let saved = savedSession {
                 PracticeSessionView(
-                    viewModel: PracticeSessionViewModel(
-                        questions: viewModel.loadedQuestions,
-                        userId: userId,
-                        planTaskId: planTaskId
-                    )
+                    viewModel: PracticeSessionViewModel(restoring: saved, planTaskId: planTaskId)
                 )
             }
         }
+    }
+}
+
+// MARK: - Resume Banner
+
+private struct ResumeBanner: View {
+    let session: SavedPracticeSession
+    let onResume: () -> Void
+    let onDiscard: () -> Void
+
+    private var displayMode: String {
+        switch session.mode {
+        case "incorrect": return "Review Mistakes"
+        case "topic":     return "Topic Practice"
+        default:          return session.category ?? "Practice"
+        }
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 10) {
+                IconBox(systemName: "play.circle.fill", size: 36)
+                VStack(alignment: .leading, spacing: 2) {
+                    HStack(spacing: 6) {
+                        Text("In Progress")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(Color.brand)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 3)
+                            .background(Color.brand.opacity(0.15))
+                            .clipShape(Capsule())
+                    }
+                    Text(displayMode)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.white)
+                }
+                Spacer()
+                Text("\(session.questionsRemaining) left")
+                    .font(.caption.weight(.medium))
+                    .foregroundStyle(Color.mutedForeground)
+            }
+
+            // Progress bar
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    RoundedRectangle(cornerRadius: 3)
+                        .fill(Color.white.opacity(0.08))
+                        .frame(height: 5)
+                    RoundedRectangle(cornerRadius: 3)
+                        .fill(Color.brand)
+                        .frame(width: geo.size.width * session.progressFraction, height: 5)
+                }
+            }
+            .frame(height: 5)
+
+            HStack(spacing: 10) {
+                Button(action: onResume) {
+                    Text("Resume")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.black)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 40)
+                        .background(Color.brand)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                }
+
+                Button(action: onDiscard) {
+                    Text("Discard")
+                        .font(.subheadline.weight(.medium))
+                        .foregroundStyle(Color.mutedForeground)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 40)
+                        .background(Color.cardSurface)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .overlay(RoundedRectangle(cornerRadius: 10).strokeBorder(Color.cardBorder, lineWidth: 1))
+                }
+            }
+        }
+        .padding(16)
+        .background(Color.cardSurface)
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).strokeBorder(Color.brand.opacity(0.35), lineWidth: 1))
     }
 }
 

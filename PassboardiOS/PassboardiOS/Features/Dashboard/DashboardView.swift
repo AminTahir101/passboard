@@ -179,8 +179,7 @@ private struct AccuracyCard: View {
             } label: {
                 HStack {
                     Text(LocalizedStringKey("dashboard.continuePracticing"))
-                        .font(.subheadline)
-                        .fontWeight(.semibold)
+                        .font(.subheadline).fontWeight(.semibold)
                     Spacer()
                     Image(systemName: "arrow.right")
                         .font(.subheadline.weight(.semibold))

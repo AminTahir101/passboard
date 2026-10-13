@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		005CA9777026CF0D858090C2 /* MockExamService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E18783B95073BD9B1002ABA /* MockExamService.swift */; };
+		AA1B2C3D4E5F6A7B8C9D0E1F /* SessionPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB2C3D4E5F6A7B8C9D0E1F2A /* SessionPersistence.swift */; };
 		017DB7B67DB25B8042C2AD30 /* DashboardViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542B5A5503A5BAD4EEE65E10 /* DashboardViewModelTests.swift */; };
 		095CB707F4B44D54DAB3E5D6 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7741520B764A8BA5BD1FA05 /* CardView.swift */; };
 		0D74789BADF54D7B0A6ECF9E /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 00A78F6FF53BEEFC76D40320 /* Supabase */; };
@@ -108,6 +109,7 @@
 		58CC04D1DD41924E7EE830FC /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		60F96B09E1E414531752872C /* PracticeViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeViewModelTests.swift; sourceTree = "<group>"; };
 		6D4A261540CE6BD90C821965 /* AIChatService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIChatService.swift; sourceTree = "<group>"; };
+		BB2C3D4E5F6A7B8C9D0E1F2A /* SessionPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionPersistence.swift; sourceTree = "<group>"; };
 		6EE256AE30C5C004E60827B9 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		728B682FBCC556113B7B1E56 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		7A852E4F50B71FA9CF445284 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
@@ -280,6 +282,7 @@
 				8BF41D27DB6656EC9D57E0FA /* ProfileService.swift */,
 				535FBF1FEE4551250076518A /* QuestionService.swift */,
 				ED2E3BFC6270C7407744692C /* ServiceProtocols.swift */,
+				BB2C3D4E5F6A7B8C9D0E1F2A /* SessionPersistence.swift */,
 				531EF410AF4C72FCFC107A5C /* StudyPlanService.swift */,
 			);
 			path = Services;
@@ -511,6 +514,7 @@
 				BAD7CC092533DB9AC635E880 /* LoginViewModel.swift in Sources */,
 				CBD691F3109B7D17E8E4E36A /* MockExamModels.swift in Sources */,
 				8908B634DD71B3CD7DF6F09C /* MockExamResultsView.swift in Sources */,
+				AA1B2C3D4E5F6A7B8C9D0E1F /* SessionPersistence.swift in Sources */,
 				005CA9777026CF0D858090C2 /* MockExamService.swift in Sources */,
 				C773D4F34998049E00954396 /* MockExamSessionView.swift in Sources */,
 				F1381EB6955C412D62CFB74A /* MockExamSetupView.swift in Sources */,
