@@ -1,4 +1,5 @@
 import { createAdminClient } from '@/lib/supabase/admin'
+import type { Json } from '@/types/database'
 import { sendEmail } from './channels/email'
 import { sendPush } from './channels/push'
 import type { NotifyOptions } from './types'
@@ -37,7 +38,7 @@ export async function notify(options: NotifyOptions): Promise<void> {
             title_ar: title.ar,
             body_en: body.en,
             body_ar: body.ar,
-            metadata: metadata ?? null,
+            metadata: (metadata as Json) ?? null,
           })
           .then(({ error }: { error: { message: string } | null }) => {
             if (error) console.error('[notify] in-app write failed:', error.message)
