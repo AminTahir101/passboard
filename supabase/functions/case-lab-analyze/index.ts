@@ -33,13 +33,12 @@ Rules:
 - urgency: emergency (life-threatening), urgent (same-day), routine (outpatient)
 - teaching_points: 2-3 concise exam-relevant takeaways
 - Never fabricate patient details; use only what is provided
-- This is for educational purposes only — always remind the student`;
+- This is for educational purposes only`;
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: CORS_HEADERS });
   }
-
   if (req.method !== "POST") {
     return new Response(JSON.stringify({ error: "Method not allowed" }), {
       status: 405,
@@ -47,7 +46,6 @@ serve(async (req) => {
     });
   }
 
-  // Authenticate user
   const authHeader = req.headers.get("Authorization");
   if (!authHeader?.startsWith("Bearer ")) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
@@ -55,23 +53,22 @@ serve(async (req) => {
       headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
     });
   }
-
   const userToken = authHeader.replace("Bearer ", "");
-  const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
-  const userClient = createClient(SUPABASE_URL, userToken, {
-    global: { headers: { Authorization: authHeader } },
-  });
 
-  // Verify user
-  const { data: { user }, error: authError } = await userClient.auth.getUser();
+  // Use service role client for everything; verify JWT via auth.getUser(token)
+  const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+
+  const { data: { user }, error: authError } = await supabase.auth.getUser(userToken);
   if (authError || !user) {
+    console.error("Auth error:", authError);
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
       headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
     });
   }
 
-  const { caseId } = await req.json();
+  const body = await req.json().catch(() => ({}));
+  const { caseId } = body;
   if (!caseId) {
     return new Response(JSON.stringify({ error: "caseId required" }), {
       status: 400,
@@ -79,14 +76,16 @@ serve(async (req) => {
     });
   }
 
-  // Fetch case (owner check via RLS on user client)
-  const { data: medCase, error: caseError } = await userClient
+  // Fetch case — manually enforce ownership (service role bypasses RLS)
+  const { data: medCase, error: caseError } = await supabase
     .from("cases")
     .select("*")
     .eq("id", caseId)
+    .eq("owner_id", user.id)
     .single();
 
   if (caseError || !medCase) {
+    console.error("Case fetch error:", caseError);
     return new Response(JSON.stringify({ error: "Case not found" }), {
       status: 404,
       headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
@@ -102,14 +101,16 @@ serve(async (req) => {
     .select("storage_path")
     .eq("case_id", caseId);
 
-  // Build signed URLs for images
+  // Build signed URLs
   const imageUrls: string[] = [];
   for (const img of images ?? []) {
     const { data: signed } = await supabase.storage
       .from("case-media")
-      .createSignedUrl(img.storage_path, 300); // 5-minute signed URL
+      .createSignedUrl(img.storage_path, 300);
     if (signed?.signedUrl) imageUrls.push(signed.signedUrl);
   }
+
+  console.log(`Case ${caseId}: ${imageUrls.length} images, complaint="${medCase.chief_complaint}"`);
 
   // Build message content
   const userContent: unknown[] = [
@@ -118,23 +119,21 @@ serve(async (req) => {
       text: [
         `Chief complaint: ${medCase.chief_complaint ?? "Not specified"}`,
         medCase.history_json ? `History: ${JSON.stringify(medCase.history_json)}` : null,
-        imageUrls.length > 0 ? `${imageUrls.length} clinical image(s) attached.` : "No images attached.",
+        imageUrls.length > 0
+          ? `${imageUrls.length} clinical image(s) attached.`
+          : "No images uploaded — analyze based on chief complaint only.",
       ]
         .filter(Boolean)
         .join("\n"),
     },
   ];
 
-  // Attach images (GPT-4o vision)
   for (const url of imageUrls) {
-    userContent.push({
-      type: "image_url",
-      image_url: { url, detail: "high" },
-    });
+    userContent.push({ type: "image_url", image_url: { url, detail: "high" } });
   }
 
-  let analysisJson: Record<string, unknown>;
   const start = Date.now();
+  let analysisJson: Record<string, unknown>;
 
   try {
     const aiRes = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -156,17 +155,19 @@ serve(async (req) => {
     });
 
     if (!aiRes.ok) {
-      const err = await aiRes.text();
-      throw new Error(`OpenAI error: ${err}`);
+      const errText = await aiRes.text();
+      console.error("OpenAI error:", aiRes.status, errText);
+      throw new Error(`OpenAI ${aiRes.status}: ${errText}`);
     }
 
     const aiData = await aiRes.json();
     const raw = aiData.choices?.[0]?.message?.content ?? "{}";
+    console.log("OpenAI raw response:", raw.substring(0, 200));
     analysisJson = JSON.parse(raw);
   } catch (e) {
     console.error("AI call failed:", e);
     await supabase.from("cases").update({ status: "failed" }).eq("id", caseId);
-    return new Response(JSON.stringify({ error: "Analysis failed" }), {
+    return new Response(JSON.stringify({ error: String(e) }), {
       status: 500,
       headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
     });
@@ -191,6 +192,7 @@ serve(async (req) => {
     .single();
 
   if (analysisError || !analysis) {
+    console.error("Analysis insert error:", analysisError);
     await supabase.from("cases").update({ status: "failed" }).eq("id", caseId);
     return new Response(JSON.stringify({ error: "Failed to store analysis" }), {
       status: 500,
@@ -198,14 +200,14 @@ serve(async (req) => {
     });
   }
 
-  // Store report (EN)
   const reportContent = {
     summary: analysisJson.summary ?? "",
     teaching_points: analysisJson.teaching_points ?? [],
     findings: analysisJson.findings ?? [],
     differential: analysisJson.differential ?? [],
     urgency,
-    disclaimer: "This analysis is for educational purposes only and does not constitute medical advice.",
+    disclaimer:
+      "This analysis is for educational purposes only and does not constitute medical advice.",
   };
 
   await supabase.from("case_reports").insert({
@@ -216,9 +218,9 @@ serve(async (req) => {
     released_at: new Date().toISOString(),
   });
 
-  // Mark case as done
   await supabase.from("cases").update({ status: "done" }).eq("id", caseId);
 
+  console.log(`Case ${caseId} analysis complete in ${latencyMs}ms`);
   return new Response(JSON.stringify({ success: true, analysisId: analysis.id }), {
     status: 200,
     headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
