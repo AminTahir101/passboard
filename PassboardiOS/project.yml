@@ -1,0 +1,76 @@
+name: PassboardiOS
+options:
+  bundleIdPrefix: com.passboard
+  deploymentTarget:
+    iOS: "17.0"
+  xcodeVersion: "16.0"
+  generateEmptyDirectories: true
+  createIntermediateGroups: true
+  defaultConfig: Debug
+
+packages:
+  supabase-swift:
+    url: https://github.com/supabase/supabase-swift
+    from: 2.0.0
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+    TARGETED_DEVICE_FAMILY: "1,2"
+    SUPPORTS_MAC_DESIGNED_FOR_IPAD: NO
+    ENABLE_PREVIEWS: YES
+
+targets:
+  PassboardiOS:
+    type: application
+    platform: iOS
+    sources:
+      - path: PassboardiOS
+    settings:
+      base:
+        INFOPLIST_FILE: PassboardiOS/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: com.passboard.ios
+        CODE_SIGN_ENTITLEMENTS: PassboardiOS/PassboardiOS.entitlements
+    configFiles:
+      Debug: Config.xcconfig
+      Release: Config.xcconfig
+    dependencies:
+      - package: supabase-swift
+        product: Supabase
+    info:
+      path: PassboardiOS/Info.plist
+      properties:
+        CFBundleDisplayName: Passboard
+        UILaunchScreen: {}
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: true
+          UISceneConfigurations: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        SUPABASE_URL: $(SUPABASE_URL)
+        SUPABASE_ANON_KEY: $(SUPABASE_ANON_KEY)
+
+  PassboardiOSTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - PassboardiOSTests
+    dependencies:
+      - target: PassboardiOS
+
+  PassboardiOSUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - PassboardiOSUITests
+    dependencies:
+      - target: PassboardiOS

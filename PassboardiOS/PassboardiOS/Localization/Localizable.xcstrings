@@ -1,0 +1,324 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "auth.accessDenied" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Access Pending" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "الوصول معلق" } }
+      }
+    },
+    "auth.accessDeniedMessage" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Your access request is being reviewed. Please check back soon." } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "طلب وصولك قيد المراجعة. يرجى المحاولة لاحقاً." } }
+      }
+    },
+    "auth.signOut" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Sign Out" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "تسجيل الخروج" } }
+      }
+    },
+    "accessRequest.examInfo" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Exam Information" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "معلومات الاختبار" } }
+      }
+    },
+    "accessRequest.expectedDate" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Expected Exam Date" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "تاريخ الاختبار المتوقع" } }
+      }
+    },
+    "accessRequest.notes" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Notes" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "ملاحظات" } }
+      }
+    },
+    "accessRequest.personalInfo" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Personal Information" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "المعلومات الشخصية" } }
+      }
+    },
+    "accessRequest.success" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Request Submitted!" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "تم إرسال الطلب!" } }
+      }
+    },
+    "common.all" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "All" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "الكل" } }
+      }
+    },
+    "common.cancel" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Cancel" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "إلغاء" } }
+      }
+    },
+    "common.done" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Done" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "تم" } }
+      }
+    },
+    "common.email" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Email" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "البريد الإلكتروني" } }
+      }
+    },
+    "common.fullName" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Full Name" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "الاسم الكامل" } }
+      }
+    },
+    "common.phone" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Phone" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "الهاتف" } }
+      }
+    },
+    "common.questions" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "questions" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "أسئلة" } }
+      }
+    },
+    "common.quit" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Quit" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "إنهاء" } }
+      }
+    },
+    "common.start" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Start" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "ابدأ" } }
+      }
+    },
+    "common.submit" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Submit" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "إرسال" } }
+      }
+    },
+    "common.targetExam" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Target Exam" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "الاختبار المستهدف" } }
+      }
+    },
+    "dashboard.accuracy" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Accuracy" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "الدقة" } }
+      }
+    },
+    "dashboard.days" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "days" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "أيام" } }
+      }
+    },
+    "dashboard.daysToExam" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Days to Exam" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "أيام للاختبار" } }
+      }
+    },
+    "dashboard.greeting" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Welcome back," } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "مرحباً بعودتك،" } }
+      }
+    },
+    "dashboard.questionsAttempted" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Questions Attempted" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "الأسئلة المحاولة" } }
+      }
+    },
+    "dashboard.quickActions" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Quick Actions" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "إجراءات سريعة" } }
+      }
+    },
+    "dashboard.streak" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Streak" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "السلسلة" } }
+      }
+    },
+    "dashboard.todaysTasks" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Today's Tasks" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "مهام اليوم" } }
+      }
+    },
+    "login.email" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Email" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "البريد الإلكتروني" } }
+      }
+    },
+    "login.or" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "or" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "أو" } }
+      }
+    },
+    "login.password" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Password" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "كلمة المرور" } }
+      }
+    },
+    "login.requestAccess" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Request Access" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "طلب الوصول" } }
+      }
+    },
+    "login.signIn" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Sign In" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "تسجيل الدخول" } }
+      }
+    },
+    "login.subtitle" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Your SMLE prep partner" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "شريكك في التحضير للسمل" } }
+      }
+    },
+    "nav.aiChat" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "AI Tutor" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "المدرس الذكي" } }
+      }
+    },
+    "nav.dashboard" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Dashboard" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "لوحة التحكم" } }
+      }
+    },
+    "nav.mockExam" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Mock Exam" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "الاختبار التجريبي" } }
+      }
+    },
+    "nav.practice" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Practice" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "تدريب" } }
+      }
+    },
+    "nav.profile" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Profile" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "الملف الشخصي" } }
+      }
+    },
+    "nav.studyPlan" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Study Plan" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "خطة الدراسة" } }
+      }
+    },
+    "practice.category" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Category" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "الفئة" } }
+      }
+    },
+    "practice.correct" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "correct" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "صحيح" } }
+      }
+    },
+    "practice.explanation" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Explanation" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "الشرح" } }
+      }
+    },
+    "practice.finish" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Finish" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "إنهاء" } }
+      }
+    },
+    "practice.mode" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Mode" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "الوضع" } }
+      }
+    },
+    "practice.mode.category" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "By Category" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "حسب الفئة" } }
+      }
+    },
+    "practice.mode.incorrect" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Incorrect" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "الأخطاء" } }
+      }
+    },
+    "practice.mode.topic" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "By Topic" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "حسب الموضوع" } }
+      }
+    },
+    "practice.next" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Next" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "التالي" } }
+      }
+    },
+    "practice.questionCount" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Question Count" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "عدد الأسئلة" } }
+      }
+    },
+    "practice.results" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Results" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "النتائج" } }
+      }
+    },
+    "practice.sessionComplete" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Session Complete!" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "انتهت الجلسة!" } }
+      }
+    },
+    "practice.start" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Start" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "ابدأ" } }
+      }
+    },
+    "practice.topic" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Topic" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "الموضوع" } }
+      }
+    }
+  },
+  "version" : "1.0"
+}

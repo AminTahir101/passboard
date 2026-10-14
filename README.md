@@ -158,6 +158,21 @@ Environment variables are managed in the Vercel dashboard. The following are req
 - `OPENAI_API_KEY`
 - `OPENAI_MODEL`
 
+### Notification system env vars
+
+| Variable | Required | Notes |
+|---|---|---|
+| `RESEND_API_KEY` | Yes | Resend API key for email delivery |
+| `INTERNAL_NOTIFY_SECRET` | Yes | Shared secret for the internal relay route — generate with `openssl rand -hex 32` |
+| `NEXT_PUBLIC_APP_URL` | Yes | Full app URL (e.g. `https://passboard.ai`) — also set as a Supabase Edge Function secret |
+| `APNS_KEY` | When APNs is configured | Contents of the APNs `.p8` key file, base64-encoded |
+| `APNS_KEY_ID` | When APNs is configured | 10-character APNs key ID from App Store Connect |
+| `APNS_TEAM_ID` | When APNs is configured | Apple Developer Team ID |
+| `APNS_BUNDLE_ID` | When APNs is configured | iOS app bundle ID (e.g. `ai.passboard.app`) |
+| `CRON_SECRET` | Auto-injected by Vercel | No manual setup needed — Vercel passes it as the `Authorization` header to the daily cron route |
+
+APNs variables can remain unset until App Store Connect certificates are ready; `sendPush()` skips silently when they are absent.
+
 ---
 
 ## Database

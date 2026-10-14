@@ -386,6 +386,24 @@ export const ar: Dictionary = {
     verdictCorrect: "الذكاء الاصطناعي كان صحيحاً", verdictPartial: "صحيح جزئياً",
     verdictWrong: "الذكاء الاصطناعي كان خاطئاً", submitFeedback: "إرسال التقييم",
   },
+  notifications: {
+    title: 'الإشعارات',
+    subtitle: 'اختر الإشعارات التي تتلقاها وكيفية استلامها.',
+    markAllRead: 'تحديد الكل كمقروء',
+    empty: 'لا توجد إشعارات بعد',
+    preferences: 'إعدادات الإشعارات',
+    channels: { inApp: 'داخل التطبيق', email: 'البريد الإلكتروني', push: 'الإشعارات الفورية' },
+    types: {
+      exam_countdown: 'العد التنازلي للاختبار',
+      study_plan_reminder: 'تذكير خطة الدراسة',
+      access_expiring: 'انتهاء صلاحية الوصول',
+      inactivity: 'تذكير عدم النشاط',
+      mock_exam_result: 'نتيجة الاختبار التجريبي',
+      case_lab_ready: 'Case Lab جاهز',
+      announcement: 'إعلان',
+      access_approved: 'تمت الموافقة على الوصول',
+    },
+  },
   admin: {
     dashboard: {
       title: "لوحة تحكم المسؤول", totalStudents: "إجمالي الطلاب",

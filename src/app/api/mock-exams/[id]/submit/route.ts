@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { notify } from "@/lib/notifications/notify";
 
 export async function POST(
   request: NextRequest,
@@ -121,6 +122,18 @@ export async function POST(
         duration_seconds: calculatedDuration,
       })
       .eq("id", id);
+
+    // Notify user — fire-and-forget
+    notify({
+      userId: user.id,
+      type: 'mock_exam_result',
+      title: { en: 'Mock exam results ready', ar: 'نتائج الاختبار التجريبي جاهزة' },
+      body: {
+        en: `You scored ${Math.round(percentage)}% on your mock exam.`,
+        ar: `حصلت على ${Math.round(percentage)}٪ في اختبارك التجريبي.`,
+      },
+      metadata: { exam_id: id, score, percentage: Math.round(percentage) },
+    }).catch((e) => console.error('[mock-exam-result] notify failed:', e))
 
     return NextResponse.json({ score, percentage, total });
   } catch (err) {

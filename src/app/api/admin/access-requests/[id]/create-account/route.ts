@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { NextResponse } from "next/server";
+import { notify } from "@/lib/notifications/notify";
 
 function generatePassword(): string {
   const chars = "ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#$";
@@ -64,6 +65,17 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
 
   // Update request status to approved
   await admin.from("access_requests").update({ status: "approved", updated_at: new Date().toISOString() }).eq("id", id);
+
+  // Notify the new student — fire-and-forget so it never blocks account creation
+  notify({
+    userId: newUser.user.id,
+    type: 'access_approved',
+    title: { en: 'Your access has been approved', ar: 'تمت الموافقة على وصولك' },
+    body: {
+      en: 'Welcome to Passboard. You can now log in and start preparing.',
+      ar: 'مرحباً بك في Passboard. يمكنك الآن تسجيل الدخول والبدء في الاستعداد.',
+    },
+  }).catch((e) => console.error('[access-approved] notify failed:', e))
 
   return NextResponse.json({ email: req.email, tempPassword });
 }

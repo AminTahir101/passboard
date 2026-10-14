@@ -26,6 +26,7 @@ import { createClient } from "@/lib/supabase/client";
 import { localePath } from "@/lib/i18n";
 import LanguageToggle from "@/components/LanguageToggle";
 import { Logo } from "@/components/landing/ui";
+import { NotificationBell } from "@/components/app/NotificationBell";
 
 interface AppSidebarProps {
   userName: string | null;
@@ -38,9 +39,15 @@ interface AppSidebarProps {
     studyPlan: string; caseLab: string;
   };
   langToggleLabel: string;
+  notificationLabels: {
+    title: string;
+    markAllRead: string;
+    empty: string;
+    preferences: string;
+  };
 }
 
-export default function AppSidebar({ userName, userEmail, lang, nav, langToggleLabel }: AppSidebarProps) {
+export default function AppSidebar({ userName, userEmail, lang, nav, langToggleLabel, notificationLabels }: AppSidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -137,6 +144,9 @@ export default function AppSidebar({ userName, userEmail, lang, nav, langToggleL
               {userEmail}
             </p>
           </div>
+        </div>
+        <div className="mb-1 px-1">
+          <NotificationBell lang={lang} labels={notificationLabels} />
         </div>
         <div className="mb-1 px-1">
           <LanguageToggle lang={lang} label={langToggleLabel} />
