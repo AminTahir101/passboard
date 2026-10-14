@@ -34,8 +34,10 @@ create table public.notifications (
   created_at timestamptz not null default now()
 );
 create index notifications_user_created on public.notifications(user_id, created_at desc);
-create index notifications_unread on public.notifications(user_id, read_at) where read_at is null;
+create index notifications_unread on public.notifications(user_id) where read_at is null;
 alter table public.notifications enable row level security;
+-- INSERT intentionally omitted: all notification rows are written by the service-role
+-- client (server-side only), which bypasses RLS. Users cannot self-insert notifications.
 create policy "users read own notifications" on public.notifications
   for select using (auth.uid() = user_id);
 create policy "users update own notifications" on public.notifications
@@ -53,7 +55,8 @@ create table public.notification_preferences (
 );
 alter table public.notification_preferences enable row level security;
 create policy "users manage own preferences" on public.notification_preferences
-  for all using (auth.uid() = user_id);
+  for all using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
 
 -- 4. device_tokens
 create table public.device_tokens (
@@ -66,7 +69,8 @@ create table public.device_tokens (
 );
 alter table public.device_tokens enable row level security;
 create policy "users manage own device tokens" on public.device_tokens
-  for all using (auth.uid() = user_id);
+  for all using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
 
 -- 5. announcements
 create table public.announcements (
