@@ -48,6 +48,7 @@ export default async function AppLayout({
         lang={lang}
         nav={dict.nav}
         langToggleLabel={dict.lang.toggle}
+        notificationLabels={dict.notifications}
       />
       <div className="min-h-screen lg:ps-60 pt-[57px] lg:pt-0" style={{ background: "var(--background)" }}>
         <main className="p-6">{children}</main>
