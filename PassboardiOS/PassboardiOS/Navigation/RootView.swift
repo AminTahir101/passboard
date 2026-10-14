@@ -31,7 +31,7 @@ private struct iPadRootView: View {
         NavigationSplitView {
             SidebarView(selection: $selectedTab)
         } detail: {
-            tabContent(for: selectedTab)
+            tabContent(for: selectedTab, selectedTab: $selectedTab)
         }
     }
 }
@@ -44,7 +44,7 @@ private struct iPhoneRootView: View {
         TabView(selection: $selectedTab) {
             ForEach(AppTab.allCases) { tab in
                 NavigationStack {
-                    tabContent(for: tab)
+                    tabContent(for: tab, selectedTab: $selectedTab)
                 }
                 .tabItem {
                     Label(tab.titleKey, systemImage: tab.icon)
@@ -57,12 +57,13 @@ private struct iPhoneRootView: View {
 
 // MARK: - Shared tab content
 @ViewBuilder
-private func tabContent(for tab: AppTab) -> some View {
+private func tabContent(for tab: AppTab, selectedTab: Binding<AppTab>) -> some View {
     switch tab {
-    case .dashboard: DashboardView()
+    case .dashboard: DashboardView(selectedTab: selectedTab)
     case .practice: PracticeSetupView()
     case .mockExam: MockExamSetupView()
     case .studyPlan: StudyPlanView()
+    case .aiChat: AIChatListView()
     case .profile: ProfileView()
     }
 }

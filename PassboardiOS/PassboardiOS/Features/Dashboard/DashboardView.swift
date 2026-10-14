@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct DashboardView: View {
+    @Binding var selectedTab: AppTab
     @Environment(AppState.self) private var appState
     @State private var viewModel = DashboardViewModel()
 
@@ -64,10 +65,11 @@ struct DashboardView: View {
                         .font(.headline)
                         .padding(.horizontal)
                     LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-                        QuickActionCard(titleKey: "nav.practice", icon: "doc.text", color: .blue)
-                        QuickActionCard(titleKey: "nav.mockExam", icon: "clock", color: .purple)
-                        QuickActionCard(titleKey: "nav.studyPlan", icon: "calendar", color: .green)
-                        QuickActionCard(titleKey: "nav.aiChat", icon: "bubble.left.and.bubble.right", color: .orange)
+                        ForEach(AppTab.allCases.filter { $0 != .dashboard }) { tab in
+                            QuickActionCard(tab: tab) {
+                                selectedTab = tab
+                            }
+                        }
                     }
                     .padding(.horizontal)
                 }
@@ -114,17 +116,31 @@ private struct TodayTaskRow: View {
 }
 
 private struct QuickActionCard: View {
-    let titleKey: LocalizedStringKey
-    let icon: String
-    let color: Color
+    let tab: AppTab
+    let action: () -> Void
+
     var body: some View {
-        CardView {
-            VStack(spacing: 8) {
-                Image(systemName: icon).font(.title).foregroundStyle(color)
-                Text(titleKey).font(.callout.bold())
+        Button(action: action) {
+            CardView {
+                VStack(spacing: 10) {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            .fill(tab.color.opacity(0.15))
+                            .frame(width: 48, height: 48)
+                        Image(systemName: tab.icon)
+                            .font(.system(size: 22, weight: .semibold))
+                            .foregroundStyle(tab.color)
+                    }
+                    Text(tab.titleKey)
+                        .font(.callout.bold())
+                        .multilineTextAlignment(.center)
+                        .foregroundStyle(.primary)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 4)
             }
-            .frame(maxWidth: .infinity)
         }
+        .buttonStyle(.plain)
     }
 }
 
