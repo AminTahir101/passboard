@@ -19,6 +19,7 @@ import {
   CalendarDays,
   Moon,
   Sun,
+  FlaskConical,
 } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
 import { createClient } from "@/lib/supabase/client";
@@ -34,7 +35,7 @@ interface AppSidebarProps {
     dashboard: string; practice: string; questionBank: string;
     mockExams: string; aiTutor: string; myMistakes: string;
     performance: string; profile: string; logout: string; anatomy: string;
-    studyPlan: string;
+    studyPlan: string; caseLab: string;
   };
   langToggleLabel: string;
 }
@@ -52,6 +53,7 @@ export default function AppSidebar({ userName, userEmail, lang, nav, langToggleL
     { label: nav.questionBank, icon: BookOpen, href: localePath(lang, "/questions") },
     { label: nav.mockExams, icon: ClipboardList, href: localePath(lang, "/mock-exams") },
     { label: nav.anatomy, icon: Layers, href: localePath(lang, "/anatomy") },
+    { label: nav.caseLab, icon: FlaskConical, href: localePath(lang, "/case-lab") },
     { label: nav.aiTutor, icon: Brain, href: localePath(lang, "/tutor") },
     { label: nav.myMistakes, icon: XCircle, href: localePath(lang, "/mistakes") },
     { label: nav.performance, icon: BarChart3, href: localePath(lang, "/performance") },

@@ -381,6 +381,131 @@ export interface Database {
         };
         Relationships: [];
       };
+      cases: {
+        Row: {
+          id: string; patient_id: string | null; owner_id: string;
+          mode: string; status: string; chief_complaint: string | null;
+          history_json: Record<string, unknown> | null; consent_at: string | null;
+          model_version: string; created_at: string; updated_at: string;
+        };
+        Insert: {
+          id?: string; patient_id?: string | null; owner_id: string;
+          mode?: string; status?: string; chief_complaint?: string | null;
+          history_json?: Record<string, unknown> | null; consent_at?: string | null;
+          model_version?: string; created_at?: string; updated_at?: string;
+        };
+        Update: {
+          status?: string; chief_complaint?: string | null;
+          history_json?: Record<string, unknown> | null; updated_at?: string;
+        };
+        Relationships: [];
+      };
+      case_images: {
+        Row: {
+          id: string; case_id: string; storage_path: string;
+          body_site: string | null; view: string | null; captured_at: string | null;
+          quality_json: Record<string, unknown> | null; faces_blurred: boolean; created_at: string;
+        };
+        Insert: {
+          id?: string; case_id: string; storage_path: string;
+          body_site?: string | null; view?: string | null; captured_at?: string | null;
+          quality_json?: Record<string, unknown> | null; faces_blurred?: boolean;
+        };
+        Update: { quality_json?: Record<string, unknown> | null; faces_blurred?: boolean };
+        Relationships: [];
+      };
+      case_documents: {
+        Row: {
+          id: string; case_id: string; storage_path: string;
+          doc_type: string | null; ocr_engine: string | null; ocr_confidence: number | null; created_at: string;
+        };
+        Insert: {
+          id?: string; case_id: string; storage_path: string;
+          doc_type?: string | null; ocr_engine?: string | null; ocr_confidence?: number | null;
+        };
+        Update: { ocr_engine?: string | null; ocr_confidence?: number | null };
+        Relationships: [];
+      };
+      case_extracted_values: {
+        Row: {
+          id: string; document_id: string; loinc: string | null; name: string;
+          value: string; unit: string | null; ref_range: string | null; flag: string | null;
+          observed_at: string | null; confidence: number | null; confirmed_by: string | null; page: number | null;
+        };
+        Insert: {
+          id?: string; document_id: string; loinc?: string | null; name: string;
+          value: string; unit?: string | null; ref_range?: string | null; flag?: string | null;
+          observed_at?: string | null; confidence?: number | null; confirmed_by?: string | null; page?: number | null;
+        };
+        Update: { confirmed_by?: string | null };
+        Relationships: [];
+      };
+      case_analyses: {
+        Row: {
+          id: string; case_id: string; findings_json: Record<string, unknown> | null;
+          differential_json: Record<string, unknown>[] | null; urgency: string | null;
+          agreement: number | null; abstained: boolean; prompt_version: string;
+          tokens: number | null; latency_ms: number | null; created_at: string;
+        };
+        Insert: {
+          id?: string; case_id: string; findings_json?: Record<string, unknown> | null;
+          differential_json?: Record<string, unknown>[] | null; urgency?: string | null;
+          agreement?: number | null; abstained?: boolean; prompt_version?: string;
+          tokens?: number | null; latency_ms?: number | null;
+        };
+        Update: Record<string, never>;
+        Relationships: [];
+      };
+      case_reports: {
+        Row: {
+          id: string; analysis_id: string; lang: string; audience: string;
+          content_json: Record<string, unknown>; pdf_path: string | null;
+          released_at: string | null; signed_by: string | null; created_at: string;
+        };
+        Insert: {
+          id?: string; analysis_id: string; lang?: string; audience?: string;
+          content_json: Record<string, unknown>; pdf_path?: string | null;
+        };
+        Update: { pdf_path?: string | null; released_at?: string | null; signed_by?: string | null };
+        Relationships: [];
+      };
+      case_feedback: {
+        Row: {
+          id: string; case_id: string; final_diagnosis_icd: string | null;
+          confirmation: string | null; verdict: string | null; notes: string | null; created_at: string;
+        };
+        Insert: {
+          id?: string; case_id: string; final_diagnosis_icd?: string | null;
+          confirmation?: string | null; verdict?: string | null; notes?: string | null;
+        };
+        Update: Record<string, never>;
+        Relationships: [];
+      };
+      case_audit_log: {
+        Row: {
+          id: string; case_id: string; actor_id: string | null;
+          action: string; at: string; ip_hash: string | null;
+        };
+        Insert: {
+          id?: string; case_id: string; actor_id?: string | null;
+          action: string; ip_hash?: string | null;
+        };
+        Update: Record<string, never>;
+        Relationships: [];
+      };
+      case_jobs: {
+        Row: {
+          id: string; case_id: string; document_id: string | null;
+          status: string; attempts: number; error: string | null;
+          created_at: string; updated_at: string;
+        };
+        Insert: {
+          id?: string; case_id: string; document_id?: string | null;
+          status?: string; attempts?: number; error?: string | null;
+        };
+        Update: { status?: string; attempts?: number; error?: string | null; updated_at?: string };
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;

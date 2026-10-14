@@ -26,7 +26,7 @@ export type Dictionary = {
     performance: string; profile: string; logout: string;
     accessRequests: string; students: string; questions: string;
     importQuestions: string; adminDashboard: string; anatomy: string;
-    studyPlan: string;
+    studyPlan: string; caseLab: string;
   };
   lang: { toggle: string; ar: string; en: string };
   landing: {
@@ -221,6 +221,48 @@ export type Dictionary = {
     todayCard: string;
     viewPlan: string;
     noTasksToday: string;
+  };
+  caseLab: {
+    title: string;
+    subtitle: string;
+    newCase: string;
+    noCases: string;
+    noCasesDesc: string;
+    status: { draft: string; images_uploaded: string; ocr_pending: string; ocr_done: string; analyzing: string; done: string; failed: string };
+    disclaimer: string;
+    // wizard steps
+    step1Title: string; step2Title: string; step3Title: string;
+    step4Title: string; step5Title: string; step6Title: string; step7Title: string;
+    // consent
+    consentHeading: string; consentBody: string; consentAgree: string;
+    // image upload
+    addImages: string; maxImages: string; bodySite: string; imageView: string;
+    closeUp: string; overview: string; qualityChecking: string;
+    qualityFail: string; faceBlur: string;
+    // history form
+    demographics: string; ageRange: string; sex: string; fitzpatrick: string;
+    chiefComplaint: string; onset: string; duration: string; progression: string;
+    symptoms: string; triggers: string; systemicSymptoms: string;
+    medications: string; allergies: string; pastHistory: string; priorInvestigations: string;
+    // document upload
+    addDocuments: string; maxDocuments: string; extracting: string;
+    confirmValues: string; noDocuments: string;
+    // commit first
+    commitHeading: string; commitBody: string; yourDifferential: string;
+    commitPlaceholder: string; revealAI: string;
+    // analysis progress
+    analyzing: string; progressSteps: string[];
+    // report
+    urgency: string; caseSummary: string; imageFindings: string;
+    documentFindings: string; differential: string; cantMiss: string;
+    missingInfo: string; workup: string; management: string;
+    referral: string; learning: string; linkedQuestions: string;
+    abstained: string; exportPdf: string; askTutor: string;
+    confidence: string; agreement: string;
+    // feedback
+    feedbackTitle: string; finalDiagnosis: string;
+    verdictCorrect: string; verdictPartial: string; verdictWrong: string;
+    submitFeedback: string;
   };
   admin: {
     dashboard: {
