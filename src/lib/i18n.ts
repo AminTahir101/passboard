@@ -264,6 +264,23 @@ export type Dictionary = {
     verdictCorrect: string; verdictPartial: string; verdictWrong: string;
     submitFeedback: string;
   };
+  notifications: {
+    title: string
+    markAllRead: string
+    empty: string
+    preferences: string
+    channels: { inApp: string; email: string; push: string }
+    types: {
+      exam_countdown: string
+      study_plan_reminder: string
+      access_expiring: string
+      inactivity: string
+      mock_exam_result: string
+      case_lab_ready: string
+      announcement: string
+      access_approved: string
+    }
+  };
   admin: {
     dashboard: {
       title: string; totalStudents: string; activeStudents: string;

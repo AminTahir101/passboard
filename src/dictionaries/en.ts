@@ -386,6 +386,23 @@ export const en: Dictionary = {
     verdictCorrect: "AI was correct", verdictPartial: "Partly correct",
     verdictWrong: "AI was wrong", submitFeedback: "Submit Feedback",
   },
+  notifications: {
+    title: 'Notifications',
+    markAllRead: 'Mark all as read',
+    empty: 'No notifications yet',
+    preferences: 'Notification preferences',
+    channels: { inApp: 'In-app', email: 'Email', push: 'Push' },
+    types: {
+      exam_countdown: 'Exam countdown',
+      study_plan_reminder: 'Study plan reminder',
+      access_expiring: 'Access expiring',
+      inactivity: 'Inactivity reminder',
+      mock_exam_result: 'Mock exam result',
+      case_lab_ready: 'Case Lab ready',
+      announcement: 'Announcement',
+      access_approved: 'Access approved',
+    },
+  },
   admin: {
     dashboard: {
       title: "Admin Dashboard", totalStudents: "Total Students",
