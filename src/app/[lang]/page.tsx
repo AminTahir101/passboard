@@ -5,6 +5,7 @@ import { StatsBand } from "@/components/landing/StatsBand";
 import { Exams } from "@/components/landing/Exams";
 import { Platform } from "@/components/landing/Platform";
 import { Testimonials } from "@/components/landing/Testimonials";
+import { Pricing } from "@/components/landing/Pricing";
 import { Cta } from "@/components/landing/Cta";
 import { Footer } from "@/components/landing/Footer";
 
@@ -28,6 +29,7 @@ export default async function LandingPage({ params }: { params: Promise<{ lang: 
         <Exams t={d.exams} />
         <Platform t={d.platform} />
         <Testimonials t={d.howItWorks} />
+        <Pricing lang={lang} t={d.pricing} />
         <Cta lang={lang} t={d.ctaSection} />
       </main>
 

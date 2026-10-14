@@ -68,6 +68,18 @@ export type Dictionary = {
       pillars: { n: string; title: string; desc: string }[];
     };
     ctaSection: { eyebrow: string; titleA: string; titleEm: string; sub: string; button: string };
+    pricing: {
+      eyebrow: string;
+      title: string;
+      subtitle: string;
+      badge: string;
+      currency: string;
+      period: string;
+      includes: string;
+      cta: string;
+      vatNote: string;
+      features: string[];
+    };
   };
   login: {
     title: string; subtitle: string; emailLabel: string;
