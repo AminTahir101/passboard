@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Almarai, Cormorant_Garamond, IBM_Plex_Mono, IBM_Plex_Sans, IBM_Plex_Sans_Arabic, Instrument_Sans, Newsreader } from "next/font/google";
 import "@/app/globals.css";
 
@@ -72,6 +73,7 @@ export default async function LocaleLayout({
       <body className="min-h-full font-sans">
         {children}
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
