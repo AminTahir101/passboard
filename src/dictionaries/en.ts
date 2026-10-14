@@ -388,6 +388,7 @@ export const en: Dictionary = {
   },
   notifications: {
     title: 'Notifications',
+    subtitle: 'Choose which notifications you receive and how.',
     markAllRead: 'Mark all as read',
     empty: 'No notifications yet',
     preferences: 'Notification preferences',

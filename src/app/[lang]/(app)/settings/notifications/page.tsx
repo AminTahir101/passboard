@@ -25,9 +25,7 @@ export default async function NotificationPreferencesPage({
           {dict.notifications.preferences}
         </h1>
         <p className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>
-          {lang === 'ar'
-            ? 'اختر الإشعارات التي تتلقاها وكيفية استلامها.'
-            : 'Choose which notifications you receive and how.'}
+          {dict.notifications.subtitle}
         </p>
       </div>
       <NotificationPreferencesClient labels={dict.notifications} />

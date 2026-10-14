@@ -388,6 +388,7 @@ export const ar: Dictionary = {
   },
   notifications: {
     title: 'الإشعارات',
+    subtitle: 'اختر الإشعارات التي تتلقاها وكيفية استلامها.',
     markAllRead: 'تحديد الكل كمقروء',
     empty: 'لا توجد إشعارات بعد',
     preferences: 'إعدادات الإشعارات',

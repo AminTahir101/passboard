@@ -266,6 +266,7 @@ export type Dictionary = {
   };
   notifications: {
     title: string
+    subtitle: string
     markAllRead: string
     empty: string
     preferences: string
