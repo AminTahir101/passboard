@@ -1,0 +1,58 @@
+import Testing
+@testable import PassboardiOS
+
+// Mock implementation for testing
+final class MockAuthService: AuthServiceProtocol {
+    var signInCalled = false
+    var signOutCalled = false
+    var shouldThrow = false
+
+    func signIn(email: String, password: String) async throws {
+        if shouldThrow { throw URLError(.badServerResponse) }
+        signInCalled = true
+    }
+    func signInWithApple(idToken: String, nonce: String) async throws {
+        if shouldThrow { throw URLError(.badServerResponse) }
+    }
+    func signOut() async throws { signOutCalled = true }
+    func submitAccessRequest(_ request: AccessRequestInput) async throws {}
+}
+
+struct AuthServiceTests {
+    @Test func mockSignInSetsFlag() async throws {
+        let service = MockAuthService()
+        try await service.signIn(email: "test@example.com", password: "pass")
+        #expect(service.signInCalled == true)
+    }
+
+    @Test func mockSignInThrowsWhenConfigured() async throws {
+        let service = MockAuthService()
+        service.shouldThrow = true
+        await #expect(throws: URLError.self) {
+            try await service.signIn(email: "a@b.com", password: "pw")
+        }
+    }
+}
+
+@MainActor
+struct LoginViewModelTests {
+    @Test func loginSetsNoError() async throws {
+        let service = MockAuthService()
+        let vm = LoginViewModel(authService: service)
+        vm.email = "test@example.com"
+        vm.password = "password123"
+        await vm.login()
+        #expect(vm.error == nil)
+        #expect(service.signInCalled)
+    }
+
+    @Test func loginSetsErrorOnFailure() async throws {
+        let service = MockAuthService()
+        service.shouldThrow = true
+        let vm = LoginViewModel(authService: service)
+        vm.email = "bad@example.com"
+        vm.password = "wrong"
+        await vm.login()
+        #expect(vm.error != nil)
+    }
+}
