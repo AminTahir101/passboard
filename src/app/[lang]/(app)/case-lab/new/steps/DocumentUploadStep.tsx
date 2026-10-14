@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef } from "react";
-import { FileText, X, Plus } from "lucide-react";
+import { useRef, useState } from "react";
+import { FileText, X, Plus, Loader2 } from "lucide-react";
 import type { Dictionary } from "@/lib/i18n";
 import type { WizardState, UploadedDocument } from "../NewCaseWizard";
 
@@ -16,6 +16,8 @@ type Props = {
 
 export default function DocumentUploadStep({ dict, state, update, next, back }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   function addFiles(files: FileList | null) {
     if (!files) return;
@@ -28,6 +30,58 @@ export default function DocumentUploadStep({ dict, state, update, next, back }: 
     const docs = [...state.documents];
     docs.splice(i, 1);
     update({ documents: docs });
+  }
+
+  async function handleNext() {
+    // No documents — skip extraction entirely
+    if (state.documents.length === 0) {
+      next();
+      return;
+    }
+
+    setUploading(true);
+    setError(null);
+
+    try {
+      // Get signed upload URLs + record documents + queue OCR jobs
+      const res = await fetch(`/api/case-lab/cases/${state.caseId}/extract`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          files: state.documents.map((d) => ({ name: d.file.name, type: d.file.type })),
+        }),
+      });
+
+      if (!res.ok) throw new Error(await res.text());
+
+      const { uploads }: { uploads: { signedUrl: string; path: string; documentId: string }[] } =
+        await res.json();
+
+      // Upload each file to storage
+      await Promise.all(
+        uploads.map((u, i) =>
+          fetch(u.signedUrl, {
+            method: "PUT",
+            body: state.documents[i].file,
+            headers: { "Content-Type": state.documents[i].file.type },
+          })
+        )
+      );
+
+      // Store keys on wizard state so downstream steps can reference them
+      update({
+        documents: state.documents.map((d, i) => ({
+          ...d,
+          storageKey: uploads[i]?.path,
+        })),
+      });
+
+      next();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Upload failed");
+    } finally {
+      setUploading(false);
+    }
   }
 
   return (
@@ -76,16 +130,26 @@ export default function DocumentUploadStep({ dict, state, update, next, back }: 
         </button>
       )}
 
+      {error && (
+        <p className="text-xs" style={{ color: "var(--destructive)" }}>{error}</p>
+      )}
+
       <div className="flex justify-between pt-2">
         <button onClick={back} className="px-4 py-2 text-sm rounded-lg" style={{ color: "var(--muted-foreground)" }}>
           ← {dict.step3Title}
         </button>
         <button
-          onClick={next}
-          className="px-4 py-2 text-sm font-medium rounded-lg"
-          style={{ background: "var(--accent)", color: "var(--accent-foreground)" }}
+          onClick={handleNext}
+          disabled={uploading}
+          className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg"
+          style={{
+            background: "var(--accent)",
+            color: "var(--accent-foreground)",
+            opacity: uploading ? 0.6 : 1,
+          }}
         >
-          {dict.step5Title} →
+          {uploading && <Loader2 size={13} className="animate-spin" />}
+          {uploading ? dict.extracting : `${dict.step5Title} →`}
         </button>
       </div>
     </div>
