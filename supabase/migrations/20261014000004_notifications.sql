@@ -89,3 +89,6 @@ create table public.announcements (
 alter table public.announcements enable row level security;
 create policy "admins manage announcements" on public.announcements
   for all using (public.is_admin());
+
+-- Enable Realtime for the notifications table so clients can subscribe to live inserts
+alter publication supabase_realtime add table public.notifications;

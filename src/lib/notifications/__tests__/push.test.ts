@@ -51,7 +51,8 @@ describe('sendPush()', () => {
     await sendPush(
       'user-1',
       { en: 'Exam in 7 days', ar: 'الاختبار بعد ٧ أيام' },
-      { en: 'Keep going!', ar: 'استمر!' }
+      { en: 'Keep going!', ar: 'استمر!' },
+      'en'
     )
     expect(mockApnsSend).toHaveBeenCalledTimes(1)
   })
@@ -59,14 +60,14 @@ describe('sendPush()', () => {
   it('does not throw when no device tokens exist', async () => {
     mockTokenQuery.eq.mockResolvedValueOnce({ data: [], error: null })
     await expect(
-      sendPush('user-no-device', { en: 'T', ar: 'ت' }, { en: 'B', ar: 'ب' })
+      sendPush('user-no-device', { en: 'T', ar: 'ت' }, { en: 'B', ar: 'ب' }, 'en')
     ).resolves.not.toThrow()
   })
 
   it('skips silently when APNs env vars are not configured', async () => {
     delete process.env.APNS_KEY
     await expect(
-      sendPush('user-1', { en: 'T', ar: 'ت' }, { en: 'B', ar: 'ب' })
+      sendPush('user-1', { en: 'T', ar: 'ت' }, { en: 'B', ar: 'ب' }, 'en')
     ).resolves.not.toThrow()
     expect(mockApnsSend).not.toHaveBeenCalled()
   })

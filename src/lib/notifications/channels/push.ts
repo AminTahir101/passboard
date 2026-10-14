@@ -15,7 +15,8 @@ function buildClient(): ApnsClient {
 export async function sendPush(
   userId: string,
   title: { en: string; ar: string },
-  body: { en: string; ar: string }
+  body: { en: string; ar: string },
+  lang: string = 'en'
 ): Promise<void> {
   if (
     !process.env.APNS_KEY ||
@@ -40,7 +41,7 @@ export async function sendPush(
   for (const { token } of tokens as { token: string }[]) {
     try {
       const notification = new Notification(token, {
-        alert: { title: title.ar, body: body.ar },
+        alert: { title: lang === 'ar' ? title.ar : title.en, body: lang === 'ar' ? body.ar : body.en },
         badge: 1,
         sound: 'default',
       })

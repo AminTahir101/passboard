@@ -2,13 +2,17 @@ import { Resend } from 'resend'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
+function escapeHtml(str: string): string {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+}
+
 export async function sendEmail(
   to: string,
   name: string | null,
   title: { en: string; ar: string },
   body: { en: string; ar: string }
 ): Promise<void> {
-  const greeting = name ? `Hi ${name},` : 'Hi,'
+  const greeting = name ? `Hi ${escapeHtml(name)},` : 'Hi,'
 
   const html = `<!DOCTYPE html>
 <html>
