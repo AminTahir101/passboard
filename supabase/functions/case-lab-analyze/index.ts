@@ -220,6 +220,29 @@ serve(async (req) => {
 
   await supabase.from("cases").update({ status: "done" }).eq("id", caseId);
 
+  // Notify user that analysis is complete
+  const appUrl = Deno.env.get("NEXT_PUBLIC_APP_URL");
+  const notifySecret = Deno.env.get("INTERNAL_NOTIFY_SECRET");
+  if (appUrl && notifySecret) {
+    fetch(`${appUrl}/api/notifications/internal`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${notifySecret}`,
+      },
+      body: JSON.stringify({
+        userId: user.id,
+        type: "case_lab_ready",
+        title: { en: "Case analysis ready", ar: "تحليل الحالة جاهز" },
+        body: {
+          en: "Your Case Lab analysis is complete. Tap to view the report.",
+          ar: "اكتمل تحليل حالتك. اضغط لعرض التقرير.",
+        },
+        metadata: { case_id: caseId },
+      }),
+    }).catch((e: unknown) => console.error("[case-lab] notify failed:", e));
+  }
+
   console.log(`Case ${caseId} analysis complete in ${latencyMs}ms`);
   return new Response(JSON.stringify({ success: true, analysisId: analysis.id }), {
     status: 200,
