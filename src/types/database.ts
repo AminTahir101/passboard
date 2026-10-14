@@ -54,8 +54,63 @@ export interface Database {
           exam_date?: string | null;
           access_status?: AccessStatus;
           access_expires_at?: string | null;
+          last_active_at?: string | null;
           updated_at?: string;
         };
+        Relationships: [];
+      };
+      notifications: {
+        Row: {
+          id: string; user_id: string; type: string;
+          title_en: string; title_ar: string; body_en: string; body_ar: string;
+          read_at: string | null; metadata: Json | null; created_at: string;
+        };
+        Insert: {
+          id?: string; user_id: string; type: string;
+          title_en: string; title_ar: string; body_en: string; body_ar: string;
+          read_at?: string | null; metadata?: Json | null; created_at?: string;
+        };
+        Update: { read_at?: string | null };
+        Relationships: [];
+      };
+      notification_preferences: {
+        Row: {
+          id: string; user_id: string; type: string;
+          in_app: boolean; email: boolean; push: boolean;
+        };
+        Insert: {
+          id?: string; user_id: string; type: string;
+          in_app?: boolean; email?: boolean; push?: boolean;
+        };
+        Update: { in_app?: boolean; email?: boolean; push?: boolean };
+        Relationships: [];
+      };
+      device_tokens: {
+        Row: {
+          id: string; user_id: string; token: string;
+          platform: string; created_at: string; last_seen_at: string;
+        };
+        Insert: {
+          id?: string; user_id: string; token: string;
+          platform?: string; created_at?: string; last_seen_at?: string;
+        };
+        Update: { last_seen_at?: string };
+        Relationships: [];
+      };
+      announcements: {
+        Row: {
+          id: string; created_by: string; title_en: string; title_ar: string;
+          body_en: string; body_ar: string; target_type: string;
+          target_exam: string | null; target_user_ids: string[] | null;
+          sent_at: string | null; created_at: string;
+        };
+        Insert: {
+          id?: string; created_by: string; title_en: string; title_ar: string;
+          body_en: string; body_ar: string; target_type: string;
+          target_exam?: string | null; target_user_ids?: string[] | null;
+          sent_at?: string | null; created_at?: string;
+        };
+        Update: { sent_at?: string | null };
         Relationships: [];
       };
       access_requests: {

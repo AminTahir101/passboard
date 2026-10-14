@@ -16,7 +16,7 @@ export async function notify(options: NotifyOptions): Promise<void> {
       .single(),
     admin
       .from('profiles')
-      .select('email, full_name, preferred_lang')
+      .select('email, full_name')
       .eq('id', userId)
       .single(),
   ])
@@ -49,7 +49,7 @@ export async function notify(options: NotifyOptions): Promise<void> {
         )
       : Promise.resolve(),
     pushPref
-      ? sendPush(userId, title, body, profile?.preferred_lang ?? 'en').catch((e: unknown) =>
+      ? sendPush(userId, title, body, 'en').catch((e: unknown) =>
           console.error('[notify] push failed:', e)
         )
       : Promise.resolve(),
