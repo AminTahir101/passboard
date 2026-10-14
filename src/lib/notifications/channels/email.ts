@@ -1,6 +1,10 @@
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+let resend: Resend
+function getResend() {
+  if (!resend) resend = new Resend(process.env.RESEND_API_KEY)
+  return resend
+}
 
 function escapeHtml(str: string): string {
   return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
@@ -29,7 +33,7 @@ export async function sendEmail(
 </body>
 </html>`
 
-  const { error } = await resend.emails.send({
+  const { error } = await getResend().emails.send({
     from: 'Passboard <notifications@passboard.ai>',
     to,
     subject: `${title.en} / ${title.ar}`,
