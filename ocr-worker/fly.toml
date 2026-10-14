@@ -1,0 +1,44 @@
+# Fly.io config for Passboard OCR worker
+# Deploy: fly deploy --config ocr-worker/fly.toml
+
+app = "passboard-ocr-worker"
+primary_region = "ams"   # Amsterdam — closest available to GCC
+
+[build]
+  dockerfile = "ocr-worker/Dockerfile"
+
+[env]
+  POLL_INTERVAL_SECONDS = "5"
+
+# Secrets (set via `fly secrets set` — never committed):
+#   SUPABASE_URL
+#   SUPABASE_SERVICE_KEY
+#   OPENAI_API_KEY
+
+[[services]]
+  protocol = "tcp"
+  internal_port = 8080
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+
+  [services.concurrency]
+    type = "requests"
+    hard_limit = 10
+    soft_limit = 5
+
+  [[services.http_checks]]
+    interval = "30s"
+    timeout = "5s"
+    grace_period = "10s"
+    method = "GET"
+    path = "/health"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"
