@@ -2,120 +2,128 @@ import SwiftUI
 
 struct PracticeSessionView: View {
     @State var viewModel: PracticeSessionViewModel
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.horizontalSizeClass) private var sizeClass
 
     var body: some View {
         Group {
             if viewModel.isFinished {
-                ResultView(
-                    correct: viewModel.correctCount,
-                    total: viewModel.questions.count,
-                    onDone: { dismiss() }
+                PracticeResultsView(
+                    totalQuestions: viewModel.questions.count,
+                    correctCount: viewModel.correctCount,
+                    questions: viewModel.questions,
+                    planTaskId: viewModel.planTaskId
                 )
+            } else if sizeClass == .regular {
+                iPadLayout
             } else {
-                questionView
+                iPhoneLayout
             }
         }
         .navigationBarBackButtonHidden(true)
     }
 
-    private var questionView: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                // Progress
-                HStack {
-                    ProgressView(value: viewModel.progress)
-                        .progressViewStyle(.linear)
-                    Text("\(viewModel.currentIndex + 1)/\(viewModel.questions.count)")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+    // iPad: two columns
+    private var iPadLayout: some View {
+        HStack(alignment: .top, spacing: 0) {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    progressBar
+                    questionText
                 }
-                .padding(.horizontal)
-
-                // Question
-                Text(viewModel.current.questionText)
-                    .font(.body)
-                    .padding(.horizontal)
-
-                // Options
-                VStack(spacing: 8) {
-                    ForEach(CorrectAnswer.allCases, id: \.self) { answer in
-                        QuestionOptionRow(
-                            label: answer.rawValue,
-                            text: viewModel.current.option(for: answer),
-                            state: viewModel.optionState(answer),
-                            onTap: { Task { await viewModel.submitAnswer(answer) } }
-                        )
-                    }
-                }
-                .padding(.horizontal)
-
-                // Explanation (after answer)
-                if viewModel.showAnswer, let justification = viewModel.current.justification {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(LocalizedStringKey("practice.explanation"))
-                            .font(.headline)
-                        Text(justification)
-                            .font(.body)
-                            .foregroundStyle(.secondary)
-                    }
-                    .padding()
-                    .background(.regularMaterial)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                    .padding(.horizontal)
-                }
-
-                // Next button
-                if viewModel.showAnswer {
-                    Button(viewModel.isLast
-                           ? LocalizedStringKey("practice.finish")
-                           : LocalizedStringKey("practice.next")) {
-                        viewModel.nextQuestion()
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .frame(maxWidth: .infinity)
-                    .padding(.horizontal)
-                }
+                .padding()
             }
-            .padding(.vertical)
+            .frame(maxWidth: .infinity)
+
+            Divider()
+
+            ScrollView {
+                VStack(spacing: 12) {
+                    optionRows
+                    if viewModel.showAnswer { explanationCard }
+                    nextButton
+                }
+                .padding()
+            }
+            .frame(maxWidth: .infinity)
         }
-        .navigationTitle(LocalizedStringKey("nav.practice"))
+    }
+
+    // iPhone: single column
+    private var iPhoneLayout: some View {
+        ScrollView {
+            VStack(spacing: 16) {
+                progressBar
+                questionText
+                optionRows
+                if viewModel.showAnswer { explanationCard }
+                nextButton
+            }
+            .padding()
+        }
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
-                Button(LocalizedStringKey("common.quit")) { dismiss() }
+                Button(LocalizedStringKey("common.quit")) {
+                    viewModel.isFinished = true
+                }
             }
         }
     }
-}
 
-private struct ResultView: View {
-    let correct: Int
-    let total: Int
-    let onDone: () -> Void
+    private var progressBar: some View {
+        VStack(spacing: 4) {
+            ProgressView(value: viewModel.progress)
+                .tint(.accentColor)
+            Text("\(viewModel.currentIndex + 1) / \(viewModel.questions.count)")
+                .font(.caption).foregroundStyle(.secondary)
+                .frame(maxWidth: .infinity, alignment: .trailing)
+        }
+    }
 
-    var body: some View {
-        VStack(spacing: 24) {
-            ProgressRing(progress: Double(correct) / Double(total))
-                .frame(width: 120, height: 120)
-                .overlay(
-                    Text("\(Int(Double(correct) / Double(total) * 100))%")
-                        .font(.title.bold())
-                )
+    private var questionText: some View {
+        Text(viewModel.current.questionText)
+            .font(.body)
+            .padding()
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(.regularMaterial)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
 
-            Text(LocalizedStringKey("practice.sessionComplete"))
-                .font(.title2.bold())
+    private var optionRows: some View {
+        VStack(spacing: 8) {
+            ForEach(CorrectAnswer.allCases, id: \.self) { option in
+                QuestionOptionRow(
+                    label: option.rawValue,
+                    text: viewModel.current.option(for: option),
+                    state: viewModel.optionState(option)
+                ) {
+                    Task { await viewModel.submitAnswer(option) }
+                }
+            }
+        }
+    }
 
-            Text("\(correct)/\(total) \(NSLocalizedString("practice.correct", comment: ""))")
-                .foregroundStyle(.secondary)
-
-            Button(LocalizedStringKey("common.done"), action: onDone)
-                .buttonStyle(.borderedProminent)
+    private var explanationCard: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Label(LocalizedStringKey("practice.justification"), systemImage: "lightbulb.fill")
+                .font(.headline)
+                .foregroundStyle(.yellow)
+            if let justification = viewModel.current.justification {
+                Text(justification).font(.body)
+            }
         }
         .padding()
-        .navigationTitle(LocalizedStringKey("practice.results"))
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(.yellow.opacity(0.1))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
-}
 
-extension CorrectAnswer: CaseIterable {
-    public static var allCases: [CorrectAnswer] { [.A, .B, .C, .D] }
+    private var nextButton: some View {
+        Button(viewModel.isLast ? LocalizedStringKey("practice.finish") : LocalizedStringKey("practice.next")) {
+            viewModel.nextQuestion()
+        }
+        .frame(maxWidth: .infinity)
+        .padding()
+        .buttonStyle(.borderedProminent)
+        .disabled(!viewModel.showAnswer)
+    }
 }
