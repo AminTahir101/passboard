@@ -122,23 +122,14 @@ function PrivacyEn() {
         </p>
       </Section>
 
-      <Section title="8. Third-party services">
-        <p>We use the following third-party services to operate Passboard:</p>
-        <ul>
-          <li><strong>Supabase</strong> — database and authentication.</li>
-          <li><strong>Vercel</strong> — hosting and content delivery.</li>
-          <li><strong>OpenAI</strong> — AI tutor functionality. Conversations may be processed by OpenAI in accordance with their privacy policy.</li>
-        </ul>
-      </Section>
-
-      <Section title="9. Children">
+      <Section title="8. Children">
         <p>
           Passboard is intended for medical students and professionals aged 18 and over.
           We do not knowingly collect data from anyone under 18.
         </p>
       </Section>
 
-      <Section title="10. Changes to this policy">
+      <Section title="9. Changes to this policy">
         <p>
           We may update this Privacy Policy from time to time. We will notify registered users
           of material changes by email. Continued use of the platform after changes take effect
@@ -146,7 +137,7 @@ function PrivacyEn() {
         </p>
       </Section>
 
-      <Section title="11. Contact">
+      <Section title="10. Contact">
         <p>
           If you have questions about this policy, contact us at{" "}
           <a href="mailto:privacy@passboard.ai" className="text-amber-ink underline">privacy@passboard.ai</a>.

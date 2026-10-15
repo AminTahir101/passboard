@@ -60,6 +60,7 @@ export type Dictionary = {
         mock: { title: string; desc: string; questions: string; minutes: string; pass: string };
         mistakes: { title: string; desc: string; review: string; improving: string };
         anatomy: { title: string; desc: string; layers: string };
+        caseLab: { title: string; desc: string; label: string };
       };
     };
     howItWorks: {

@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 import type { Dictionary } from "@/lib/i18n";
-import Image from "next/image";
 import { Container } from "./ui";
 
 type F = Dictionary["landing"]["platform"]["feats"];
@@ -56,28 +55,14 @@ export function Platform({ t }: { t: Dictionary["landing"]["platform"] }) {
           <Feature n="06" title={f.mistakes.title} desc={f.mistakes.desc}>
             <MistakesVisual t={f.mistakes} />
           </Feature>
-          {/* Feature 07 spans the full row with image on the right */}
-          <article className="md:col-span-2 lg:col-span-3 flex min-h-[500px] bg-paper-2">
-            {/* Left: text + small visual */}
-            <div className="flex flex-col p-6 lg:p-9 shrink-0 w-[340px] lg:w-[400px]">
-              <span className="font-mono text-[13px] text-amber">07</span>
-              <h3 className="mt-[18px] font-serif text-[30px] leading-[1.15] font-normal">{f.anatomy.title}</h3>
-              <p className="mt-3 text-[15px] leading-relaxed text-lp-ink-2">{f.anatomy.desc}</p>
-              <div className="mt-auto pt-8">
-                <AnatomyVisual t={f.anatomy} />
-              </div>
-            </div>
-            {/* Right: full-bleed anatomy layers image */}
-            <div className="relative flex-1 overflow-hidden">
-              <Image
-                src="/anatomy-layers.png"
-                alt="Nine anatomical body systems layer by layer"
-                fill
-                className="object-cover object-left"
-                sizes="(max-width: 768px) 100vw, 66vw"
-              />
-            </div>
-          </article>
+          {/* Feature 07 — anatomy */}
+          <Feature n="07" title={f.anatomy.title} desc={f.anatomy.desc}>
+            <AnatomyVisual t={f.anatomy} />
+          </Feature>
+          {/* Feature 08 — Case Lab */}
+          <Feature n="08" title={f.caseLab.title} desc={f.caseLab.desc}>
+            <CaseLabVisual t={f.caseLab} />
+          </Feature>
         </div>
       </Container>
     </section>
@@ -118,7 +103,7 @@ function PracticeVisual({ t }: { t: F["practice"] }) {
 function UnderstandVisual({ t }: { t: F["understand"] }) {
   return (
     <div className="flex flex-col gap-3.5">
-      <span className="font-serif text-[88px] leading-[0.9] tracking-[-0.03em]">25k+</span>
+      <span className="font-serif text-[88px] leading-[0.9] tracking-[-0.03em]">50k+</span>
       <span className="text-sm text-lp-muted">{t.caption}</span>
       <div dir="ltr" className="flex flex-col gap-2 border-t border-lp-line pt-3.5 text-left text-[13px] leading-normal">
         <div className="grid grid-cols-[28px_minmax(0,1fr)] gap-2">
@@ -267,6 +252,33 @@ function AnatomyVisual({ t }: { t: F["anatomy"] }) {
         <span className="font-mono text-[11px] tracking-wide mt-1" style={{ color: "rgba(255,255,255,0.25)" }}>
           {t.layers}
         </span>
+      </div>
+    </div>
+  );
+}
+
+function CaseLabVisual({ t }: { t: F["caseLab"] }) {
+  return (
+    <div className="flex flex-col gap-3">
+      <div dir="ltr" className="rounded-xl border border-lp-line-2 bg-white p-[18px] text-left">
+        <div className="flex items-center gap-2 font-mono text-[11px] text-lp-muted uppercase tracking-[0.04em] mb-3">
+          <span className="size-1.5 rounded-full bg-gold-deep" />
+          {t.label}
+        </div>
+        <div className="flex flex-col gap-2 text-[13px] leading-normal">
+          <div className="flex items-start gap-2">
+            <span className="shrink-0 mt-0.5 size-4 rounded bg-amber/10 flex items-center justify-center text-[10px]">1</span>
+            <span className="text-lp-ink-2">Contact dermatitis — erythematous, vesicular rash in exposed distribution</span>
+          </div>
+          <div className="flex items-start gap-2">
+            <span className="shrink-0 mt-0.5 size-4 rounded bg-amber/10 flex items-center justify-center text-[10px]">2</span>
+            <span className="text-lp-ink-2">Atopic dermatitis — flexural involvement, pruritus, personal atopy history</span>
+          </div>
+          <div className="flex items-start gap-2">
+            <span className="shrink-0 mt-0.5 size-4 rounded bg-lp-line-2 flex items-center justify-center text-[10px]">3</span>
+            <span className="text-lp-ink-2">Nummular eczema — coin-shaped plaques, less likely given distribution</span>
+          </div>
+        </div>
       </div>
     </div>
   );
