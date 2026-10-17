@@ -15,7 +15,7 @@ interface RequestAccessClientProps {
 }
 
 const PERKS = [
-  { en: "90,000+ exam-style MCQs across 20+ specialties", ar: "أكثر من 50,000 سؤال عبر أكثر من 20 تخصصاً" },
+  { en: "90,000+ exam-style MCQs across 20+ specialties", ar: "أكثر من 90,000 سؤال عبر أكثر من 20 تخصصاً" },
   { en: "Detailed clinical rationale for every answer", ar: "شرح سريري مفصّل لكل إجابة" },
   { en: "AI tutor available for every question", ar: "مدرّس ذكي متاح لكل سؤال" },
   { en: "Case Lab — AI-powered clinical image diagnosis", ar: "مختبر الحالات — تشخيص الصور السريرية بالذكاء الاصطناعي" },
