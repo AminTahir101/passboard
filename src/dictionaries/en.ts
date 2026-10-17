@@ -34,7 +34,7 @@ export const en: Dictionary = {
   landing: {
     badge: "Private Access Platform",
     tagline: "AI-powered preparation for your professional medical licensing exam.",
-    description: "Practice 65,000+ hand-curated questions, understand every answer, and prepare with an intelligent AI tutor.",
+    description: "Practice 77,000+ hand-curated questions, understand every answer, and prepare with an intelligent AI tutor.",
     requestAccess: "Request Access", login: "Login",
     featuresTitle: "Everything you need to prepare",
     featuresSubtitle: "A focused, distraction-free environment built for exam success.",
@@ -58,7 +58,7 @@ export const en: Dictionary = {
       sub: "Practice real-world questions, understand every answer, and prepare with an AI tutor that teaches you to think clinically.",
       cta: "Request access",
       pills: [
-        { n: "65,000+", t: "hand-curated questions" },
+        { n: "77,000+", t: "hand-curated questions" },
         { n: "20+", t: "medical disciplines, one AI tutor" },
       ],
       examsPill: { n: "5", t: "licensing exams covered" },
@@ -68,7 +68,7 @@ export const en: Dictionary = {
       explore: { text: "See how the AI tutor explains every option — correct and incorrect.", cta: "Explore platform" },
     },
     stats: [
-      { n: "65,000+", t: "hand-curated questions" },
+      { n: "77,000+", t: "hand-curated questions" },
       { n: "20+", t: "medical disciplines" },
       { n: "5", t: "licensing exams covered" },
       { n: "AI", t: "tutor included with every question" },
@@ -112,7 +112,7 @@ export const en: Dictionary = {
         {
           n: "01",
           title: "Filter to what matters",
-          desc: "Practice by specialty, topic, or exam type. Set the question count and start a focused session — not a random draw from 65,000+ questions.",
+          desc: "Practice by specialty, topic, or exam type. Set the question count and start a focused session — not a random draw from 77,000+ questions.",
         },
         {
           n: "02",
@@ -133,7 +133,7 @@ export const en: Dictionary = {
       cta: "Request Access",
       vatNote: "VAT not included · Cancel any time",
       features: [
-        "65,000+ hand-curated MCQs across all disciplines",
+        "77,000+ hand-curated MCQs across all disciplines",
         "Unlimited practice sessions by category and topic",
         "Timed mock exams with full performance breakdown",
         "AI Tutor with clinical reasoning and real citations",

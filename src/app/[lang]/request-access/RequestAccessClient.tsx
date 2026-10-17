@@ -15,7 +15,7 @@ interface RequestAccessClientProps {
 }
 
 const PERKS = [
-  { en: "65,000+ exam-style MCQs across 20+ specialties", ar: "أكثر من 50,000 سؤال عبر أكثر من 20 تخصصاً" },
+  { en: "77,000+ exam-style MCQs across 20+ specialties", ar: "أكثر من 50,000 سؤال عبر أكثر من 20 تخصصاً" },
   { en: "Detailed clinical rationale for every answer", ar: "شرح سريري مفصّل لكل إجابة" },
   { en: "AI tutor available for every question", ar: "مدرّس ذكي متاح لكل سؤال" },
   { en: "Case Lab — AI-powered clinical image diagnosis", ar: "مختبر الحالات — تشخيص الصور السريرية بالذكاء الاصطناعي" },
@@ -111,8 +111,8 @@ export default function RequestAccessClient({ lang, homePath, loginPath, dict }:
           <p className="eyebrow mb-5">{isAr ? "وصول خاص" : "Private access"}</p>
           <h1 className="font-serif text-4xl sm:text-5xl lg:text-[56px] leading-[1.05] font-normal tracking-[-0.02em] text-lp-ink mb-6">
             {isAr
-              ? <>65,000+ سؤال.<br />مدرّس ذكي.<br />نجاح حقيقي.</>
-              : <>65,000+ questions.<br />One AI tutor.<br />One goal.</>}
+              ? <>77,000+ سؤال.<br />مدرّس ذكي.<br />نجاح حقيقي.</>
+              : <>77,000+ questions.<br />One AI tutor.<br />One goal.</>}
           </h1>
           <p className="text-[17px] leading-relaxed text-lp-ink-2 mb-10 max-w-[420px]">
             {isAr
